@@ -2,25 +2,49 @@
 <head>
 	<script type ="text/javascript">
 	 var gold = 0;
+	 var goldpt = 0;
+	 var goldmod = 1;
+	 var goldupcost = 10;
+	 
 	 var miner = 0;
-	 var minercost = 10;
+	 var minercost = 15;
+	 var minerpt = 0;
+	 var minermod = 1;
+	 var minerupcost = 2000;
+	 
 	 var foreman = 0;
 	 var foremancost = 10;
+	 var foremanpt = 0;
+	 var foremanmod = 1;
+	 var foremanupcost = 25000;
 	 
 	 var timer = setInterval(tick, 1000);
 
+
+	function initialiseCosts()
+	{
+		document.getElementById( "goldbutton").value = "Click\n" + "+ " + goldmod + " gold";
+		document.getElementById( "foremanbutton").value = "Foremans\n" + "Costs " + foremancost + " miners";
+		document.getElementById( "minerbutton").value = "Miners\n" + "Costs " + minercost + " gold";
+
+		document.getElementById( "goldupgradebutton").value = "Upgrade Clicks\n" + "Costs " + goldupcost + " gold";
+		document.getElementById( "minerupgradebutton").value = "Upgrade Miners\n" + "Costs " + minerupcost + " gold";
+		document.getElementById( "foremanupgradebutton").value = "Upgrade Foreman\n" + "Costs " + foremanupcost + " gold";
+
+	}
+	 
 	function tick()
 	{
-		miner += foreman;
-		gold += miner;
-		document.getElementById( "counting" ).value = gold;	
-		document.getElementById( "miners" ).value = miner;	
+		miner += minerpt;
+		gold += goldpt;
+		document.getElementById( "counting" ).value = Math.round(gold);	
+		document.getElementById( "miners" ).value = Math.round(miner);	
 	
 	}
 	 
 	function count() 
 	{
-		gold += 1;
+		gold += 1*goldmod;
 		document.getElementById( "counting" ).value = gold;
 	}
 	 
@@ -36,7 +60,9 @@
 			
 			minercost *= 1.2;
 			minercost = Math.round(minercost);
-			document.getElementById( "minerbutton").value = "Miners\n" + "Costs " + minercost + " clicks";
+			document.getElementById( "minerbutton").value = "Miners\n" + "Costs " + minercost + " gold";
+			
+			goldpt = miner * minermod;
 
 		}
 	 }
@@ -54,24 +80,114 @@
 			foremancost *= 1.5;
 			foremancost = Math.round(foremancost);
 			document.getElementById( "foremanbutton").value = "Foremans\n" + "Costs " + foremancost + " miners";
+			
+			minerpt = foreman * foremanmod;
 		}
 
 	 }
 	 
+	 function upgrade(id)
+	{
+		if (id == "gold" && gold >= goldupcost)
+		{
+			gold -= goldupcost;
+			goldupcost *= 10;
+			goldmod *=5;
+			document.getElementById( "goldbutton").value = "Click\n" + "+ " + goldmod + " gold";
+			document.getElementById( "goldupgradebutton").value = "Upgrade Clicks\n" + "Costs " + goldupcost + " gold";
+		}	
+		if (id == "miner" && gold >= minerupcost)
+		{
+			gold -= minerupcost;
+			minerupcost *= 2;
+			minermod *= 1.5;
+			goldpt = miner * minermod;
+			document.getElementById( "minerupgradebutton").value = "Upgrade Miners\n" + "Costs " + minerupcost + " gold";
+
+		}
+		if (id == "foreman" && gold >= foremanupcost)
+		{
+			gold -= foremanupcost;
+			foremanupcost *= 2;
+			foremanmod *= 1.5;
+			minerpt = foreman * foremanmod;
+			document.getElementById( "foremanupgradebutton").value = "Upgrade Foreman\n" + "Costs " + foremanupcost + " gold";
+		}
+
+	}	 
+	
 	</script>
 </head>
 <html>
+<style>
+	div.buy
+	{
+		width:20px;
+		height:0px;
+		margin-top:50px;
+	}
+	div.amounts
+		{
+		width:20px;
+		height:0px;
+		margin-left:200px;
+		margin-top:0px;
+	}
+	div.upgrade
+	{
+		width:20px;
+		height:0px;
+		margin-left:400px;
+
+		margin-top:0px;
+	}
+	
+	input.buy
+	{
+		margin-top:10px;
+		height:50px; 
+		width:150px;
+		
+	}
+	input.amounts
+	{
+	    text-align: right;
+		margin-top:10px;
+		height:44px; 
+		width:150px;
+	}
+	input.upgrade
+	{
+		margin-top:10px;
+		height:50px; 
+		width:150px;
+	}
+</style>
 <body>
-	<input id = "goldbutton" type ="button" value = "Click" onclick = "count()"/>
-	<input id = "counting" type = "text" />
-	<br><br>
-	<input id = "minerbutton" type ="button" value = "Miners" onclick = "buyminer()">
-	<input id = "miners" type = "text" />
-	<br><br>
-	<input id = "foremanbutton" type ="button" value = "Foremans" onclick = "buyforeman()">
-	<input id = "foremans" type = "text" />
+	<div style="text-align: left"> 
 	
+	<div class="buy"/>
+		<input id = "goldbutton" type ="button" value = "Click\n" onclick = "count()" class="buy"/>
+		<input id = "minerbutton" type ="button" value = "Miners" onclick = "buyminer()" class="buy">
+		<input id = "foremanbutton" type ="button" value = "Foremans" onclick = "buyforeman()" class="buy">
+	</div>
 	
+	<div class="amounts"/>
+		<input id = "counting" type = "text" class="amounts"> 
+		<input id = "miners" type = "text" class="amounts"> 
+		<input id = "foremans" type = "text" class="amounts"> 
+	</div>
+	
+	<div class="upgrade"/>
+		<input id = "goldupgradebutton" type ="button" value = "Upgrade gold" onclick = "upgrade('gold')" class="upgrade"/>    
+		<input id = "minerupgradebutton" type ="button" value = "Upgrade miner" onclick = "upgrade('miner')" class="upgrade"/>    
+		<input id = "foremanupgradebutton" type ="button" value = "Upgrade foreman" onclick = "upgrade('foreman')" class="upgrade"/>
+	</div>
+	
+	<script>
+		initialiseCosts();
+    </script>
+
 	
 </body>
 </html>
