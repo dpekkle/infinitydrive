@@ -5,20 +5,20 @@
 	 var miner = 0;
 	 var timer = setInterval(tick, 1000);
 
-	 function tick()
-	 {
-				gold += miner;
-				document.getElementById( "counting" ).value = gold;					
-	 }
+	function tick()
+	{
+		gold += miner;
+		document.getElementById( "counting" ).value = gold;					
+	}
 	 
-	 function count() 
-	 {
-	  gold += 1;
-	  document.getElementById( "counting" ).value = gold;
-	 }
+	function count() 
+	{
+		gold += 1;
+		document.getElementById( "counting" ).value = gold;
+	}
 	 
-	 function buyminer()
-	 {
+	function buyminer()
+	{
 		if (gold >= 10)
 		{
 			gold -= 10;
@@ -26,7 +26,6 @@
 
 			miner += 1;
 			document.getElementById( "miners").value = miner;
-
 		}
 	 }
 	</script>
@@ -37,7 +36,5 @@
 	<input type ="button" value = "Miners" onclick = "buyminer()"<br><br>
 	<input id = "counting" type = "text" />
 	<input id = "miners" type = "text" />
-	
-	
 </body>
 </html>
