@@ -1,16 +1,43 @@
 <!DOCTYPE html>
 <head>
 	<script type ="text/javascript">
-	 var x = 0;
-	 function count() {
-	  x += 1;
-	  document.getElementById( "counting" ).value = x;
+	 var gold = 0;
+	 var miner = 0;
+	 var timer = setInterval(tick, 1000);
+
+	 function tick()
+	 {
+				gold += miner;
+				document.getElementById( "counting" ).value = gold;					
+	 }
+	 
+	 function count() 
+	 {
+	  gold += 1;
+	  document.getElementById( "counting" ).value = gold;
+	 }
+	 
+	 function buyminer()
+	 {
+		if (gold >= 10)
+		{
+			gold -= 10;
+			document.getElementById( "counting" ).value = gold;
+
+			miner += 1;
+			document.getElementById( "miners").value = miner;
+
+		}
 	 }
 	</script>
 </head>
 <html>
 <body>
-	<input type ="button" value = "Click" onclick = "count()"/><br><br>
+	<input type ="button" value = "Click" onclick = "count()"/>
+	<input type ="button" value = "Miners" onclick = "buyminer()"<br><br>
 	<input id = "counting" type = "text" />
+	<input id = "miners" type = "text" />
+	
+	
 </body>
 </html>
