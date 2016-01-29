@@ -69,6 +69,10 @@
 		document.getElementById( "miners" ).value = Math.round(miner);	
 		document.getElementById( "foremans" ).value = Math.round(foreman);
 		
+		document.getElementById( "goldpt" ).value = Math.round(goldpt);	
+		document.getElementById( "minerspt" ).value = Math.round(minerpt);	
+		document.getElementById( "foremanspt" ).value = Math.round(foremanpt);
+		
 		goldpt = miner * minermod;
 		minerpt = foreman * foremanmod;
 
@@ -79,6 +83,7 @@
 	{
 		miner += minerpt;
 		gold += goldpt;
+		
 		updateAmounts();		
 		checkVisibility();
 		
@@ -178,6 +183,14 @@
 		margin-top:0px;
 	}
 	
+	div.rate
+	{
+		width:20px;
+		height:0px;
+		margin-left:600px;
+
+		margin-top:0px;
+	}	
 	input.buy
 	{
 		visibility:hidden;
@@ -201,6 +214,14 @@
 		height:50px; 
 		width:150px;
 	}
+	input.rate
+	{
+		visibility:visible;
+	    text-align: right;
+		margin-top:10px;
+		height:44px; 
+		width:150px;
+	}
 </style>
 <body>
 	<div style="text-align: left"> 
@@ -222,6 +243,14 @@
 		<input id = "minerupgradebutton" type ="button" value = "Upgrade miner" onclick = "upgrade('miner')" class="upgrade"/>    
 		<input id = "foremanupgradebutton" type ="button" value = "Upgrade foreman" onclick = "upgrade('foreman')" class="upgrade"/>
 	</div>
+	
+	<div class="rate"/>
+		<input id = "goldpt" type = "text" class="rate"/> 
+		<input id = "minerspt" type = "text" class="rate"/> 
+		<input id = "foremanspt" type = "text" class="rate"/> 
+	</div>
+
+
 	
 	<script>
 		initialiseCosts();
