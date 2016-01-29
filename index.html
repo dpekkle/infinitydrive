@@ -55,11 +55,14 @@
 		{
 			document.getElementById( "foremans").style.visibility = "visible";
 			document.getElementById("foremanbutton").style.visibility = "visible";
+			document.getElementById("minerspt").style.visibility = "visible";
+
 		}
 		if (gold >= minercost)
 		{
 			document.getElementById("miners").style.visibility = "visible";
 			document.getElementById("minerbutton").style.visibility = "visible";
+			document.getElementById( "goldpt").style.visibility = "visible";
 		}
 	}
 	
@@ -130,27 +133,27 @@
 		if (id == "gold" && gold >= goldupcost)
 		{
 			gold -= goldupcost;
-			goldupcost *= 10;
-			goldmod *=5;
+			goldupcost *= 12;
+			goldmod *=3;
 			document.getElementById( "goldbutton").value = "Click\n" + "+ " + goldmod + " gold";
 			document.getElementById( "goldupgradebutton").value = "Upgrade Clicks\n" + "Costs " + goldupcost + " gold";
 		}	
 		if (id == "miner" && gold >= minerupcost)
 		{
 			gold -= minerupcost;
-			minerupcost *= 2;
-			minermod *= 1.5;
+			minerupcost *= 3;
+			minermod *= 1.3;
 			goldpt = miner * minermod;
-			document.getElementById( "minerupgradebutton").value = "Upgrade Miners\n" + "Costs " + minerupcost + " gold";
+			document.getElementById( "minerupgradebutton").value = "Upgrade " + minermod + "\n" + "Costs " + minerupcost + " gold";
 
 		}
 		if (id == "foreman" && gold >= foremanupcost)
 		{
 			gold -= foremanupcost;
-			foremanupcost *= 2;
-			foremanmod *= 1.5;
+			foremanupcost *= 3;
+			foremanmod *= 1.3;
 			minerpt = foreman * foremanmod;
-			document.getElementById( "foremanupgradebutton").value = "Upgrade Foreman\n" + "Costs " + foremanupcost + " gold";
+			document.getElementById( "foremanupgradebutton").value = "Upgrade " + foremanmod + "\n" + "Costs " + foremanupcost + " gold";
 		}
 		
 		updateAmounts();		
@@ -216,7 +219,7 @@
 	}
 	input.rate
 	{
-		visibility:visible;
+		visibility:hidden;
 	    text-align: right;
 		margin-top:10px;
 		height:44px; 
