@@ -1,7 +1,16 @@
 <!DOCTYPE html>
+<head>
+	<script type ="text/javascript">
+	 var x = 0;
+	 function count() {
+	  x += 1;
+	  document.getElementById( "counting" ).value = x;
+	 }
+	</script>
+</head>
 <html>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+	<input type ="button" value = "Click" onclick = "count()"/><br><br>
+	<input id = "counting" type = "text" />
 </body>
 </html>
