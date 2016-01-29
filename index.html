@@ -67,7 +67,12 @@
 	{
 		document.getElementById( "gold" ).value = Math.round(gold);	
 		document.getElementById( "miners" ).value = Math.round(miner);	
-		document.getElementById( "foremans" ).value = Math.round(foreman);	
+		document.getElementById( "foremans" ).value = Math.round(foreman);
+		
+		goldpt = miner * minermod;
+		minerpt = foreman * foremanmod;
+
+		
 	}
 	
 	function tick()
@@ -82,7 +87,7 @@
 	function count() 
 	{
 		gold += 1*goldmod;
-		document.getElementById( "gold" ).value = gold;
+		document.getElementById( "gold" ).value = Math.round(gold);	
 	}
 	 
 	function buyminer()
@@ -95,7 +100,6 @@
 			minercost = Math.round(minercost);
 			document.getElementById( "minerbutton").value = "Miners\n" + "Costs " + minercost + " gold";
 			
-			goldpt = miner * minermod;
 			
 			updateAmounts();		
 		}
@@ -110,9 +114,7 @@
 			foremancost *= 1.5;
 			foremancost = Math.round(foremancost);
 			document.getElementById( "foremanbutton").value = "Foremans\n" + "Costs " + foremancost + " miners";
-			
-			minerpt = foreman * foremanmod;
-			
+						
 			updateAmounts();		
 		}
 
