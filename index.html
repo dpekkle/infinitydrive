@@ -3,12 +3,19 @@
 	<script type ="text/javascript">
 	 var gold = 0;
 	 var miner = 0;
+	 var minercost = 10;
+	 var foreman = 0;
+	 var foremancost = 10;
+	 
 	 var timer = setInterval(tick, 1000);
 
 	function tick()
 	{
+		miner += foreman;
 		gold += miner;
-		document.getElementById( "counting" ).value = gold;					
+		document.getElementById( "counting" ).value = gold;	
+		document.getElementById( "miners" ).value = miner;	
+	
 	}
 	 
 	function count() 
@@ -19,22 +26,52 @@
 	 
 	function buyminer()
 	{
-		if (gold >= 10)
+		if (gold >= minercost)
 		{
-			gold -= 10;
+			gold -= minercost;
 			document.getElementById( "counting" ).value = gold;
-
+			
 			miner += 1;
 			document.getElementById( "miners").value = miner;
+			
+			minercost *= 1.2;
+			minercost = Math.round(minercost);
+			document.getElementById( "minerbutton").value = "Miners\n" + "Costs " + minercost + " clicks";
+
 		}
 	 }
+	 
+	 function buyforeman()
+	 {
+		if (miner >= foremancost)
+		{
+			miner -= foremancost;
+			document.getElementById( "miners").value = miner;
+			
+			foreman += 1;
+			document.getElementById( "foremans").value = foreman;
+		
+			foremancost *= 1.5;
+			foremancost = Math.round(foremancost);
+			document.getElementById( "foremanbutton").value = "Foremans\n" + "Costs " + foremancost + " miners";
+		}
+
+	 }
+	 
 	</script>
 </head>
 <html>
 <body>
-	<input type ="button" value = "Click" onclick = "count()"/>
-	<input type ="button" value = "Miners" onclick = "buyminer()"<br><br>
+	<input id = "goldbutton" type ="button" value = "Click" onclick = "count()"/>
 	<input id = "counting" type = "text" />
+	<br><br>
+	<input id = "minerbutton" type ="button" value = "Miners" onclick = "buyminer()">
 	<input id = "miners" type = "text" />
+	<br><br>
+	<input id = "foremanbutton" type ="button" value = "Foremans" onclick = "buyforeman()">
+	<input id = "foremans" type = "text" />
+	
+	
+	
 </body>
 </html>
