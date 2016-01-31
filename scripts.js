@@ -100,7 +100,7 @@ function tick()
 	
 	shipx = Math.floor(progress/levelcost * canvas.width);
 	
-	if (progress + 25 > levelcost)
+	if (shipx > canvas.width - 50)
 	{
 		shipy++;
 		progress = 0;
