@@ -7,7 +7,7 @@ var miner = 0;
 var minercost = 20;
 var minerpt = 0;
 var minermod = 1;
-var minerupcost = 2000;
+var minerupcost = 1500;
  
 var foreman = 0;
 var foremancost = 15;
@@ -223,7 +223,7 @@ function buyforeman(goldbuy)
 			miner -= foremancost;
 		
 		foreman += 1;		
-		foremancost *= 1.5;
+		foremancost *= 1.3;
 		foremancost = Math.round(foremancost);
 					
 		updateAmounts();		
@@ -260,7 +260,7 @@ function upgrade(id)
 	if (id == "gold" && gold >= goldupcost)
 	{
 		gold -= goldupcost;
-		goldupcost *= 8;
+		goldupcost *= 7.5;
 		goldmod *=4;
 	}	
 	if (id == "miner" && gold >= minerupcost)
