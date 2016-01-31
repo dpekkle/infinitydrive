@@ -200,7 +200,7 @@ function upgrade(id)
 	{
 		gold -= goldupcost;
 		goldupcost *= 10;
-		goldmod *=100;
+		goldmod *=4;
 		document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
 		document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + goldupcost + " gold";
 	}	
