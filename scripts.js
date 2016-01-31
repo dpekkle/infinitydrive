@@ -37,13 +37,13 @@ function initialiseCosts()
 	document.getElementById( "gold").style.visibility = "visible";
 
 	//give values to the buttons based off of javascript variables
-	document.getElementById( "goldbutton").value = "Click        " + "+ " + goldmod + " gold";
-	document.getElementById( "foremanbutton").value = "Foremans        " + "Costs " + foremancost + " miners";
-	document.getElementById( "minerbutton").value = "Miners        " + "Costs " + minercost + " gold";
+	document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
+	document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
+	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
 
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks        " + "Costs " + goldupcost + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners        " + "Costs " + minerupcost + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foreman        " + "Costs " + foremanupcost + " gold";
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + "Costs " + goldupcost + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + "Costs " + minerupcost + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foreman  " + "Costs " + foremanupcost + " gold";
 }
 
 function checkVisibility()
@@ -128,7 +128,7 @@ function buyminer()
 		miner += 1;			
 		minercost *= 1.2;
 		minercost = Math.round(minercost);
-		document.getElementById( "minerbutton").value = "Miners        " + "Costs " + minercost + " gold";
+		document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
 		
 		
 		updateAmounts();		
@@ -143,7 +143,7 @@ function buyforeman()
 		foreman += 1;		
 		foremancost *= 1.5;
 		foremancost = Math.round(foremancost);
-		document.getElementById( "foremanbutton").value = "Foremans        " + "Costs " + foremancost + " miners";
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
 					
 		updateAmounts();		
 	}
@@ -157,16 +157,17 @@ function upgrade(id)
 		gold -= goldupcost;
 		goldupcost *= 12;
 		goldmod *=3;
-		document.getElementById( "goldbutton").value = "Click        " + "+ " + goldmod + " gold";
-		document.getElementById( "goldupgradebutton").value = "Upgrade Clicks        " + "Costs " + goldupcost + " gold";
+		document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
+		document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + goldupcost + " gold";
 	}	
 	if (id == "miner" && gold >= minerupcost)
 	{
 		gold -= minerupcost;
 		minerupcost *= 3;
 		minermod *= 1.3;
+		minermod = Math.floor(minermod * 100)/100;
 		goldpt = miner * minermod;
-		document.getElementById( "minerupgradebutton").value = "Upgrade        " + minermod + "\n" + "Costs " + minerupcost + " gold";
+		document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + minermod + "\nCosts " + minerupcost + " gold";
 
 	}
 	if (id == "foreman" && gold >= foremanupcost)
@@ -174,8 +175,10 @@ function upgrade(id)
 		gold -= foremanupcost;
 		foremanupcost *= 3;
 		foremanmod *= 1.3;
+		foremanmod = Math.floor(foremanmod * 100)/100;
+
 		minerpt = foreman * foremanmod;
-		document.getElementById( "foremanupgradebutton").value = "Upgrade        " + foremanmod + "\n" + "Costs " + foremanupcost + " gold";
+		document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + foremanmod + "\nCosts " + foremanupcost + " gold";
 	}
 	
 	updateAmounts();		
