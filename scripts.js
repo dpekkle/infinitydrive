@@ -47,7 +47,7 @@ function initialiseCosts()
 	document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
 	document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
 	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
-	document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " gold";
+	document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " foremen";
 
 	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + "Costs " + goldupcost + " gold";
 	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + "Costs " + minerupcost + " gold";
@@ -199,8 +199,8 @@ function upgrade(id)
 	if (id == "gold" && gold >= goldupcost)
 	{
 		gold -= goldupcost;
-		goldupcost *= 12;
-		goldmod *=3;
+		goldupcost *= 10;
+		goldmod *=100;
 		document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
 		document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + goldupcost + " gold";
 	}	
@@ -228,12 +228,12 @@ function upgrade(id)
 	if (id == "ship" && gold >= shipupcost)
 	{
 		gold -= shipupcost;
-		shipupcost *= 2;
-		shipmod *= 1.1;
+		shipupcost *= 3;
+		shipmod *= 1.3;
 		shipmod = Math.floor(shipmod * 100)/100;
 
-		foremanpt = ship * shipmod;
-		document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + shipmod + "\nCosts " + shipupcost + " gold";
+		minerpt = ship * shipmod;
+		document.getElementById( "shipupgradebutton").value = "Upgrade Foremen  " + shipmod + "\nCosts " + shipupcost + " gold";
 	}
 	
 	updateAmounts();		
