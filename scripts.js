@@ -21,6 +21,9 @@ var shippt = 0;
 var shipmod = 2;
 var shipupcost = 1000000;
 
+//upgrades
+var goldbuy = 0;
+var goldbuycost = 100;
 
 var shipx;
 var shipy = 1;
@@ -99,6 +102,11 @@ function checkVisibility()
 		document.getElementById("minerbutton").style.visibility = "visible";
 		document.getElementById( "goldpt").style.visibility = "visible";
 	}
+	
+	if (ship >= goldbuycost * 0.5 && goldbuy == 0)
+	{
+		document.getElementById("goldbuy").style.visibility = "visible";
+	}
 }
 
 function updateAmounts()
@@ -108,15 +116,41 @@ function updateAmounts()
 	document.getElementById( "foremans" ).value = Math.round(foreman);
 	document.getElementById( "ships" ).value = Math.round(ship);
 	
-	document.getElementById( "goldpt" ).value = Math.round(goldpt);	
-	document.getElementById( "minerspt" ).value = Math.round(minerpt);	
-	document.getElementById( "foremanspt" ).value = Math.round(foremanpt);
-	document.getElementById( "shipspt" ).value = Math.round(shippt);
+	document.getElementById( "goldpt" ).value = Math.floor(goldpt*100)/100;	
+	document.getElementById( "minerspt" ).value = Math.floor(minerpt*100)/100;	
+	document.getElementById( "foremanspt" ).value = Math.floor(foremanpt*100)/100;
+	document.getElementById( "shipspt" ).value = Math.floor(shippt*100)/100;
 	
 	goldpt = miner * minermod;
 	minerpt = foreman * foremanmod;	
 	foremanpt = ship * shipmod;	
+	
+}
 
+function updateCosts()
+{
+	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
+
+	
+	if (goldbuy == 1)
+	{
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " gold";
+		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " gold";
+	}
+	else
+	{
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
+		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " foreman";
+	}
+	
+	//upgrade costs
+	document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + goldupcost + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + minermod + "\nCosts " + minerupcost + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + foremanmod + "\nCosts " + foremanupcost + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + shipmod + "\nCosts " + shipupcost + " gold";
+
+	
 }
 
 function tick()
@@ -136,7 +170,8 @@ function tick()
 		levelcost *= 2;
 	}
 
-	updateAmounts();		
+	updateAmounts();
+	updateCosts();	
 	checkVisibility();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawScreen();
@@ -149,46 +184,72 @@ function count()
 	document.getElementById( "gold" ).value = Math.round(gold);	
 }
  
-function buyminer()
+ 
+ function buyunit(id)
+ {
+	if (id == "miner")
+		buyminer(goldbuy);
+	else if (id == "foreman")
+		buyforeman(goldbuy);
+	else if (id == "ship")
+		buyship(goldbuy);	
+ }
+function buyminer(goldbuy)
 {
 	if (gold >= minercost)
 	{
-		gold -= minercost;			
+		gold -= minercost;
 		miner += 1;			
 		minercost *= 1.2;
 		minercost = Math.round(minercost);
-		document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
-		
 		
 		updateAmounts();		
 	}
  }
  
-function buyforeman()
+function buyforeman(goldbuy)
 {
-	if (miner >= foremancost)
+	var currency;
+	if (goldbuy == 1)
+		currency = gold;
+	else
+		currency = miner;
+
+	if (currency >= foremancost)
 	{
-		miner -= foremancost;
+		if (goldbuy == 1)
+			gold -= foremancost;		
+		else
+			miner -= foremancost;
+		
 		foreman += 1;		
 		foremancost *= 1.5;
 		foremancost = Math.round(foremancost);
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
 					
 		updateAmounts();		
 	}
 
  }
  
- function buyship()
+ function buyship(goldbuy)
 {
-	if (foreman >= shipcost)
+	var currency;
+	if (goldbuy == 1)
+		currency = gold;
+	else
+		currency = foreman;
+
+	if (currency >= shipcost)
 	{
-		foreman -= shipcost;
+		if (goldbuy == 1)
+			gold -= shipcost;		
+		else
+			foreman -= shipcost;
+		
 		ship += 1;		
 		shipcost *= 1.1;
 		shipcost = Math.round(shipcost);
-		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " foremen";
-					
+						
 		updateAmounts();		
 	}
 
@@ -199,10 +260,8 @@ function upgrade(id)
 	if (id == "gold" && gold >= goldupcost)
 	{
 		gold -= goldupcost;
-		goldupcost *= 10;
+		goldupcost *= 8;
 		goldmod *=4;
-		document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
-		document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + goldupcost + " gold";
 	}	
 	if (id == "miner" && gold >= minerupcost)
 	{
@@ -211,7 +270,6 @@ function upgrade(id)
 		minermod *= 1.3;
 		minermod = Math.floor(minermod * 100)/100;
 		goldpt = miner * minermod;
-		document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + minermod + "\nCosts " + minerupcost + " gold";
 
 	}
 	if (id == "foreman" && gold >= foremanupcost)
@@ -222,7 +280,6 @@ function upgrade(id)
 		foremanmod = Math.floor(foremanmod * 100)/100;
 
 		minerpt = foreman * foremanmod;
-		document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + foremanmod + "\nCosts " + foremanupcost + " gold";
 	}
 	
 	if (id == "ship" && gold >= shipupcost)
@@ -233,7 +290,33 @@ function upgrade(id)
 		shipmod = Math.floor(shipmod * 100)/100;
 
 		minerpt = ship * shipmod;
-		document.getElementById( "shipupgradebutton").value = "Upgrade Foremen  " + shipmod + "\nCosts " + shipupcost + " gold";
+	}
+	
+	if (id == "goldbuy")
+	{
+		if (goldbuy == 0 && ship >= goldbuycost)
+		{
+			ship -= goldbuycost;
+			goldbuy = 1;
+			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
+
+			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00"
+		}
+		else if (goldbuy == 1)
+		{
+			goldbuy = 2;
+			document.getElementById( "goldbuy" ).value = "Goldbuying units disabled";
+
+			document.getElementById( "goldbuy").style.backgroundColor = "#FFFFFF"
+			
+		}	
+		else if (goldbuy == 2)
+		{
+			goldbuy = 1;
+			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
+
+			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00"		
+		}
 	}
 	
 	updateAmounts();		

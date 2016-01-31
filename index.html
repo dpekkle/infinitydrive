@@ -86,9 +86,9 @@
 	<div style="text-align: left"> 
 	<div class="buy"/>
 		<input id = "goldbutton" type ="button" value = "Click        " onclick = "count()" class="buy"/>
-		<input id = "minerbutton" type ="button" value = "Miners        " onclick = "buyminer()" class="buy"/>
-		<input id = "foremanbutton" type ="button" value = "Foremans        " onclick = "buyforeman()" class="buy"/>
-		<input id = "shipbutton" type ="button" value = "Ships        " onclick = "buyship()" class="buy"/>
+		<input id = "minerbutton" type ="button" value = "Miners        " onclick = "buyunit('miner')" class="buy"/>
+		<input id = "foremanbutton" type ="button" value = "Foremans        " onclick = "buyunit('foreman')" class="buy"/>
+		<input id = "shipbutton" type ="button" value = "Ships        " onclick = "buyunit('ship')" class="buy"/>
 		
 	</div>
 	<div class="amounts"/>
@@ -103,6 +103,7 @@
 		<input id = "minerupgradebutton" type ="button" value = "Miners        " onclick = "upgrade('miner')" class="upgrade"/>    
 		<input id = "foremanupgradebutton" type ="button" value = "Foremen        " onclick = "upgrade('foreman')" class="upgrade"/>
 		<input id = "shipupgradebutton" type ="button" value = "Ships        " onclick = "upgrade('ship')" class="upgrade"/>
+		<input id = "goldbuy" type = "button" value = "Buy units with gold, costs 100 ships" onclick = "upgrade('goldbuy')" class = "upgrade"/>
 
 	</div>
 	<div class="rate"/>
