@@ -16,7 +16,7 @@ var foremanmod = 1;
 var foremanupcost = 25000;
 
 var shipx;
-var shipy = 50;
+var shipy = 1;
 
 // canvas element and "controller"
 var canvas = document.getElementById("canvas");
@@ -191,6 +191,6 @@ function drawScreen()
 	drawShip();
 	
 	ctx.font = "30px Arial";
-	ctx.fillText("Level" + shipx,100,100);
+	ctx.fillText("Level" + shipy,100,100);
 
 }
