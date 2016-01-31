@@ -3,6 +3,7 @@
 </head>
 <html>
 <style>
+
 	div.buy
 	{
 		width:20px;
@@ -38,7 +39,7 @@
 	{
 		margin-left: 800px;
 	}
-
+	
 	input.buy
 	{
 		visibility:hidden;
@@ -76,34 +77,40 @@
 		width:175px;
 		white-space: pre-wrap	
 	}
+	
+
+
 </style>
 <body>
 	<img id = "ship1" width="220" height="220" src="defaultship.png" style = "display: none">
-	
 	<div style="text-align: left"> 
-	
 	<div class="buy"/>
 		<input id = "goldbutton" type ="button" value = "Click        " onclick = "count()" class="buy"/>
 		<input id = "minerbutton" type ="button" value = "Miners        " onclick = "buyminer()" class="buy"/>
 		<input id = "foremanbutton" type ="button" value = "Foremans        " onclick = "buyforeman()" class="buy"/>
+		<input id = "shipbutton" type ="button" value = "Ships        " onclick = "buyship()" class="buy"/>
+		
 	</div>
-	
 	<div class="amounts"/>
 		<input id = "gold" type = "text" class="amounts"/> 
 		<input id = "miners" type = "text" class="amounts"/> 
 		<input id = "foremans" type = "text" class="amounts"/> 
+		<input id = "ships" type = "text" class="amounts"/> 
+
 	</div>
-	
 	<div class="upgrade"/>
-		<input id = "goldupgradebutton" type ="button" value = "Upgrade gold        " onclick = "upgrade('gold')" class="upgrade"/>    
-		<input id = "minerupgradebutton" type ="button" value = "Upgrade miner        " onclick = "upgrade('miner')" class="upgrade"/>    
-		<input id = "foremanupgradebutton" type ="button" value = "Upgrade foreman        " onclick = "upgrade('foreman')" class="upgrade"/>
+		<input id = "goldupgradebutton" type ="button" value = "Gold        " onclick = "upgrade('gold')" class="upgrade"/>    
+		<input id = "minerupgradebutton" type ="button" value = "Miners        " onclick = "upgrade('miner')" class="upgrade"/>    
+		<input id = "foremanupgradebutton" type ="button" value = "Foremen        " onclick = "upgrade('foreman')" class="upgrade"/>
+		<input id = "shipupgradebutton" type ="button" value = "Ships        " onclick = "upgrade('ships')" class="upgrade"/>
+
 	</div>
-	
 	<div class="rate"/>
 		<input id = "goldpt" type = "text" class="rate"/> 
 		<input id = "minerspt" type = "text" class="rate"/> 
 		<input id = "foremanspt" type = "text" class="rate"/> 
+		<input id = "shipspt" type = "text" class="rate"/> 
+
 	</div>
 	
 	<!-- Game window -->

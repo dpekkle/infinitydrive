@@ -4,16 +4,23 @@ var goldmod = 1;
 var goldupcost = 10;
  
 var miner = 0;
-var minercost = 15;
+var minercost = 20;
 var minerpt = 0;
 var minermod = 1;
 var minerupcost = 2000;
  
 var foreman = 0;
-var foremancost = 10;
+var foremancost = 15;
 var foremanpt = 0;
 var foremanmod = 1;
 var foremanupcost = 25000;
+
+var ship = 0;
+var shipcost = 10;
+var shippt = 0;
+var shipmod = 2;
+var shipupcost = 1000000;
+
 
 var shipx;
 var shipy = 1;
@@ -40,10 +47,13 @@ function initialiseCosts()
 	document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
 	document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
 	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
+	document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " gold";
 
 	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + "Costs " + goldupcost + " gold";
 	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + "Costs " + minerupcost + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foreman  " + "Costs " + foremanupcost + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + "Costs " + foremanupcost + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + "Costs " + shipupcost + " gold";
+
 }
 
 function checkVisibility()
@@ -61,6 +71,12 @@ function checkVisibility()
 		document.getElementById("minerupgradebutton").style.visibility = "visible";
 
 	}	
+	
+	if (gold >= shipupcost * 0.5 && document.getElementById("ships").style.visibility == "visible" )
+	{
+		document.getElementById("shipupgradebutton").style.visibility = "visible";
+	}
+	
 	if ( miner >= foremancost * 0.5)
 	{
 		document.getElementById( "foremans").style.visibility = "visible";
@@ -68,6 +84,15 @@ function checkVisibility()
 		document.getElementById("minerspt").style.visibility = "visible";
 
 	}
+	
+	if (foreman >= shipcost * 0.5)
+	{
+		document.getElementById( "ships").style.visibility = "visible";
+		document.getElementById("shipbutton").style.visibility = "visible";
+		document.getElementById("foremanspt").style.visibility = "visible";		
+		
+	}
+	
 	if (gold >= minercost)
 	{
 		document.getElementById("miners").style.visibility = "visible";
@@ -81,13 +106,17 @@ function updateAmounts()
 	document.getElementById( "gold" ).value = Math.round(gold);	
 	document.getElementById( "miners" ).value = Math.round(miner);	
 	document.getElementById( "foremans" ).value = Math.round(foreman);
+	document.getElementById( "ships" ).value = Math.round(ship);
 	
 	document.getElementById( "goldpt" ).value = Math.round(goldpt);	
 	document.getElementById( "minerspt" ).value = Math.round(minerpt);	
 	document.getElementById( "foremanspt" ).value = Math.round(foremanpt);
+	document.getElementById( "shipspt" ).value = Math.round(shippt);
 	
 	goldpt = miner * minermod;
 	minerpt = foreman * foremanmod;	
+	foremanpt = ship * shipmod;	
+
 }
 
 function tick()
@@ -95,8 +124,8 @@ function tick()
 	
 	gold += goldpt/100;	
 	progress += goldpt/100;
-	
 	miner += minerpt/100;
+	foreman += foremanpt/100;
 	
 	shipx = Math.floor(progress/levelcost * canvas.width);
 	
@@ -150,6 +179,21 @@ function buyforeman()
 
  }
  
+ function buyship()
+{
+	if (foreman >= shipcost)
+	{
+		foreman -= shipcost;
+		ship += 1;		
+		shipcost *= 1.1;
+		shipcost = Math.round(shipcost);
+		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " foremen";
+					
+		updateAmounts();		
+	}
+
+ }
+ 
 function upgrade(id)
 {
 	if (id == "gold" && gold >= goldupcost)
@@ -181,13 +225,28 @@ function upgrade(id)
 		document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + foremanmod + "\nCosts " + foremanupcost + " gold";
 	}
 	
+	if (id == "ship" && gold >= shipupcost)
+	{
+		gold -= shipupcost;
+		shipupcost *= 2;
+		shipmod *= 1.1;
+		shipmod = Math.floor(shipmod * 100)/100;
+
+		foremanpt = ship * shipmod;
+		document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + shipmod + "\nCosts " + shipupcost + " gold";
+	}
+	
 	updateAmounts();		
 }
 
 function drawShip()
 {
 	var img = document.getElementById("ship1");
-	ctx.drawImage(img, shipx, shipy, 50, 50);	
+	
+	for (i = 0; i < ship + 1; i++)
+	{
+		ctx.drawImage(img, shipx, shipy - (i*20), 50, 50);		
+	}
 }
 function drawScreen()
 {
