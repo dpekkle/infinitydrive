@@ -1,3 +1,12 @@
+var ranges = [
+  { divider: 1e18 , suffix: 'P' },
+  { divider: 1e15 , suffix: 'E' },
+  { divider: 1e12 , suffix: 'T' },
+  { divider: 1e9 , suffix: 'G' },
+  { divider: 1e6 , suffix: 'M' },
+  { divider: 1e3 , suffix: 'k' }
+];
+
 var gold = 0;
 var goldpt = 0;
 var goldmod = 1;
@@ -27,6 +36,7 @@ var goldbuycost = 100;
 
 var shipx;
 var shipy = 1;
+var shipdy = 5;
 
 // canvas element and "controller"
 var canvas = document.getElementById("canvas");
@@ -111,15 +121,15 @@ function checkVisibility()
 
 function updateAmounts()
 {
-	document.getElementById( "gold" ).value = Math.round(gold);	
-	document.getElementById( "miners" ).value = Math.round(miner);	
-	document.getElementById( "foremans" ).value = Math.round(foreman);
-	document.getElementById( "ships" ).value = Math.round(ship);
+	document.getElementById( "gold" ).value = formatNumber(gold);	
+	document.getElementById( "miners" ).value = formatNumber(miner);	
+	document.getElementById( "foremans" ).value = formatNumber(foreman);
+	document.getElementById( "ships" ).value = formatNumber(ship);
 	
-	document.getElementById( "goldpt" ).value = Math.floor(goldpt*100)/100;	
-	document.getElementById( "minerspt" ).value = Math.floor(minerpt*100)/100;	
-	document.getElementById( "foremanspt" ).value = Math.floor(foremanpt*100)/100;
-	document.getElementById( "shipspt" ).value = Math.floor(shippt*100)/100;
+	document.getElementById( "goldpt" ).value = formatNumber(goldpt);	
+	document.getElementById( "minerspt" ).value = formatNumber(minerpt);	
+	document.getElementById( "foremanspt" ).value = formatNumber(foremanpt);
+	document.getElementById( "shipspt" ).value = formatNumber(shippt);
 	
 	goldpt = miner * minermod;
 	minerpt = foreman * foremanmod;	
@@ -129,26 +139,26 @@ function updateAmounts()
 
 function updateCosts()
 {
-	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
+	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + formatNumber(minercost) + " gold";
 
 	
 	if (goldbuy == 1)
 	{
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " gold";
-		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " gold";
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(foremancost) + " gold";
+		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + formatNumber(shipcost) + " gold";
 	}
 	else
 	{
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
-		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " foreman";
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(foremancost) + " miners";
+		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + formatNumber(shipcost) + " foreman";
 	}
 	
 	//upgrade costs
-	document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + goldupcost + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + minermod + "\nCosts " + minerupcost + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + foremanmod + "\nCosts " + foremanupcost + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + shipmod + "\nCosts " + shipupcost + " gold";
+	document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(goldmod) + " gold";
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + formatNumber(goldupcost) + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + minermod + "\nCosts " + formatNumber(minerupcost) + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + foremanmod + "\nCosts " + formatNumber(foremanupcost) + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + shipmod + "\nCosts " + formatNumber(shipupcost) + " gold";
 
 	
 }
@@ -165,7 +175,7 @@ function tick()
 	
 	if (shipx > canvas.width - 50)
 	{
-		shipy++;
+		shipy += shipdy;
 		progress = 0;
 		levelcost *= 2;
 	}
@@ -181,7 +191,6 @@ function count()
 {
 	progress += 1*goldmod;
 	gold += 1*goldmod;
-	document.getElementById( "gold" ).value = Math.round(gold);	
 }
  
  
@@ -322,20 +331,44 @@ function upgrade(id)
 	updateAmounts();		
 }
 
+// number handling
+
+function round(x)
+{
+	var y = Math.floor(x);
+	return y;
+}
+
+function formatNumber(n) {
+  for (var i = 0; i < ranges.length; i++) 
+  {
+    if (n >= ranges[i].divider) 
+	{
+		var temp = (n / ranges[i].divider);
+		temp = Math.floor(temp*1000)/1000;
+		return temp.toString() + " " + ranges[i].suffix;
+    }
+  }
+  
+  var temp = Math.floor(n);
+  return temp.toString();
+}
+
+// canvas drawing
 function drawShip()
 {
 	var img = document.getElementById("ship1");
 	
-	for (i = 0; i < ship + 1; i++)
+	for (i = 0; i < Math.sqrt(ship) + 1; i++)
 	{
-		ctx.drawImage(img, shipx, shipy - (i*20), 50, 50);		
+		ctx.drawImage(img, shipx - (i*20), shipy , 50, 50);		
 	}
 }
 function drawScreen()
 {
 	drawShip();
 	
-	ctx.font = "30px Arial";
-	ctx.fillText("Level" + shipy,100,100);
+	ctx.font = "30px Times New Roman";
+	ctx.fillText("Level" + Math.ceil(shipy/shipdy),0,610);
 
 }
