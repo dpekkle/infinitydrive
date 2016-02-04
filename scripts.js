@@ -346,7 +346,15 @@ function formatNumber(n) {
 	{
 		var temp = (n / ranges[i].divider);
 		temp = Math.floor(temp*1000)/1000;
-		return temp.toString() + " " + ranges[i].suffix;
+		if ((temp * 1000)%10 == 0)
+		{
+			if ((temp * 100)%10 == 0)
+				return temp.toString() + "00 " + ranges[i].suffix;
+			else
+				return temp.toString() + "0 " + ranges[i].suffix;
+		}
+		else
+			return temp.toString() + " " + ranges[i].suffix;
     }
   }
   
