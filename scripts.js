@@ -344,13 +344,15 @@ function formatNumber(n) {
   {
     if (n >= ranges[i].divider) 
 	{
-		//25000
 		var temp = (n / ranges[i].divider);
 		temp = Math.floor(temp*1000)/1000;
 	
+	
+		//handling numbers like 25k
 		if (temp % 1 == 0)
 			return temp.toString() + " " + ranges[i].suffix;
 
+		//always display 3 digits after decimal points
 		else if ((temp * 1000)%10 == 0)
 		{
 			if ((temp * 100)%10 == 0)
