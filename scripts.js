@@ -1,10 +1,16 @@
 var ranges = [
-  { divider: 1e18 , suffix: 'P' },
+  { divider: 1e36 , suffix: 'L' },
+  { divider: 1e33 , suffix: 'K' },
+  { divider: 1e30 , suffix: 'J' },
+  { divider: 1e27 , suffix: 'I' },
+  { divider: 1e24 , suffix: 'H' },
+  { divider: 1e21 , suffix: 'G' },
+  { divider: 1e18 , suffix: 'F' },
   { divider: 1e15 , suffix: 'E' },
-  { divider: 1e12 , suffix: 'T' },
-  { divider: 1e9 , suffix: 'G' },
-  { divider: 1e6 , suffix: 'M' },
-  { divider: 1e3 , suffix: 'k' }
+  { divider: 1e12 , suffix: 'D' },
+  { divider: 1e9 , suffix: 'C' },
+  { divider: 1e6 , suffix: 'B' },
+  { divider: 1e3 , suffix: 'A' }
 ];
 
 var gold = 0;
@@ -159,9 +165,9 @@ function updateCosts()
 	//upgrade costs
 	document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(goldmod) + " gold";
 	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + formatNumber(goldupcost) + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + minermod + "\nCosts " + formatNumber(minerupcost) + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + foremanmod + "\nCosts " + formatNumber(foremanupcost) + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + shipmod + "\nCosts " + formatNumber(shipupcost) + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + formatNumber(minermod) + "\nCosts " + formatNumber(minerupcost) + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + formatNumber(foremanmod) + "\nCosts " + formatNumber(foremanupcost) + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + formatNumber(shipmod) + "\nCosts " + formatNumber(shipupcost) + " gold";
 
 	
 }
