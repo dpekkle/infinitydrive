@@ -44,6 +44,8 @@ var ctx = canvas.getContext("2d");
 
 var progress = 0;
 var levelcost = 720;
+var it = 0;
+var longtick = 10;
 
 //window.onload = drawShip;
 
@@ -53,6 +55,7 @@ var mainLoop = setInterval(tick, 10);
 function initialiseCosts()
 {
 	//set first two elements to be visible
+	document.getElementById( "goldbutton").style.backgroundColor = "lightgray";
 	document.getElementById( "goldbutton").style.visibility = "visible";
 	document.getElementById( "gold").style.visibility = "visible";
 
@@ -163,6 +166,60 @@ function updateCosts()
 	
 }
 
+function grayButtons()
+{
+	//units	
+	if (gold >= minercost)
+		document.getElementById( "minerbutton").style.backgroundColor = "lightgray"
+	else
+		document.getElementById( "minerbutton").style.backgroundColor = "gray"
+	
+	if (goldbuy == 1)
+	{
+		if (miner >= foremancost)
+			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray"
+		else
+			document.getElementById( "foremanbutton").style.backgroundColor = "gray"
+		
+		if (foreman >= shipcost)
+			document.getElementById( "shipbutton").style.backgroundColor = "lightgray"
+		else
+			document.getElementById( "shipbutton").style.backgroundColor = "gray"
+	}
+	else
+	{		
+		if (gold >= foremancost)
+			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray"
+		else
+			document.getElementById( "foremanbutton").style.backgroundColor = "gray"
+		
+		if (gold >= shipcost)
+			document.getElementById( "shipbutton").style.backgroundColor = "lightgray"
+		else
+			document.getElementById( "shipbutton").style.backgroundColor = "gray"
+	}
+	
+	//upgrades	
+	if (gold >= goldupcost)
+		document.getElementById( "goldupgradebutton").style.backgroundColor = "lightgray"
+	else
+		document.getElementById( "goldupgradebutton").style.backgroundColor = "gray"
+
+	if (gold >= minerupcost)
+		document.getElementById( "minerupgradebutton").style.backgroundColor = "lightgray"
+	else
+		document.getElementById( "minerupgradebutton").style.backgroundColor = "gray"
+
+	if (gold >= foremanupcost)
+		document.getElementById( "foremanupgradebutton").style.backgroundColor = "lightgray"
+	else
+		document.getElementById( "foremanupgradebutton").style.backgroundColor = "gray"
+	if (gold >= shipupcost)
+		document.getElementById( "shipupgradebutton").style.backgroundColor = "lightgray"
+	else
+		document.getElementById( "shipupgradebutton").style.backgroundColor = "gray"
+}
+
 function tick()
 {
 	
@@ -180,6 +237,18 @@ function tick()
 		levelcost *= 2;
 	}
 
+	if (it < longtick)
+	{
+		it++;
+		
+	}
+	
+	if (it == longtick)
+	{
+		it = 0;
+		grayButtons();
+	}
+	
 	updateAmounts();
 	updateCosts();	
 	checkVisibility();
