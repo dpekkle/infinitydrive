@@ -472,14 +472,17 @@ function drawExtras()
 
 function drawShip()
 {	
-	for (i = 0; i < Math.sqrt(ship) + 1; i++)
+	if (level % 2 == 1)
 	{
-		if (level % 2 == 1)
-			ctx.drawImage(img, shipx - (i*20), shipy , 50, 50);	
-		else
-			ctx.drawImage(img2, 700 - (shipx - (i*20)), shipy , 50, 50);	
-			
+		for (i = Math.sqrt(ship) + 1; i > 0 ; i--)
+				ctx.drawImage(img, shipx + (i*20), shipy , 50, 50);				
 	}
+	else
+	{
+		for (i = 0; i < Math.sqrt(ship) + 1; i++)
+			ctx.drawImage(img2, 700 - (shipx - (i*20)), shipy , 50, 50);	
+	}
+
 }
 function drawScreen()
 {
