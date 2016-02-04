@@ -1,3 +1,5 @@
+{
+
 var ranges = [
   { divider: 1e36 , suffix: 'L' },
   { divider: 1e33 , suffix: 'K' },
@@ -44,19 +46,24 @@ var shipx;
 var shipy = 1;
 var shipdy = 5;
 
+var img = document.getElementById("ship1");
+
+var img2 = document.getElementById("ship1flip");
+
+
 // canvas element and "controller"
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
+var level = 1;
 var progress = 0;
 var levelcost = 720;
 var it = 0;
-var longtick = 10;
-
-//window.onload = drawShip;
+var longtick = 30;
 
 initialiseCosts();
 var mainLoop = setInterval(tick, 10);
+}
 	
 function initialiseCosts()
 {
@@ -181,18 +188,6 @@ function grayButtons()
 		document.getElementById( "minerbutton").style.backgroundColor = "gray"
 	
 	if (goldbuy == 1)
-	{
-		if (miner >= foremancost)
-			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray"
-		else
-			document.getElementById( "foremanbutton").style.backgroundColor = "gray"
-		
-		if (foreman >= shipcost)
-			document.getElementById( "shipbutton").style.backgroundColor = "lightgray"
-		else
-			document.getElementById( "shipbutton").style.backgroundColor = "gray"
-	}
-	else
 	{		
 		if (gold >= foremancost)
 			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray"
@@ -203,6 +198,19 @@ function grayButtons()
 			document.getElementById( "shipbutton").style.backgroundColor = "lightgray"
 		else
 			document.getElementById( "shipbutton").style.backgroundColor = "gray"
+	}
+	else
+	{
+		if (miner >= foremancost)
+			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray"
+		else
+			document.getElementById( "foremanbutton").style.backgroundColor = "gray"
+		
+		if (foreman >= shipcost)
+			document.getElementById( "shipbutton").style.backgroundColor = "lightgray"
+		else
+			document.getElementById( "shipbutton").style.backgroundColor = "gray"
+
 	}
 	
 	//upgrades	
@@ -253,11 +261,11 @@ function tick()
 	{
 		it = 0;
 		grayButtons();
+		checkVisibility();
 	}
 	
 	updateAmounts();
 	updateCosts();	
-	checkVisibility();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawScreen();
 
@@ -446,20 +454,36 @@ function formatNumber(n) {
 }
 
 // canvas drawing
-function drawShip()
+
+function drawExtras()
 {
-	var img = document.getElementById("ship1");
+		
+	level = Math.ceil(shipy/shipdy);
 	
+	ctx.font = "30px Times New Roman";
+	ctx.fillText("Level" + level,0,610);
+	
+	if (level > 50)
+	{
+		ctx.font = "36px Times New Roman";
+		ctx.fillText("You did it!",450,50);		
+	}
+}
+
+function drawShip()
+{	
 	for (i = 0; i < Math.sqrt(ship) + 1; i++)
 	{
-		ctx.drawImage(img, shipx - (i*20), shipy , 50, 50);		
+		if (level % 2 == 1)
+			ctx.drawImage(img, shipx - (i*20), shipy , 50, 50);	
+		else
+			ctx.drawImage(img2, 700 - (shipx - (i*20)), shipy , 50, 50);	
+			
 	}
 }
 function drawScreen()
 {
+	drawExtras();
 	drawShip();
-	
-	ctx.font = "30px Times New Roman";
-	ctx.fillText("Level" + Math.ceil(shipy/shipdy),0,610);
 
 }
