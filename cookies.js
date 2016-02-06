@@ -1,3 +1,9 @@
+function addCookie(prev, name, val)
+{
+	prev += (name + "=" + val + ";");
+	return d;
+}
+
 function setCookie(value) 
 {
     var d = new Date();

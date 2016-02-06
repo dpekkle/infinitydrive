@@ -576,15 +576,17 @@ function saveGame()
 	level_text.text = "Level " + level + "    saved";
 	clearCookie();
 	
+	var cookieString = "";
+	cookieString = setCookie(cookieString, "gold", gold);
+	cookieString = setCookie(cookieString, "goldmod", goldmod);
+	cookieString = setCookie(cookieString, "miner", miner);
+	cookieString = setCookie(cookieString, "minermod", minermod);
+	cookieString = setCookie(cookieString, "foreman", foreman);
+	cookieString = setCookie(cookieString, "foremanmod", foremanmod);
+	cookieString = setCookie(cookieString, "ship", ship);
+	cookieString = setCookie(cookieString, "shipmod", shipmod);
 	
-	setCookie("gold", gold);
-	setCookie("goldmod", goldmod);
-	setCookie("miner", miner);
-	setCookie("minermod", minermod);
-	setCookie("foreman", foreman);
-	setCookie("foremanmod", foremanmod);
-	setCookie("ship", ship);
-	setCookie("shipmod", shipmod);
+	setCookie(cookieString);
 }
 
 function clearCookie()
