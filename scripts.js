@@ -94,9 +94,10 @@ initialiseCosts();
 
 var delay = (1000 / 30);
 var now, before = new Date();
+var i = 0;
 
 setInterval( function() 
-{
+{	
     now = new Date();
     var elapsedTime = (now.getTime() - before.getTime());
     if(elapsedTime > delay)
@@ -293,8 +294,11 @@ function tick(display)
 
 	if (display == true)
 	{		
+		saveGame();
+
 		if (progress/levelcost >= 1)
 		{
+			level_text.text = "Level " + level;
 			level += 1;
 			progress = 0;
 			levelcost *= 2;
@@ -537,7 +541,6 @@ function drawExtras()
 		droneArray[i].rotation -= droneArray[i].speed;
 	
 	//text
-	level_text.text = "Level " + level;
 		
 	if (level >= 50)
 	{
@@ -555,4 +558,26 @@ function drawScreen()
 	drawExtras();
 	drawShip();
 	canvas.redraw();
+}
+
+//loading game
+
+function loadGame()
+{
+	alert("you had " + getCookie("gold") + " gold");
+}
+
+
+// saving game
+function saveGame()
+{
+	level_text.text = "Level " + level + "    saved";
+	setCookie("gold", gold);
+	setCookie("goldmod", goldmod);
+	setCookie("miner", miner);
+	setCookie("minermod", minermod);
+	setCookie("foreman", foreman);
+	setCookie("foremanmod", foremanmod);
+	setCookie("ship", ship);
+	setCookie("shipmod", shipmod);
 }
