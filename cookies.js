@@ -1,7 +1,7 @@
 function addCookie(prev, name, val)
 {
 	prev += (name + "=" + val + ";");
-	return d;
+	return prev;
 }
 
 function setCookie(value) 
