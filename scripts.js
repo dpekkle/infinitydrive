@@ -145,14 +145,14 @@ function initialiseCosts()
 
 	//give values to the buttons based off of javascript variables
 	document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
-	document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
-	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
-	document.getElementById( "shipbutton").value = "Drones  " + "Costs " + shipcost + " foremen";
+	document.getElementById( "foremanbutton").value = "Foremans  " + " Costs " + foremancost + " miners";
+	document.getElementById( "minerbutton").value = "Miners  " + " Costs " + minercost + " gold";
+	document.getElementById( "shipbutton").value = "Drones  " + " Costs " + shipcost + " foremen";
 
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + "Costs " + goldupcost + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + "Costs " + minerupcost + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + "Costs " + foremanupcost + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + "Costs " + shipupcost + " gold";
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + " Costs " + goldupcost + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + " Costs " + minerupcost + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + foremanupcost + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + shipupcost + " gold";
 
 }
 
