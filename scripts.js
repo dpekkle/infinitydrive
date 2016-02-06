@@ -244,10 +244,10 @@ function updateCosts()
 	
 	//upgrade costs
 	document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(goldmod) + " gold";
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + formatNumber(goldupcost) + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + formatNumber(minermod) + "\nCosts " + formatNumber(minerupcost) + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + formatNumber(foremanmod) + "\nCosts " + formatNumber(foremanupcost) + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + formatNumber(shipmod) + "\nCosts " + formatNumber(shipupcost) + " gold";
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  " Costs " + formatNumber(goldupcost) + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners " + formatNumber(minermod) + " Costs " + formatNumber(minerupcost) + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen " + formatNumber(foremanmod) + " Costs " + formatNumber(foremanupcost) + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Drones " + formatNumber(shipmod) + " Costs " + formatNumber(shipupcost) + " gold";
 
 	
 }
