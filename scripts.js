@@ -20,7 +20,7 @@ var goldpt = 0;
 var goldmod = 1;
 var goldupcost = 10;
  
-var miner = 1;
+var miner = 0;
 var minercost = 20;
 var minerpt = 0;
 var minermod = 1;
@@ -45,7 +45,7 @@ var goldbuycost = 100;
 var level = 1;
 var progress = 0;
 var levelcost = 720;
-var it = 0;
+var it = 0, it2 = 0;
 var longtick = 5;
 
 var clicktype = "gold";
@@ -81,16 +81,27 @@ var drone = canvas.display.image(
 
 var level_text = canvas.display.text({
 	x: 20,
-	y: 600,
-	origin: { x: "left", y: "top" },
-	font: "bold 30px sans-serif",
+	y: 620,
+	origin: { x: "left", y: "bottom" },
+	font: "bold 24px sans-serif",
 	text: "Level",
+	fill: "#000"
+});
+
+var afk_text = canvas.display.text({
+	x: 700,
+	y: 620,
+	origin: { x: "right", y: "bottom" },
+	font: "bold 24px sans-serif",
+	align: "center",
+	text: "",
 	fill: "#000"
 });
 
 
 canvas.addChild(image1);
 canvas.addChild(level_text);
+canvas.addChild(afk_text);
 
 
 //loadGame();
@@ -109,6 +120,11 @@ setInterval( function()
     if(elapsedTime > delay)
 	{
         //Recover the motion lost while inactive.
+		if (elapsedTime/delay > 5)
+		{
+			afk_text.text = Math.floor(elapsedTime/delay) + " ticks\nwhile away";		
+			it2 = 0; //gives it about 6 seconds
+		}
 		for (var i = 0; i < elapsedTime/delay; i++)
 			tick(false); //without updates to canvas etc...
 	}	
@@ -337,6 +353,12 @@ function tick(display)
 			grayButtons();
 			checkVisibility();
 			updateCosts();
+			it2++;
+		}
+		if (it2 == 30)
+		{
+			it2 = 0;
+			afk_text.text = "";
 		}
 		
 		updateAmounts();
