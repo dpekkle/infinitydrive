@@ -89,7 +89,7 @@ canvas.addChild(image1);
 canvas.addChild(level_text);
 
 
-loadGame();
+//loadGame();
 initialiseCosts();
 
 //main game loop, using date based method
@@ -297,7 +297,10 @@ function tick(display)
 	if (display == true)
 	{		
 		//saveGame();
+		level_text.text = "Level " + level;
 
+		
+		
 		if (progress/levelcost >= 1)
 		{
 			level_text.text = "Level " + level;
@@ -562,11 +565,9 @@ function drawScreen()
 	canvas.redraw();
 }
 
-
-/*
-
 //loading game
 
+/*
 function loadGame()
 {
 	alert("Gold: " + getCookie("gold") + "\n\nCookie: " + document.cookie);
@@ -577,19 +578,30 @@ function loadGame()
 function saveGame()
 {
 	level_text.text = "Level " + level + "    saved";
+
 	clearCookie();
 	
 	var cookieString = "";
-	//cookieString = setCookie(cookieString, "gold", gold);
-	//cookieString = setCookie(cookieString, "goldmod", goldmod);
-	//cookieString = setCookie(cookieString, "miner", miner);
-	//cookieString = setCookie(cookieString, "minermod", minermod);
-	//cookieString = setCookie(cookieString, "foreman", foreman);
-	//cookieString = setCookie(cookieString, "foremanmod", foremanmod);
-	//cookieString = setCookie(cookieString, "ship", ship);
-	//cookieString = setCookie(cookieString, "shipmod", shipmod);
+	cookieString = setCookie(cookieString, "gold", gold);
+	cookieString = setCookie(cookieString, "goldmod", goldmod);
+	cookieString = setCookie(cookieString, "miner", miner);
+	cookieString = setCookie(cookieString, "minermod", minermod);
+	cookieString = setCookie(cookieString, "foreman", foreman);
+	cookieString = setCookie(cookieString, "foremanmod", foremanmod);
+	cookieString = setCookie(cookieString, "ship", ship);
+	cookieString = setCookie(cookieString, "shipmod", shipmod);
 	
-	//setCookie(cookieString);
+	document.cookie = cookieString;
 }
 
-*/
+function clearCookie()
+{
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+    	var cookie = cookies[i];
+    	var eqPos = cookie.indexOf("=");
+    	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    	document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+}*/
