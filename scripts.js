@@ -20,7 +20,7 @@ var goldpt = 0;
 var goldmod = 1;
 var goldupcost = 10;
  
-var miner = 0;
+var miner = 1;
 var minercost = 20;
 var minerpt = 0;
 var minermod = 1;
@@ -46,7 +46,11 @@ var level = 1;
 var progress = 0;
 var levelcost = 720;
 var it = 0;
-var longtick = 30;
+var longtick = 5;
+
+var clicktype = "gold";
+var minerclickcost = 10000000;
+
 
 //initialise canvas
 var canvas = oCanvas.create({canvas: "canvas"});
@@ -184,6 +188,11 @@ function checkVisibility()
 	{
 		document.getElementById("goldbuy").style.visibility = "visible";
 	}
+	
+	if (foreman >= minerclickcost * 0.5 && clicktype == "gold")
+	{
+		document.getElementById("minerclick").style.visibility = "visible";
+	}
 }
 
 function updateAmounts()
@@ -280,6 +289,16 @@ function grayButtons()
 		document.getElementById( "shipupgradebutton").style.backgroundColor = "lightgray"
 	else
 		document.getElementById( "shipupgradebutton").style.backgroundColor = "gray"
+	
+	if (goldbuy == 0 && ship > goldbuycost)
+		document.getElementById( "goldbuy").style.backgroundColor = "lightgray";		
+	else
+		document.getElementById( "goldbuy").style.backgroundColor = "gray";	
+	
+	if (foreman >= minerclickcost)
+		document.getElementById( "minerclick").style.backgroundColor = "lightgray";		
+	else
+		document.getElementById( "minerclick").style.backgroundColor = "gray";	
 }
 
 function tick(display)
@@ -319,20 +338,27 @@ function tick(display)
 			it = 0;
 			grayButtons();
 			checkVisibility();
+			updateCosts();
 		}
 		
 		updateAmounts();
-		updateCosts();	
 				
 		drawScreen();
 	}
 }
+
 function count() 
 {
-	progress += 1*goldmod;
-	gold += 1*goldmod;
-}
- 
+	if (clicktype == "gold")
+	{
+		progress += 1*goldmod;
+		gold += 1*goldmod;
+	}
+	else if (clicktype == "miner")
+	{
+		miner += 1*goldmod*minermod;
+	}
+} 
  
  function buyunit(id)
  {
@@ -493,6 +519,12 @@ function upgrade(id)
 		}
 	}
 	
+	if (id == "minerclick")
+	{
+		clicktype = "miner";
+		document.getElementById( "minerclick").style.visibility = "hidden";	
+	}	
+	
 	updateAmounts();		
 }
 
@@ -531,7 +563,10 @@ function formatNumber(n) {
     }
   }
   
-  var temp = Math.floor(n);
+  var temp = Math.floor(n*10)/10;
+  if ((temp * 10) % 10 == 0)
+	  return temp.toString() + ".0";
+  
   return temp.toString();
 }
 
