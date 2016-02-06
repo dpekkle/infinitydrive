@@ -218,10 +218,10 @@ function updateAmounts()
 	document.getElementById( "foremans" ).value = formatNumber(foreman);
 	document.getElementById( "ships" ).value = formatNumber(ship);
 	
-	document.getElementById( "goldpt" ).value = formatNumber(goldpt);	
-	document.getElementById( "minerspt" ).value = formatNumber(minerpt);	
-	document.getElementById( "foremanspt" ).value = formatNumber(foremanpt);
-	document.getElementById( "shipspt" ).value = formatNumber(shippt);
+	document.getElementById( "goldpt" ).value = formatNumber(goldpt) + " /sec";	
+	document.getElementById( "minerspt" ).value = formatNumber(minerpt) + " /sec";	
+	document.getElementById( "foremanspt" ).value = formatNumber(foremanpt) + " /sec";
+	document.getElementById( "shipspt" ).value = formatNumber(shippt) + " /sec";
 	
 	
 }
