@@ -36,7 +36,7 @@ var ship = 0;
 var shipcost = 10;
 var shippt = 0;
 var shipmod = 2;
-var shipupcost = 1000000;
+var shipupcost = 5000000;
 
 //upgrades
 var goldbuy = 0;
@@ -313,20 +313,18 @@ function tick(display)
 	minerpt = foreman * foremanmod;	
 	foremanpt = ship * shipmod;	
 
+	if (progress/levelcost >= 1)
+	{
+		level_text.text = "Level " + level;
+		level += 1;
+		progress = 0;
+		levelcost *= 2;
+	}
+
 	if (display == true)
 	{		
 		//saveGame();
-		level_text.text = "Level " + level;
-
 		
-		
-		if (progress/levelcost >= 1)
-		{
-			level_text.text = "Level " + level;
-			level += 1;
-			progress = 0;
-			levelcost *= 2;
-		}
 
 		if (it < longtick)
 		{
@@ -485,7 +483,7 @@ function upgrade(id)
 	if (id == "ship" && gold >= shipupcost)
 	{
 		gold -= shipupcost;
-		shipupcost *= 3;
+		shipupcost *= 2.5;
 		shipmod *= 1.3;
 		shipmod = Math.floor(shipmod * 100)/100;
 
