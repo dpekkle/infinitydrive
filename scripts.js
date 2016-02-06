@@ -574,12 +574,15 @@ function loadGame()
 function saveGame()
 {
 	level_text.text = "Level " + level + "    saved";
-	setCookie("gold", gold);
-	setCookie("goldmod", goldmod);
-	setCookie("miner", miner);
-	setCookie("minermod", minermod);
-	setCookie("foreman", foreman);
-	setCookie("foremanmod", foremanmod);
-	setCookie("ship", ship);
-	setCookie("shipmod", shipmod);
+	
+	var cookiestring = "gold=" + gold + ";goldmod=" + goldmod + ";";
+	
+	//setCookie("gold", gold);
+	//setCookie("goldmod", goldmod);
+	//setCookie("miner", miner);
+	//setCookie("minermod", minermod);
+	//setCookie("foreman", foreman);
+	//setCookie("foremanmod", foremanmod);
+	//setCookie("ship", ship);
+	//setCookie("shipmod", shipmod);
 }

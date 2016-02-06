@@ -1,10 +1,10 @@
-function setCookie(cname, cvalue) 
+function setCookie(value) 
 {
-    //var d = new Date();
-    //d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    //var expires = "expires="+d.toUTCString();
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
     
-	document.cookie += cname + "=" + cvalue + "; ";
+	document.cookie = value;
 }
 
 function getCookie(cname) 
@@ -19,6 +19,7 @@ function getCookie(cname)
     return "";
 }
 
+/*
 function checkCookie() 
 {
     var user = getCookie("username");
@@ -30,4 +31,4 @@ function checkCookie()
             setCookie("username", user);
         }
     }
-}
+}*/
