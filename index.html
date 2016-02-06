@@ -104,7 +104,7 @@
 		<input id = "minerupgradebutton" type ="button" value = "Miners        " onclick = "upgrade('miner')" class="upgrade"/>    
 		<input id = "foremanupgradebutton" type ="button" value = "Foremen        " onclick = "upgrade('foreman')" class="upgrade"/>
 		<input id = "shipupgradebutton" type ="button" value = "Ships        " onclick = "upgrade('ship')" class="upgrade"/>
-		<input id = "goldbuy" type = "button" value = "Buy units with gold, costs 100 ships" onclick = "upgrade('goldbuy')" class = "upgrade"/>
+		<input id = "goldbuy" type = "button" value = "Buy units with gold, costs 100 drones" onclick = "upgrade('goldbuy')" class = "upgrade"/>
 
 	</div>
 	<div class="rate"/>
@@ -116,11 +116,14 @@
 	</div>
 	
 	<!-- Game window -->
+	
 	<div class = "window"/>
 	<canvas id="canvas" width="720" height="640" style="background-color:#559"></canvas>
 	</div>
-	
-	<script src="scripts.js"></script>
+
+	<script defer src="cookies.js"></script>
+	<script defer src="ocanvas-2.8.3.js"></script>
+	<script defer src="scripts.js"></script>
 
 </body>
 </html>

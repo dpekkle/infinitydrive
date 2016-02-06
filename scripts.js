@@ -42,29 +42,77 @@ var shipupcost = 1000000;
 var goldbuy = 0;
 var goldbuycost = 100;
 
-var shipx;
-var shipy = 1;
-var shipdy = 5;
-
-var img = document.getElementById("ship1");
-
-var img2 = document.getElementById("ship1flip");
-
-
-// canvas element and "controller"
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-
 var level = 1;
 var progress = 0;
 var levelcost = 720;
 var it = 0;
 var longtick = 30;
 
-initialiseCosts();
-var mainLoop = setInterval(tick, 10);
-}
+//initialise canvas
+var canvas = oCanvas.create({canvas: "canvas"});
 	
+var image1 = canvas.display.image(
+{
+	x:30, 
+	y:30, 
+	origin: {x:"center", y:"center"},
+	image: "defaultship.png",
+	height:50,
+	width:50
+});
+
+var droneArray = [];
+
+var drone = canvas.display.image(
+{
+	x:0, 
+	y:0, 
+	origin: {x:15, y:70},
+	image: "defaultship180.png",
+	height:30,
+	width:30,
+	speed: 1
+	
+});
+
+var level_text = canvas.display.text({
+	x: 20,
+	y: 600,
+	origin: { x: "left", y: "top" },
+	font: "bold 30px sans-serif",
+	text: "Level",
+	fill: "#000"
+});
+
+
+canvas.addChild(image1);
+canvas.addChild(level_text);
+
+initialiseCosts();
+
+//main game loop, using date based method
+
+var delay = (1000 / 30);
+var now, before = new Date();
+
+setInterval( function() 
+{
+    now = new Date();
+    var elapsedTime = (now.getTime() - before.getTime());
+    if(elapsedTime > delay)
+	{
+        //Recover the motion lost while inactive.
+		for (var i = 0; i < elapsedTime/delay; i++)
+			tick(false); //without updates to canvas etc...
+	}	
+	else
+		tick(true);
+	
+    before = new Date();    
+}, delay);		
+
+}
+
 function initialiseCosts()
 {
 	//set first two elements to be visible
@@ -76,12 +124,12 @@ function initialiseCosts()
 	document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
 	document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + foremancost + " miners";
 	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + minercost + " gold";
-	document.getElementById( "shipbutton").value = "Ships  " + "Costs " + shipcost + " foremen";
+	document.getElementById( "shipbutton").value = "Drones  " + "Costs " + shipcost + " foremen";
 
 	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + "Costs " + goldupcost + " gold";
 	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + "Costs " + minerupcost + " gold";
 	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + "Costs " + foremanupcost + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + "Costs " + shipupcost + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + "Costs " + shipupcost + " gold";
 
 }
 
@@ -147,9 +195,6 @@ function updateAmounts()
 	document.getElementById( "foremanspt" ).value = formatNumber(foremanpt);
 	document.getElementById( "shipspt" ).value = formatNumber(shippt);
 	
-	goldpt = miner * minermod;
-	minerpt = foreman * foremanmod;	
-	foremanpt = ship * shipmod;	
 	
 }
 
@@ -166,7 +211,7 @@ function updateCosts()
 	else
 	{
 		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(foremancost) + " miners";
-		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + formatNumber(shipcost) + " foreman";
+		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(shipcost) + " foreman";
 	}
 	
 	//upgrade costs
@@ -174,7 +219,7 @@ function updateCosts()
 	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  "\nCosts " + formatNumber(goldupcost) + " gold";
 	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + formatNumber(minermod) + "\nCosts " + formatNumber(minerupcost) + " gold";
 	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + formatNumber(foremanmod) + "\nCosts " + formatNumber(foremanupcost) + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Ships  " + formatNumber(shipmod) + "\nCosts " + formatNumber(shipupcost) + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + formatNumber(shipmod) + "\nCosts " + formatNumber(shipupcost) + " gold";
 
 	
 }
@@ -234,41 +279,44 @@ function grayButtons()
 		document.getElementById( "shipupgradebutton").style.backgroundColor = "gray"
 }
 
-function tick()
+function tick(display)
 {
 	
-	gold += goldpt/100;	
-	progress += goldpt/100;
-	miner += minerpt/100;
-	foreman += foremanpt/100;
+	gold += goldpt/50;	
+	progress += goldpt/50;
+	miner += minerpt/50;
+	foreman += foremanpt/50;
 	
-	shipx = Math.floor(progress/levelcost * canvas.width);
-	
-	if (shipx > canvas.width - 50)
-	{
-		shipy += shipdy;
-		progress = 0;
-		levelcost *= 2;
-	}
+	goldpt = miner * minermod;
+	minerpt = foreman * foremanmod;	
+	foremanpt = ship * shipmod;	
 
-	if (it < longtick)
-	{
-		it++;
+	if (display == true)
+	{		
+		if (progress/levelcost >= 1)
+		{
+			level += 1;
+			progress = 0;
+			levelcost *= 2;
+		}
+
+		if (it < longtick)
+		{
+			it++;
+			
+		}
+		if (it == longtick)
+		{
+			it = 0;
+			grayButtons();
+			checkVisibility();
+		}
 		
+		updateAmounts();
+		updateCosts();	
+				
+		drawScreen();
 	}
-	
-	if (it == longtick)
-	{
-		it = 0;
-		grayButtons();
-		checkVisibility();
-	}
-	
-	updateAmounts();
-	updateCosts();	
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	drawScreen();
-
 }
 function count() 
 {
@@ -338,7 +386,32 @@ function buyforeman(goldbuy)
 		else
 			foreman -= shipcost;
 		
-		ship += 1;		
+		var prevDrone = Math.floor(Math.log(ship));	
+		ship += 1;			
+		var newDrone = Math.floor(Math.log(ship));
+		
+		if (newDrone > prevDrone)
+		{
+			//add new drone
+			var newdrone = drone.clone();
+			
+			image1.addChild(newdrone);
+			droneArray.push(newdrone);
+			
+			for (var i = 0; i < droneArray.length; i++)
+			{
+				droneArray[i].rotation = i*360/droneArray.length;			
+			}
+			
+			//orbit more drones around drones, works with ellipses but non-centered images make it tricky
+			/*
+			var newdrone2 = drone.clone({x: newdrone.origin.x * -1, y: newdrone.origin.y * -1, origin: {x:0, y: 60}});
+			newdrone.addChild(newdrone2);
+			droneArray.push(newdrone2);
+			*/
+		}
+		
+		
 		shipcost *= 1.1;
 		shipcost = Math.round(shipcost);
 						
@@ -455,15 +528,18 @@ function formatNumber(n) {
 
 // canvas drawing
 
+//ocanvas
+
 function drawExtras()
-{
+{	
+	//move drones
+	for (var i = 0; i < droneArray.length; i++)
+		droneArray[i].rotation -= droneArray[i].speed;
+	
+	//text
+	level_text.text = "Level " + level;
 		
-	level = Math.ceil(shipy/shipdy);
-	
-	ctx.font = "30px Times New Roman";
-	ctx.fillText("Level" + level,0,610);
-	
-	if (level > 50)
+	if (level >= 50)
 	{
 		ctx.font = "36px Times New Roman";
 		ctx.fillText("You did it!",450,50);		
@@ -472,21 +548,11 @@ function drawExtras()
 
 function drawShip()
 {	
-	if (level % 2 == 1)
-	{
-		for (i = Math.sqrt(ship) + 1; i > 0 ; i--)
-				ctx.drawImage(img, shipx + (i*20), shipy , 50, 50);				
-	}
-	else
-	{
-		for (i = 0; i < Math.sqrt(ship) + 1; i++)
-			ctx.drawImage(img2, 700 - (shipx - (i*20)), shipy , 50, 50);	
-	}
-
+	image1.moveTo(-40 + 840*progress/levelcost, 30 + level*5);
 }
 function drawScreen()
 {
 	drawExtras();
 	drawShip();
-
+	canvas.redraw();
 }
