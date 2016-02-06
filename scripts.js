@@ -566,7 +566,7 @@ function drawScreen()
 
 function loadGame()
 {
-	alert("Cookie: " + document.cookie);
+	alert("Gold: " + getCookie("gold") + "\n\nCookie: " + document.cookie);
 }
 
 
@@ -575,16 +575,16 @@ function saveGame()
 {
 	level_text.text = "Level " + level + "    saved";
 	clearCookie();
-	var cookiestring = "gold=" + gold + ";goldmod=" + goldmod + ";";
 	
-	//setCookie("gold", gold);
-	//setCookie("goldmod", goldmod);
-	//setCookie("miner", miner);
-	//setCookie("minermod", minermod);
-	//setCookie("foreman", foreman);
-	//setCookie("foremanmod", foremanmod);
-	//setCookie("ship", ship);
-	//setCookie("shipmod", shipmod);
+	
+	setCookie("gold", gold);
+	setCookie("goldmod", goldmod);
+	setCookie("miner", miner);
+	setCookie("minermod", minermod);
+	setCookie("foreman", foreman);
+	setCookie("foremanmod", foremanmod);
+	setCookie("ship", ship);
+	setCookie("shipmod", shipmod);
 }
 
 function clearCookie()
