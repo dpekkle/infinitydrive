@@ -88,6 +88,8 @@ var level_text = canvas.display.text({
 canvas.addChild(image1);
 canvas.addChild(level_text);
 
+
+loadGame();
 initialiseCosts();
 
 //main game loop, using date based method
