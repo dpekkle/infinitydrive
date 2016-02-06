@@ -566,7 +566,7 @@ function drawScreen()
 
 function loadGame()
 {
-	alert("you had " + getCookie("gold") + " gold");
+	alert("Cookie: " + document.cookie);
 }
 
 
