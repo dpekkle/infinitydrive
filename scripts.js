@@ -578,13 +578,13 @@ function saveGame()
 	
 	var cookieString = "";
 	cookieString = setCookie(cookieString, "gold", gold);
-	cookieString = setCookie(cookieString, "goldmod", goldmod);
-	cookieString = setCookie(cookieString, "miner", miner);
-	cookieString = setCookie(cookieString, "minermod", minermod);
-	cookieString = setCookie(cookieString, "foreman", foreman);
-	cookieString = setCookie(cookieString, "foremanmod", foremanmod);
-	cookieString = setCookie(cookieString, "ship", ship);
-	cookieString = setCookie(cookieString, "shipmod", shipmod);
+	//cookieString = setCookie(cookieString, "goldmod", goldmod);
+	//cookieString = setCookie(cookieString, "miner", miner);
+	//cookieString = setCookie(cookieString, "minermod", minermod);
+	//cookieString = setCookie(cookieString, "foreman", foreman);
+	//cookieString = setCookie(cookieString, "foremanmod", foremanmod);
+	//cookieString = setCookie(cookieString, "ship", ship);
+	//cookieString = setCookie(cookieString, "shipmod", shipmod);
 	
 	setCookie(cookieString);
 }
