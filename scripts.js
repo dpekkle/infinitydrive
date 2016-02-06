@@ -296,7 +296,7 @@ function tick(display)
 
 	if (display == true)
 	{		
-		saveGame();
+		//saveGame();
 
 		if (progress/levelcost >= 1)
 		{
@@ -562,6 +562,9 @@ function drawScreen()
 	canvas.redraw();
 }
 
+
+/*
+
 //loading game
 
 function loadGame()
@@ -577,7 +580,7 @@ function saveGame()
 	clearCookie();
 	
 	var cookieString = "";
-	cookieString = setCookie(cookieString, "gold", gold);
+	//cookieString = setCookie(cookieString, "gold", gold);
 	//cookieString = setCookie(cookieString, "goldmod", goldmod);
 	//cookieString = setCookie(cookieString, "miner", miner);
 	//cookieString = setCookie(cookieString, "minermod", minermod);
@@ -586,17 +589,7 @@ function saveGame()
 	//cookieString = setCookie(cookieString, "ship", ship);
 	//cookieString = setCookie(cookieString, "shipmod", shipmod);
 	
-	setCookie(cookieString);
+	//setCookie(cookieString);
 }
 
-function clearCookie()
-{
-    var cookies = document.cookie.split(";");
-
-    for (var i = 0; i < cookies.length; i++) {
-    	var cookie = cookies[i];
-    	var eqPos = cookie.indexOf("=");
-    	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    	document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    }
-}
+*/
