@@ -445,14 +445,7 @@ function buyforeman(goldbuy)
 			for (var i = 0; i < droneArray.length; i++)
 			{
 				droneArray[i].rotation = i*360/droneArray.length;			
-			}
-			
-			//orbit more drones around drones, works with ellipses but non-centered images make it tricky
-			/*
-			var newdrone2 = drone.clone({x: newdrone.origin.x * -1, y: newdrone.origin.y * -1, origin: {x:0, y: 60}});
-			newdrone.addChild(newdrone2);
-			droneArray.push(newdrone2);
-			*/
+			}			
 		}
 		
 		
@@ -510,6 +503,29 @@ function upgrade(id)
 			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
 
 			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";
+			
+			//remove the ships
+			while (image1.children.length != 0)
+			{
+				image1.removeChildAt(0);
+			}	
+			droneArray.length = 0;
+			prevDrone = Math.log(ship);
+			for (var x = 0; x < prevDrone; x++)
+			{
+				//add new drone
+				var newdrone = drone.clone();
+				
+				image1.addChild(newdrone);
+				droneArray.push(newdrone);
+				
+				for (var i = 0; i < droneArray.length; i++)
+				{
+					droneArray[i].rotation = i*360/droneArray.length;			
+				}	
+			}
+
+			
 		}
 		else if (goldbuy == 1)
 		{
