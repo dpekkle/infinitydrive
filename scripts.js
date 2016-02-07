@@ -48,7 +48,7 @@ var it = 0, it2 = 0;
 var longtick = 5;
 
 var clicktype = "gold";
-var minerclickcost = 10000000;
+var minerclickcost = 20000000;
 
 
 //initialise canvas
@@ -230,7 +230,7 @@ function updateCosts()
 	}
 	
 	//upgrade costs
-	document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(goldmod) + " gold";
+	document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(goldmod) + " " + clicktype;
 	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  " Costs " + formatNumber(goldupcost) + " gold";
 	document.getElementById( "minerupgradebutton").value = "Upgrade Miners " + formatNumber(minermod) + " Costs " + formatNumber(minerupcost) + " gold";
 	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen " + formatNumber(foremanmod) + " Costs " + formatNumber(foremanupcost) + " gold";
@@ -548,6 +548,7 @@ function upgrade(id)
 	{
 		clicktype = "miner";
 		document.getElementById( "minerclick").style.visibility = "hidden";	
+		goldmod *= 100;
 	}	
 	
 	updateAmounts();		
