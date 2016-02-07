@@ -221,7 +221,7 @@ function updateCosts()
 	if (goldbuy == 1)
 	{
 		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(foremancost) + " gold";
-		document.getElementById( "shipbutton").value = "Ships  " + "Costs " + formatNumber(shipcost) + " gold";
+		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(shipcost) + " gold";
 	}
 	else
 	{
