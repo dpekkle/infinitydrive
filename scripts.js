@@ -317,10 +317,11 @@ function tick(display)
 
 	if (progress/levelcost >= 1)
 	{
-		level_text.text = "Level " + level;
 		level += 1;
 		progress = 0;
 		levelcost *= 2;
+		level_text.text = "Level " + level;
+
 	}
 
 	if (display === true)
