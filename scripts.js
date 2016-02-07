@@ -99,7 +99,6 @@ initialiseCosts();
 
 var delay = (1000 / 30);
 var now, before = new Date();
-var i = 0;
 
 setInterval( function() 
 {	
@@ -183,7 +182,7 @@ function checkVisibility()
 		document.getElementById( "goldpt").style.visibility = "visible";
 	}
 	
-	if (ship >= goldbuycost * 0.5 && goldbuy == 0)
+	if (ship >= goldbuycost * 0.5 && goldbuy === 0)
 	{
 		document.getElementById("goldbuy").style.visibility = "visible";
 	}
@@ -239,57 +238,57 @@ function grayButtons()
 {
 	//units	
 	if (gold >= minercost)
-		document.getElementById( "minerbutton").style.backgroundColor = "lightgray"
+		document.getElementById( "minerbutton").style.backgroundColor = "lightgray";
 	else
-		document.getElementById( "minerbutton").style.backgroundColor = "gray"
+		document.getElementById( "minerbutton").style.backgroundColor = "gray";
 	
 	if (goldbuy == 1)
 	{		
 		if (gold >= foremancost)
-			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray"
+			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray";
 		else
-			document.getElementById( "foremanbutton").style.backgroundColor = "gray"
+			document.getElementById( "foremanbutton").style.backgroundColor = "gray";
 		
 		if (gold >= shipcost)
-			document.getElementById( "shipbutton").style.backgroundColor = "lightgray"
+			document.getElementById( "shipbutton").style.backgroundColor = "lightgray";
 		else
-			document.getElementById( "shipbutton").style.backgroundColor = "gray"
+			document.getElementById( "shipbutton").style.backgroundColor = "gray";
 	}
 	else
 	{
 		if (miner >= foremancost)
-			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray"
+			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray";
 		else
-			document.getElementById( "foremanbutton").style.backgroundColor = "gray"
+			document.getElementById( "foremanbutton").style.backgroundColor = "gray";
 		
 		if (foreman >= shipcost)
-			document.getElementById( "shipbutton").style.backgroundColor = "lightgray"
+			document.getElementById( "shipbutton").style.backgroundColor = "lightgray";
 		else
-			document.getElementById( "shipbutton").style.backgroundColor = "gray"
+			document.getElementById( "shipbutton").style.backgroundColor = "gray";
 
 	}
 	
 	//upgrades	
 	if (gold >= goldupcost)
-		document.getElementById( "goldupgradebutton").style.backgroundColor = "lightgray"
+		document.getElementById( "goldupgradebutton").style.backgroundColor = "lightgray";
 	else
-		document.getElementById( "goldupgradebutton").style.backgroundColor = "gray"
+		document.getElementById( "goldupgradebutton").style.backgroundColor = "gray";
 
 	if (gold >= minerupcost)
-		document.getElementById( "minerupgradebutton").style.backgroundColor = "lightgray"
+		document.getElementById( "minerupgradebutton").style.backgroundColor = "lightgray";
 	else
-		document.getElementById( "minerupgradebutton").style.backgroundColor = "gray"
+		document.getElementById( "minerupgradebutton").style.backgroundColor = "gray";
 
 	if (gold >= foremanupcost)
-		document.getElementById( "foremanupgradebutton").style.backgroundColor = "lightgray"
+		document.getElementById( "foremanupgradebutton").style.backgroundColor = "lightgray";
 	else
-		document.getElementById( "foremanupgradebutton").style.backgroundColor = "gray"
+		document.getElementById( "foremanupgradebutton").style.backgroundColor = "gray";
 	if (gold >= shipupcost)
-		document.getElementById( "shipupgradebutton").style.backgroundColor = "lightgray"
+		document.getElementById( "shipupgradebutton").style.backgroundColor = "lightgray";
 	else
-		document.getElementById( "shipupgradebutton").style.backgroundColor = "gray"
+		document.getElementById( "shipupgradebutton").style.backgroundColor = "gray";
 	
-	if (goldbuy == 0 && ship > goldbuycost)
+	if (goldbuy === 0 && ship > goldbuycost)
 		document.getElementById( "goldbuy").style.backgroundColor = "lightgray";		
 	else
 		document.getElementById( "goldbuy").style.backgroundColor = "gray";	
@@ -320,7 +319,7 @@ function tick(display)
 		levelcost *= 2;
 	}
 
-	if (display == true)
+	if (display === true)
 	{		
 		//saveGame();
 		
@@ -496,20 +495,20 @@ function upgrade(id)
 	
 	if (id == "goldbuy")
 	{
-		if (goldbuy == 0 && ship >= goldbuycost)
+		if (goldbuy === 0 && ship >= goldbuycost)
 		{
 			ship -= goldbuycost;
 			goldbuy = 1;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
 
-			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00"
+			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";
 		}
 		else if (goldbuy == 1)
 		{
 			goldbuy = 2;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units disabled";
 
-			document.getElementById( "goldbuy").style.backgroundColor = "#FFFFFF"
+			document.getElementById( "goldbuy").style.backgroundColor = "#FFFFFF";
 			
 		}	
 		else if (goldbuy == 2)
@@ -517,7 +516,7 @@ function upgrade(id)
 			goldbuy = 1;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
 
-			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00"		
+			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";		
 		}
 	}
 	
@@ -531,13 +530,6 @@ function upgrade(id)
 }
 
 // number handling
-
-function round(x)
-{
-	var y = Math.floor(x);
-	return y;
-}
-
 function formatNumber(n) {
   for (var i = 0; i < ranges.length; i++) 
   {
@@ -548,13 +540,13 @@ function formatNumber(n) {
 	
 	
 		//handling numbers like 25k
-		if (temp % 1 == 0)
+		if (temp % 1 === 0)
 			return temp.toString() + " " + ranges[i].suffix;
 
 		//always display 3 digits after decimal points
-		else if ((temp * 1000)%10 == 0)
+		else if ((temp * 1000)%10 === 0)
 		{
-			if ((temp * 100)%10 == 0)
+			if ((temp * 100)%10 === 0)
 				return temp.toString() + "00 " + ranges[i].suffix;
 			else
 				return temp.toString() + "0 " + ranges[i].suffix;
@@ -564,9 +556,8 @@ function formatNumber(n) {
 
     }
   }
-  
-  var temp = Math.floor(n*10)/10;
-  if ((temp * 10) % 10 == 0)
+  var temp = Math.floor(n*10)/10;  
+  if ((temp * 10) % 10 === 0)
 	  return temp.toString() + ".0";
   
   return temp.toString();
@@ -583,12 +574,13 @@ function drawExtras()
 		droneArray[i].rotation -= droneArray[i].speed;
 	
 	//text
-		
+	
+	/*	
 	if (level >= 50)
 	{
 		ctx.font = "36px Times New Roman";
 		ctx.fillText("You did it!",450,50);		
-	}
+	}*/
 }
 
 function drawShip()
