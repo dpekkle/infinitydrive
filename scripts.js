@@ -270,7 +270,6 @@ function grayButtons()
 			document.getElementById( "shipbutton").style.backgroundColor = "lightgray";
 		else
 			document.getElementById( "shipbutton").style.backgroundColor = "gray";
-
 	}
 	
 	//upgrades	
@@ -293,10 +292,13 @@ function grayButtons()
 	else
 		document.getElementById( "shipupgradebutton").style.backgroundColor = "gray";
 	
-	if (goldbuy === 0 && ship > goldbuycost)
-		document.getElementById( "goldbuy").style.backgroundColor = "lightgray";		
-	else
-		document.getElementById( "goldbuy").style.backgroundColor = "gray";	
+	if (goldbuy === 0)
+	{
+		if( ship >= goldbuycost)
+			document.getElementById( "goldbuy").style.backgroundColor = "lightgray";		
+		else
+			document.getElementById( "goldbuy").style.backgroundColor = "gray";	
+	}
 	
 	if (foreman >= minerclickcost)
 		document.getElementById( "minerclick").style.backgroundColor = "lightgray";		
@@ -363,7 +365,7 @@ function count()
 	}
 	else if (clicktype == "miner")
 	{
-		miner += goldmod*Math.sqrt(minermod);
+		miner += 1*goldmod;
 	}
 } 
  
