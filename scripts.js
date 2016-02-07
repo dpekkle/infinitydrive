@@ -88,20 +88,8 @@ var level_text = canvas.display.text({
 	fill: "#000"
 });
 
-var afk_text = canvas.display.text({
-	x: 700,
-	y: 620,
-	origin: { x: "right", y: "bottom" },
-	font: "bold 24px sans-serif",
-	align: "center",
-	text: "",
-	fill: "#000"
-});
-
-
 canvas.addChild(image1);
 canvas.addChild(level_text);
-canvas.addChild(afk_text);
 
 
 //loadGame();
@@ -120,11 +108,6 @@ setInterval( function()
     if(elapsedTime > delay)
 	{
         //Recover the motion lost while inactive.
-		if (elapsedTime/delay > 5)
-		{
-			afk_text.text = Math.floor(elapsedTime/delay) + " ticks\nwhile away";		
-			it2 = 0; //gives it about 6 seconds
-		}
 		for (var i = 0; i < elapsedTime/delay; i++)
 			tick(false); //without updates to canvas etc...
 	}	
@@ -358,7 +341,6 @@ function tick(display)
 		if (it2 == 30)
 		{
 			it2 = 0;
-			afk_text.text = "";
 		}
 		
 		updateAmounts();
