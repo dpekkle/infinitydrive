@@ -8,20 +8,21 @@
 	{
 		width:20px;
 		height:0px;
-		margin-top:50px;
+		margin-top:0px;
+		margin-left:50px;
 	}
 	div.amounts
-		{
+	{
 		width:20px;
 		height:0px;
-		margin-left:200px;
+		margin-left:250px;
 		margin-top:0px;
 	}
 	div.upgrade
 	{
 		width:20px;
 		height:0px;
-		margin-left:400px;
+		margin-left:450px;
 
 		margin-top:0px;
 	}
@@ -30,14 +31,14 @@
 	{
 		width:20px;
 		height:0px;
-		margin-left:600px;
+		margin-left:650px;
 
 		margin-top:0px;
 	}	
 	
 	div.window
 	{
-		margin-left: 800px;
+		margin-left: 50px;
 	}
 	
 	input.buy
@@ -84,6 +85,12 @@
 	<img id = "ship1" width="220" height="220" src="defaultship.png" style = "display: none">
 	<img id = "ship1flip" width="220" height="220" src="defaultship180.png" style = "display: none">
 	
+	<!-- Game window -->
+	
+	<div class = "window"/>
+	<canvas id="canvas" width="1000" height="500" style="background-color:#559"></canvas>
+	</div>
+	
 	<div style="text-align: left"> 
 	<div class="buy"/>
 		<input id = "goldbutton" type ="button" value = "Click        " onclick = "count()" class="buy" />
@@ -116,11 +123,7 @@
 
 	</div>
 	
-	<!-- Game window -->
 	
-	<div class = "window"/>
-	<canvas id="canvas" width="720" height="640" style="background-color:#559"></canvas>
-	</div>
 
 	<!-- <script defer src="cookies.js"></script> -->
 	<script defer src="ocanvas-2.8.3.js"></script>

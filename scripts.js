@@ -44,7 +44,6 @@ var goldbuycost = 100;
 
 var level = 1;
 var progress = 0;
-var levelcost = 720;
 var it = 0, it2 = 0;
 var longtick = 5;
 
@@ -54,6 +53,7 @@ var minerclickcost = 10000000;
 
 //initialise canvas
 var canvas = oCanvas.create({canvas: "canvas"});
+var levelcost = canvas.width;
 	
 var image1 = canvas.display.image(
 {
@@ -61,8 +61,8 @@ var image1 = canvas.display.image(
 	y:30, 
 	origin: {x:"center", y:"center"},
 	image: "defaultship.png",
-	height:50,
-	width:50
+	height:150,
+	width:150
 });
 
 var droneArray = [];
@@ -71,17 +71,18 @@ var drone = canvas.display.image(
 {
 	x:0, 
 	y:0, 
-	origin: {x:15, y:70},
 	image: "defaultship180.png",
-	height:30,
-	width:30,
-	speed: 1
+	height:90,
+	width:90,
+	speed: 1,
+	origin: {x:45, y:200},
+
 	
 });
 
 var level_text = canvas.display.text({
 	x: 20,
-	y: 620,
+	y: canvas.height - 24,
 	origin: { x: "left", y: "bottom" },
 	font: "bold 24px sans-serif",
 	text: "Level",
@@ -381,7 +382,7 @@ function buyminer(goldbuy)
 	{
 		gold -= minercost;
 		miner += 1;			
-		minercost *= 1.2;
+		minercost *= 1.15;
 		minercost = Math.round(minercost);
 		
 		updateAmounts();		
@@ -404,7 +405,7 @@ function buyforeman(goldbuy)
 			miner -= foremancost;
 		
 		foreman += 1;		
-		foremancost *= 1.3;
+		foremancost *= 1.25;
 		foremancost = Math.round(foremancost);
 					
 		updateAmounts();		
@@ -590,7 +591,7 @@ function drawExtras()
 
 function drawShip()
 {	
-	image1.moveTo(-40 + 840*progress/levelcost, 30 + level*5);
+	image1.moveTo(-75 + (canvas.width+150)*progress/levelcost, canvas.height/2);
 }
 function drawScreen()
 {
