@@ -136,6 +136,10 @@ function initialiseCosts()
 	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + foremanupcost + " gold";
 	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + shipupcost + " gold";
 
+	//Initialise canvas text
+	level_text.text = "Level " + level;
+
+	
 }
 
 function checkVisibility()
@@ -357,7 +361,7 @@ function count()
 	}
 	else if (clicktype == "miner")
 	{
-		miner += 1*goldmod*minermod;
+		miner += goldmod*Math.sqrt(minermod);
 	}
 } 
  
