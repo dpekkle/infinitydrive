@@ -48,7 +48,7 @@ var it = 0, it2 = 0;
 var longtick = 5;
 
 var clicktype = "gold";
-var minerclickcost = 20000000;
+var minerclickcost = 400000000;
 
 
 //initialise canvas
@@ -548,7 +548,7 @@ function upgrade(id)
 	{
 		clicktype = "miner";
 		document.getElementById( "minerclick").style.visibility = "hidden";	
-		goldmod *= 100;
+		goldmod *= 10;
 	}	
 	
 	updateAmounts();		
