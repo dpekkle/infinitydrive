@@ -32,7 +32,7 @@ var foremanpt = 0;
 var foremanmod = 1;
 var foremanupcost = 25000;
 
-var ship = 0;
+var ship = 1;
 var shipcost = 10;
 var shippt = 0;
 var shipmod = 2;
@@ -60,24 +60,25 @@ var image1 = canvas.display.image(
 	x:30, 
 	y:30, 
 	origin: {x:"center", y:"center"},
-	image: "defaultship.png",
+	image: "images/defaultship.png",
 	height:150,
 	width:150
 });
 
 var droneArray = [];
 
-var drone = canvas.display.image(
+var dronesprite = canvas.display.sprite(
 {
-	x:0, 
-	y:0, 
-	image: "defaultship180.png",
-	height:90,
-	width:90,
-	speed: 1,
-	origin: {x:45, y:200},
-
-	
+	x:0,
+	y:0,
+	origin: {x:32, y:650},
+	image: "images/dronesheet.jpg",
+	height: 256,
+	width: 256,
+	generate: true,
+	direction: "x",
+	duration: 120,
+	speed: 1
 });
 
 var level_text = canvas.display.text({
@@ -437,10 +438,12 @@ function buyforeman(goldbuy)
 		if (newDrone > prevDrone)
 		{
 			//add new drone
-			var newdrone = drone.clone();
+			var newdrone = dronesprite.clone();
+			newdrone.scale(0.25,0.25);
 			
 			image1.addChild(newdrone);
 			droneArray.push(newdrone);
+			newdrone.start();
 			
 			for (var i = 0; i < droneArray.length; i++)
 			{
@@ -514,10 +517,12 @@ function upgrade(id)
 			for (var x = 0; x < prevDrone; x++)
 			{
 				//add new drone
-				var newdrone = drone.clone();
+				var newdrone = dronesprite.clone();
+				newdrone.scale(0.25,0.25);
 				
 				image1.addChild(newdrone);
 				droneArray.push(newdrone);
+				newdrone.start();
 				
 				for (var i = 0; i < droneArray.length; i++)
 				{
