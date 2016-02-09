@@ -52,6 +52,8 @@ var minerclickcost = 400000000;
 
 
 //initialise canvas
+var fps = 30;
+
 var canvas = oCanvas.create({canvas: "canvas"});
 var levelcost = canvas.width;
 	
@@ -77,7 +79,7 @@ var dronesprite = canvas.display.sprite(
 	width: 256,
 	generate: true,
 	direction: "x",
-	duration: 20,
+	duration: 1000/fps,
 	speed: 1
 });
 
@@ -99,7 +101,7 @@ initialiseCosts();
 
 //main game loop, using date based method
 
-var delay = (1000 / 30);
+var delay = (1000 / fps);
 var now, before = new Date();
 
 setInterval( function() 
