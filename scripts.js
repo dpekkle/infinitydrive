@@ -77,7 +77,7 @@ var dronesprite = canvas.display.sprite(
 	width: 256,
 	generate: true,
 	direction: "x",
-	duration: 120,
+	duration: 20,
 	speed: 1
 });
 
