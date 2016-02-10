@@ -32,7 +32,7 @@ var foremanpt = 0;
 var foremanmod = 1;
 var foremanupcost = 25000;
 
-var ship = 1;
+var ship = 0;
 var shipcost = 10;
 var shippt = 0;
 var shipmod = 2;
