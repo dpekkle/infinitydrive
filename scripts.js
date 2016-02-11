@@ -370,7 +370,10 @@ function count()
 	}
 	else if (clicktype == "miner")
 	{
-		miner += 1*goldmod;
+		progress += 1*goldmod;
+		gold += 1*goldmod;
+		
+		miner += 0.01*goldmod;
 	}
 } 
  
