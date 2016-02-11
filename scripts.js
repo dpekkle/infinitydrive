@@ -26,7 +26,7 @@ var minerpt = 0;
 var minermod = 1;
 var minerupcost = 1500;
  
-var foreman = 0;
+var foreman = 10;
 var foremancost = 15;
 var foremanpt = 0;
 var foremanmod = 1;
@@ -98,6 +98,8 @@ canvas.addChild(level_text);
 
 //loadGame();
 initialiseCosts();
+
+buyship();
 
 //main game loop, using date based method
 
