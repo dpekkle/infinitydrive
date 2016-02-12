@@ -120,7 +120,8 @@ if (localStorage.getItem('saveObject') === null)
 //load file from local storage
 Game = JSON.parse(localStorage.getItem('saveObject'));
 
-//need to re-add the drones to canvas
+//need to re-add the drones to canvas, just in case...
+Game.ship = 0;
 createDrones();
 
 
@@ -181,11 +182,8 @@ function checkVisibility()
 		switch(visiblemax - hiddenleft)
 		{
 			case 0:
-				if (Game.gold >= Game.goldupcost * 0.5)
-				{
-					document.getElementById( "goldupgradebutton").style.visibility = "visible";
-					hiddenleft--;
-				}
+				document.getElementById( "goldupgradebutton").style.visibility = "visible";
+				hiddenleft--;
 				break;
 			case 1:
 				if (Game.gold >= Game.minercost || Game.miner > 0)
@@ -468,7 +466,7 @@ function buyforeman(mode)
 	if (mode == 1)
 		currency = Game.gold;
 	else
-		currency = Game.miner;
+		currency = Game.foreman;
 
 	if (currency >= Game.shipcost)
 	{
