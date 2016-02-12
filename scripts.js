@@ -639,7 +639,7 @@ function createDrones(first)
 		}
 		while (targetdrones < visibledrones && targetdrones >= 0) //just in case of a bug
 		{
-			image1.removeChildAt(image1.children.length, false);
+			image1.removeChildAt(image1.children.length-1, false);
 			droneArray.pop();
 			visibledrones--;
 		}
