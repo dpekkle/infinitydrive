@@ -78,19 +78,17 @@
 		white-space: pre-wrap	
 	}
 	
-
-
 </style>
 <body>
 	<img id = "ship1" width="220" height="220" src="defaultship.png" style = "display: none">
-	<img id = "ship1flip" width="220" height="220" src="defaultship180.png" style = "display: none">
 	
-	<h> v.0.1.1</h>
-	<p> Added drone sprites </p>
+	<h> v.0.1.2</h>
+	<p> Added save files in local storage </p>
 	<!-- Game window -->
 	
 	<div class = "window"/>
-	<canvas id="canvas" width="1000" height="500" style="background-color: #282828"></canvas>
+		<canvas id="canvas" width="1000" height="500" style="background-color: #393939"></canvas>
+		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
 	</div>
 	
 	<div style="text-align: left"> 
@@ -124,10 +122,7 @@
 		<input id = "shipspt" type = "text" class="rate"/> 
 
 	</div>
-	
-	
 
-	<!-- <script defer src="cookies.js"></script> -->
 	<script defer src="ocanvas-2.8.3.js"></script>
 	<script defer src="scripts.js"></script>
 

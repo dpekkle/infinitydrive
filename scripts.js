@@ -15,48 +15,54 @@ var ranges = [
   { divider: 1e3 , suffix: 'A' }
 ];
 
-var gold = 0;
-var goldpt = 0;
-var goldmod = 1;
-var goldupcost = 10;
- 
-var miner = 0;
-var minercost = 20;
-var minerpt = 0;
-var minermod = 1;
-var minerupcost = 1500;
- 
-var foreman = 10;
-var foremancost = 15;
-var foremanpt = 0;
-var foremanmod = 1;
-var foremanupcost = 25000;
-
-var ship = 0;
-var shipcost = 10;
-var shippt = 0;
-var shipmod = 2;
-var shipupcost = 5000000;
-
-//upgrades
-var goldbuy = 0;
-var goldbuycost = 100;
-
-var level = 1;
-var progress = 0;
-var it = 0, it2 = 0;
-var longtick = 5;
-
-var clicktype = "gold";
-var minerclickcost = 400000000;
-
-
 //initialise canvas
 var fps = 30;
 
 var canvas = oCanvas.create({canvas: "canvas"});
-var levelcost = canvas.width;
-	
+
+function NewGame()
+{
+	this.gold = 0;
+	this.gold = 0;
+	this.goldpt = 0;
+	this.goldmod = 1;
+	this.goldupcost = 10;
+	 
+	this.miner = 0;
+	this.minercost = 20;
+	this.minerpt = 0;
+	this.minermod = 1;
+	this.minerupcost = 1500;
+	 
+	this.foreman = 0;
+	this.foremancost = 15;
+	this.foremanpt = 0;
+	this.foremanmod = 1;
+	this.foremanupcost = 25000;
+
+	this.ship = 0;
+	this.shipcost = 10;
+	this.shippt = 0;
+	this.shipmod = 2;
+	this.shipupcost = 5000000;
+	this.prevdrone = -1;
+
+	//upgrades
+	this.goldbuy = 0;
+	this.goldbuycost = 100;
+
+	this.level = 1;
+	this.levelcost = canvas.width;
+	this.progress = 0;
+	this.it = 0;
+	this.it2 = 0;
+	this.longtick = 5;
+
+	this.clicktype = "gold";
+	this.minerclickcost = 400000000;
+}
+var Game = new NewGame();
+
 var image1 = canvas.display.image(
 {
 	x:30, 
@@ -92,17 +98,29 @@ var level_text = canvas.display.text({
 	fill: "#000"
 });
 
+var save_text = canvas.display.text({
+	x: canvas.width - 20,
+	y: canvas.height - 24,
+	origin: { x: "right", y: "bottom" },
+	font: "bold 24px sans-serif",
+	text: "",
+	fill: "#000"
+});
+
 canvas.addChild(image1);
 canvas.addChild(level_text);
+canvas.addChild(save_text);
 
+// if save file does not exist, create one in local storage
+if (localStorage.getItem('saveObject') === null)
+	localStorage.setItem('saveObject', JSON.stringify(Game));
 
-//loadGame();
+//load file from local storage
+Game = JSON.parse(localStorage.getItem('saveObject'));
+
 initialiseCosts();
 
-buyship();
-
 //main game loop, using date based method
-
 var delay = (1000 / fps);
 var now, before = new Date();
 
@@ -132,44 +150,44 @@ function initialiseCosts()
 	document.getElementById( "gold").style.visibility = "visible";
 
 	//give values to the buttons based off of javascript variables
-	document.getElementById( "goldbutton").value = "Click  " + "+ " + goldmod + " gold";
-	document.getElementById( "foremanbutton").value = "Foremans  " + " Costs " + foremancost + " miners";
-	document.getElementById( "minerbutton").value = "Miners  " + " Costs " + minercost + " gold";
-	document.getElementById( "shipbutton").value = "Drones  " + " Costs " + shipcost + " foremen";
+	document.getElementById( "goldbutton").value = "Click  " + "+ " + Game.goldmod + " gold";
+	document.getElementById( "foremanbutton").value = "Foremans  " + " Costs " + Game.foremancost + " miners";
+	document.getElementById( "minerbutton").value = "Miners  " + " Costs " + Game.minercost + " gold";
+	document.getElementById( "shipbutton").value = "Drones  " + " Costs " + Game.shipcost + " foremen";
 
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + " Costs " + goldupcost + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + " Costs " + minerupcost + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + foremanupcost + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + shipupcost + " gold";
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + " Costs " + Game.goldupcost + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + " Costs " + Game.minerupcost + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + Game.foremanupcost + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + Game.shipupcost + " gold";
 
 	//Initialise canvas text
-	level_text.text = "Level " + level;
+	level_text.text = "Level " + Game.level;
 
 	
 }
 
 function checkVisibility()
 {
-	if (gold >= goldupcost * 0.5)
+	if (Game.gold >= Game.goldupcost * 0.5)
 	{
 		document.getElementById( "goldupgradebutton").style.visibility = "visible";
 	}
-	if (gold >= foremanupcost * 0.5 && document.getElementById( "foremans").style.visibility == "visible")
+	if (Game.gold >= Game.foremanupcost * 0.5 && document.getElementById( "foremans").style.visibility == "visible")
 	{
 		document.getElementById( "foremanupgradebutton").style.visibility = "visible";
 	}
-	if ( gold >= minerupcost * 0.5 && document.getElementById("miners").style.visibility == "visible")
+	if ( Game.gold >= Game.minerupcost * 0.5 && document.getElementById("miners").style.visibility == "visible")
 	{
 		document.getElementById("minerupgradebutton").style.visibility = "visible";
 
 	}	
 	
-	if (gold >= shipupcost * 0.5 && document.getElementById("ships").style.visibility == "visible" )
+	if (Game.gold >= Game.shipupcost * 0.5 && document.getElementById("ships").style.visibility == "visible" )
 	{
 		document.getElementById("shipupgradebutton").style.visibility = "visible";
 	}
 	
-	if ( miner >= foremancost * 0.5)
+	if ( Game.miner >= Game.foremancost * 0.5)
 	{
 		document.getElementById( "foremans").style.visibility = "visible";
 		document.getElementById("foremanbutton").style.visibility = "visible";
@@ -177,7 +195,7 @@ function checkVisibility()
 
 	}
 	
-	if (foreman >= shipcost * 0.5)
+	if (Game.foreman >= Game.shipcost * 0.5)
 	{
 		document.getElementById( "ships").style.visibility = "visible";
 		document.getElementById("shipbutton").style.visibility = "visible";
@@ -185,19 +203,19 @@ function checkVisibility()
 		
 	}
 	
-	if (gold >= minercost)
+	if (Game.gold >= Game.minercost)
 	{
 		document.getElementById("miners").style.visibility = "visible";
 		document.getElementById("minerbutton").style.visibility = "visible";
 		document.getElementById( "goldpt").style.visibility = "visible";
 	}
 	
-	if (ship >= goldbuycost * 0.5 && goldbuy === 0)
+	if (Game.ship >= Game.goldbuycost * 0.5 && Game.goldbuy === 0)
 	{
 		document.getElementById("goldbuy").style.visibility = "visible";
 	}
 	
-	if (foreman >= minerclickcost * 0.5 && clicktype == "gold")
+	if (Game.foreman >= Game.minerclickcost * 0.5 && Game.clicktype == "gold")
 	{
 		document.getElementById("minerclick").style.visibility = "visible";
 	}
@@ -205,41 +223,41 @@ function checkVisibility()
 
 function updateAmounts()
 {
-	document.getElementById( "gold" ).value = formatNumber(gold);	
-	document.getElementById( "miners" ).value = formatNumber(miner);	
-	document.getElementById( "foremans" ).value = formatNumber(foreman);
-	document.getElementById( "ships" ).value = formatNumber(ship);
+	document.getElementById( "gold" ).value = formatNumber(Game.gold);	
+	document.getElementById( "miners" ).value = formatNumber(Game.miner);	
+	document.getElementById( "foremans" ).value = formatNumber(Game.foreman);
+	document.getElementById( "ships" ).value = formatNumber(Game.ship);
 	
-	document.getElementById( "goldpt" ).value = formatNumber(goldpt) + " /sec";	
-	document.getElementById( "minerspt" ).value = formatNumber(minerpt) + " /sec";	
-	document.getElementById( "foremanspt" ).value = formatNumber(foremanpt) + " /sec";
-	document.getElementById( "shipspt" ).value = formatNumber(shippt) + " /sec";
+	document.getElementById( "goldpt" ).value = formatNumber(Game.goldpt) + " /sec";	
+	document.getElementById( "minerspt" ).value = formatNumber(Game.minerpt) + " /sec";	
+	document.getElementById( "foremanspt" ).value = formatNumber(Game.foremanpt) + " /sec";
+	document.getElementById( "shipspt" ).value = formatNumber(Game.shippt) + " /sec";
 	
 	
 }
 
 function updateCosts()
 {
-	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + formatNumber(minercost) + " gold";
+	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + formatNumber(Game.minercost) + " gold";
 
 	
-	if (goldbuy == 1)
+	if (Game.goldbuy == 1)
 	{
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(foremancost) + " gold";
-		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(shipcost) + " gold";
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(Game.foremancost) + " gold";
+		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(Game.shipcost) + " gold";
 	}
 	else
 	{
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(foremancost) + " miners";
-		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(shipcost) + " foreman";
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(Game.foremancost) + " miners";
+		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(Game.shipcost) + " foreman";
 	}
 	
 	//upgrade costs
-	document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(goldmod) + " " + clicktype;
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  " Costs " + formatNumber(goldupcost) + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners " + formatNumber(minermod) + " Costs " + formatNumber(minerupcost) + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen " + formatNumber(foremanmod) + " Costs " + formatNumber(foremanupcost) + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Drones " + formatNumber(shipmod) + " Costs " + formatNumber(shipupcost) + " gold";
+	document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(Game.goldmod) + " " + Game.clicktype;
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  " Costs " + formatNumber(Game.goldupcost) + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners " + formatNumber(Game.minermod) + " Costs " + formatNumber(Game.minerupcost) + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen " + formatNumber(Game.foremanmod) + " Costs " + formatNumber(Game.foremanupcost) + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Drones " + formatNumber(Game.shipmod) + " Costs " + formatNumber(Game.shipupcost) + " gold";
 
 	
 }
@@ -247,65 +265,65 @@ function updateCosts()
 function grayButtons()
 {
 	//units	
-	if (gold >= minercost)
+	if (Game.gold >= Game.minercost)
 		document.getElementById( "minerbutton").style.backgroundColor = "lightgray";
 	else
 		document.getElementById( "minerbutton").style.backgroundColor = "gray";
 	
-	if (goldbuy == 1)
+	if (Game.goldbuy == 1)
 	{		
-		if (gold >= foremancost)
+		if (Game.gold >= Game.foremancost)
 			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray";
 		else
 			document.getElementById( "foremanbutton").style.backgroundColor = "gray";
 		
-		if (gold >= shipcost)
+		if (Game.gold >= Game.shipcost)
 			document.getElementById( "shipbutton").style.backgroundColor = "lightgray";
 		else
 			document.getElementById( "shipbutton").style.backgroundColor = "gray";
 	}
 	else
 	{
-		if (miner >= foremancost)
+		if (Game.miner >= Game.foremancost)
 			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray";
 		else
 			document.getElementById( "foremanbutton").style.backgroundColor = "gray";
 		
-		if (foreman >= shipcost)
+		if (Game.foreman >= Game.shipcost)
 			document.getElementById( "shipbutton").style.backgroundColor = "lightgray";
 		else
 			document.getElementById( "shipbutton").style.backgroundColor = "gray";
 	}
 	
 	//upgrades	
-	if (gold >= goldupcost)
+	if (Game.gold >= Game.goldupcost)
 		document.getElementById( "goldupgradebutton").style.backgroundColor = "lightgray";
 	else
 		document.getElementById( "goldupgradebutton").style.backgroundColor = "gray";
 
-	if (gold >= minerupcost)
+	if (Game.gold >= Game.minerupcost)
 		document.getElementById( "minerupgradebutton").style.backgroundColor = "lightgray";
 	else
 		document.getElementById( "minerupgradebutton").style.backgroundColor = "gray";
 
-	if (gold >= foremanupcost)
+	if (Game.gold >= Game.minerupcost)
 		document.getElementById( "foremanupgradebutton").style.backgroundColor = "lightgray";
 	else
 		document.getElementById( "foremanupgradebutton").style.backgroundColor = "gray";
-	if (gold >= shipupcost)
+	if (Game.gold >= Game.shipupcost)
 		document.getElementById( "shipupgradebutton").style.backgroundColor = "lightgray";
 	else
 		document.getElementById( "shipupgradebutton").style.backgroundColor = "gray";
 	
-	if (goldbuy === 0)
+	if (Game.goldbuy === 0)
 	{
-		if( ship >= goldbuycost)
+		if( Game.ship >= Game.goldbuycost)
 			document.getElementById( "goldbuy").style.backgroundColor = "lightgray";		
 		else
 			document.getElementById( "goldbuy").style.backgroundColor = "gray";	
 	}
 	
-	if (foreman >= minerclickcost)
+	if (Game.miner >= Game.minerclickcost)
 		document.getElementById( "minerclick").style.backgroundColor = "lightgray";		
 	else
 		document.getElementById( "minerclick").style.backgroundColor = "gray";	
@@ -314,135 +332,137 @@ function grayButtons()
 function tick(display)
 {
 	
-	gold += goldpt/50;	
-	progress += goldpt/50;
-	miner += minerpt/50;
-	foreman += foremanpt/50;
+	Game.gold += Game.goldpt/50;	
+	Game.progress += Game.goldpt/50;
+	Game.miner += Game.minerpt/50;
+	Game.foreman += Game.foremanpt/50;
 	
-	goldpt = miner * minermod;
-	minerpt = foreman * foremanmod;	
-	foremanpt = ship * shipmod;	
+	Game.goldpt = Game.miner * Game.minermod;
+	Game.minerpt = Game.foreman * Game.foremanmod;	
+	Game.foremanpt = Game.ship * Game.shipmod;	
 
-	if (progress/levelcost >= 1)
+	if (Game.progress/Game.levelcost >= 1)
 	{
-		level += 1;
-		progress = 0;
-		levelcost *= 2;
-		level_text.text = "Level " + level;
+		Game.level += 1;
+		Game.progress = 0;
+		Game.levelcost *= 2;
+		level_text.text = "level " + Game.level;
 
 	}
-
+	
+	// auto save the game
+	if (Game.it % 500 === 0)
+	{
+		localStorage.setItem('saveObject', JSON.stringify(Game));
+		Game.it2 = 0;
+		save_text.text = "Autosaved...";
+	}	
+	//only update ui when the tab is selected
 	if (display === true)
 	{		
-		//saveGame();
+		if (Game.it < 1000)
+			Game.it++;	
+		else
+			Game.it = 0;
 		
-
-		if (it < longtick)
+		//run ui functions
+		if (Game.it % 6 === 0)
 		{
-			it++;
-			
+			updateCosts();
 		}
-		if (it == longtick)
+		if (Game.it % 20 === 0)
 		{
-			it = 0;
 			grayButtons();
 			checkVisibility();
-			updateCosts();
-			it2++;
-		}
-		if (it2 == 30)
-		{
-			it2 = 0;
-		}
-		
-		updateAmounts();
-				
+			save_text.text = "";
+		}			
+		updateAmounts();			
 		drawScreen();
 	}
 }
 
 function count() 
 {
-	if (clicktype == "gold")
+	if (Game.clicktype == "gold")
 	{
-		progress += 1*goldmod;
-		gold += 1*goldmod;
+		Game.progress += 1*Game.goldmod;
+		Game.gold += 1*Game.goldmod;
 	}
-	else if (clicktype == "miner")
+	else if (Game.clicktype == "miner")
 	{
-		progress += 1*goldmod;
-		gold += 1*goldmod;
+		Game.progress += 1*Game.goldmod;
+		Game.gold += 1*Game.goldmod;
 		
-		miner += 0.01*goldmod;
+		Game.miner += 0.01*Game.goldmod;
 	}
 } 
  
  function buyunit(id)
  {
 	if (id == "miner")
-		buyminer(goldbuy);
+		buyminer(Game.goldbuy);
 	else if (id == "foreman")
-		buyforeman(goldbuy);
+		buyforeman(Game.goldbuy);
 	else if (id == "ship")
-		buyship(goldbuy);	
+		buyship(Game.goldbuy);	
  }
-function buyminer(goldbuy)
+function buyminer(mode)
 {
-	if (gold >= minercost)
+	if (Game.gold >= Game.minercost)
 	{
-		gold -= minercost;
-		miner += 1;			
-		minercost *= 1.15;
-		minercost = Math.round(minercost);
+		Game.gold -= Game.minercost;
+		Game.miner += 1;			
+		Game.minercost *= 1.15;
+		Game.minercost = Math.round(Game.minercost);
 		
-		updateAmounts();		
+		grayButtons();		
 	}
  }
  
-function buyforeman(goldbuy)
+function buyforeman(mode)
 {
 	var currency;
-	if (goldbuy == 1)
-		currency = gold;
+	if (mode == 1)
+		currency = Game.gold;
 	else
-		currency = miner;
+		currency = Game.miner;
 
-	if (currency >= foremancost)
+	if (currency >= Game.foremancost)
 	{
-		if (goldbuy == 1)
-			gold -= foremancost;		
+		if (mode == 1)
+			Game.gold -= Game.foremancost;		
 		else
-			miner -= foremancost;
+			Game.miner -= Game.foremancost;
 		
-		foreman += 1;		
-		foremancost *= 1.25;
-		foremancost = Math.round(foremancost);
+		Game.foreman += 1;		
+		Game.foremancost *= 1.25;
+		Game.foremancost = Math.round(Game.foremancost);
 					
-		updateAmounts();		
+		grayButtons();		
 	}
 
  }
  
- function buyship(goldbuy)
+ function buyship(mode)
 {
 	var currency;
-	if (goldbuy == 1)
-		currency = gold;
+	if (mode == 1)
+		currency = Game.gold;
 	else
-		currency = foreman;
+		currency = Game.miner;
 
-	if (currency >= shipcost)
+	if (currency >= Game.shipcost)
 	{
-		if (goldbuy == 1)
-			gold -= shipcost;		
+		if (mode == 1)
+			Game.gold -= Game.shipcost;		
 		else
-			foreman -= shipcost;
+			Game.miner -= Game.shipcost;
 		
-		var prevDrone = Math.floor(Math.log(ship));	
-		ship += 1;			
-		var newDrone = Math.floor(Math.log(ship));
+		Game.prevdrone = Math.floor(Math.log(Game.ship));	
+		Game.ship += 1;			
+		var newDrone = Math.floor(Math.log(Game.ship));
 		
-		if (newDrone > prevDrone)
+		if (newDrone > Game.prevdrone)
 		{
 			//add new drone
 			var newdrone = dronesprite.clone();
@@ -459,57 +479,57 @@ function buyforeman(goldbuy)
 		}
 		
 		
-		shipcost *= 1.1;
-		shipcost = Math.round(shipcost);
+		Game.shipcost *= 1.1;
+		Game.shipcost = Math.round(Game.shipcost);
 						
-		updateAmounts();		
+		grayButtons();		
 	}
 
  }
  
 function upgrade(id)
 {
-	if (id == "gold" && gold >= goldupcost)
+	if (id == "gold" && Game.gold >= Game.goldupcost)
 	{
-		gold -= goldupcost;
-		goldupcost *= 7.5;
-		goldmod *=4;
+		Game.gold -= Game.goldupcost;
+		Game.goldupcost *= 7.5;
+		Game.goldmod *=4;
 	}	
-	if (id == "miner" && gold >= minerupcost)
+	if (id == "miner" && Game.gold >= Game.minerupcost)
 	{
-		gold -= minerupcost;
-		minerupcost *= 3;
-		minermod *= 1.3;
-		minermod = Math.floor(minermod * 100)/100;
-		goldpt = miner * minermod;
+		Game.gold -= Game.minerupcost;
+		Game.minerupcost *= 3;
+		Game.minermod *= 1.3;
+		Game.minermod = Math.floor(Game.minermod * 100)/100;
+		Game.goldpt = Game.miner * Game.minermod;
 
 	}
-	if (id == "foreman" && gold >= foremanupcost)
+	if (id == "foreman" && Game.gold >= Game.minerupcost)
 	{
-		gold -= foremanupcost;
-		foremanupcost *= 3;
-		foremanmod *= 1.3;
-		foremanmod = Math.floor(foremanmod * 100)/100;
+		Game.gold -= Game.minerupcost;
+		Game.minerupcost *= 3;
+		Game.minermod *= 1.3;
+		Game.minermod = Math.floor(Game.minermod * 100)/100;
 
-		minerpt = foreman * foremanmod;
+		Game.minerpt = Game.miner * Game.minermod;
 	}
 	
-	if (id == "ship" && gold >= shipupcost)
+	if (id == "ship" && Game.gold >= Game.shipupcost)
 	{
-		gold -= shipupcost;
-		shipupcost *= 2.5;
-		shipmod *= 1.3;
-		shipmod = Math.floor(shipmod * 100)/100;
+		Game.gold -= Game.shipupcost;
+		Game.shipupcost *= 2.5;
+		Game.shipmod *= 1.3;
+		Game.shipmod = Math.floor(Game.shipmod * 100)/100;
 
-		minerpt = ship * shipmod;
+		Game.minerpt = Game.ship * Game.shipmod;
 	}
 	
 	if (id == "goldbuy")
 	{
-		if (goldbuy === 0 && ship >= goldbuycost)
+		if (Game.goldbuy === 0 && Game.ship >= Game.goldbuycost)
 		{
-			ship -= goldbuycost;
-			goldbuy = 1;
+			Game.ship -= Game.goldbuycost;
+			Game.goldbuy = 1;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
 
 			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";
@@ -520,8 +540,8 @@ function upgrade(id)
 				image1.removeChildAt(0);
 			}	
 			droneArray.length = 0;
-			prevDrone = Math.log(ship);
-			for (var x = 0; x < prevDrone; x++)
+			Game.prevdrone = Math.log(Game.ship);
+			for (var x = 0; x < Game.prevdrone; x++)
 			{
 				//add new drone
 				var newdrone = dronesprite.clone();
@@ -539,17 +559,17 @@ function upgrade(id)
 
 			
 		}
-		else if (goldbuy == 1)
+		else if (Game.goldbuy == 1)
 		{
-			goldbuy = 2;
+			Game.goldbuy = 2;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units disabled";
 
 			document.getElementById( "goldbuy").style.backgroundColor = "#FFFFFF";
 			
 		}	
-		else if (goldbuy == 2)
+		else if (Game.goldbuy == 2)
 		{
-			goldbuy = 1;
+			Game.goldbuy = 1;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
 
 			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";		
@@ -558,9 +578,9 @@ function upgrade(id)
 	
 	if (id == "minerclick")
 	{
-		clicktype = "miner";
+		Game.clicktype = "miner";
 		document.getElementById( "minerclick").style.visibility = "hidden";	
-		goldmod *= 10;
+		Game.goldmod *= 10;
 	}	
 	
 	updateAmounts();		
@@ -622,7 +642,7 @@ function drawExtras()
 
 function drawShip()
 {	
-	image1.moveTo(-75 + (canvas.width+150)*progress/levelcost, canvas.height/2);
+	image1.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
 }
 function drawScreen()
 {
@@ -631,43 +651,11 @@ function drawScreen()
 	canvas.redraw();
 }
 
-//loading game
-
-/*
-function loadGame()
+function deleteSave()
 {
-	alert("Gold: " + getCookie("gold") + "\n\nCookie: " + document.cookie);
+	if (confirm('Are you sure you want to delete your save file? All progress will be lost'))
+	{
+		localStorage.removeItem('saveObject');
+		window.location.reload(true); //true to get new updates, pulls new page from server
+	}
 }
-
-
-// saving game
-function saveGame()
-{
-	level_text.text = "Level " + level + "    saved";
-
-	clearCookie();
-	
-	var cookieString = "";
-	cookieString = setCookie(cookieString, "gold", gold);
-	cookieString = setCookie(cookieString, "goldmod", goldmod);
-	cookieString = setCookie(cookieString, "miner", miner);
-	cookieString = setCookie(cookieString, "minermod", minermod);
-	cookieString = setCookie(cookieString, "foreman", foreman);
-	cookieString = setCookie(cookieString, "foremanmod", foremanmod);
-	cookieString = setCookie(cookieString, "ship", ship);
-	cookieString = setCookie(cookieString, "shipmod", shipmod);
-	
-	document.cookie = cookieString;
-}
-
-function clearCookie()
-{
-    var cookies = document.cookie.split(";");
-
-    for (var i = 0; i < cookies.length; i++) {
-    	var cookie = cookies[i];
-    	var eqPos = cookie.indexOf("=");
-    	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    	document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    }
-}*/
