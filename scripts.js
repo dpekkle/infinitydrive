@@ -144,15 +144,7 @@ if (localStorage.getItem('saveObject') !== null)
 {
 	Game = JSON.parse(localStorage.getItem('saveObject'));
 	//need to re-add the drones to canvas, just in case...
-	createDrones();
-	
-	if (Game.goldbuy !== 0)
-	{
-		//switch from default button text for goldbuying back to what it was, fixes graphical confusion
-		upgrade(Game.goldbuy);
-		upgrade(Game.goldbuy);
-	}
-	
+	createDrones();	
 	//load the last date and tell the user we were offline
 	//dates act funny so can't be simply placed in game object
 	before = new Date(parseInt(localStorage.getItem('time')));  
@@ -166,8 +158,15 @@ if (localStorage.getItem('saveObject') !== null)
 		setTimeout(function() { alert('Offline progress: ' + hours + 'hrs ' + minutes + 'min ' + seconds + 'sec'); }, 1);
 	}
 }
-
 initialiseCosts();
+
+//these must come after initialiseCosts for loaded games
+if (Game.goldbuy !== 0)
+{
+	//switch from default button text for goldbuying back to what it was, fixes graphical confusion
+	upgrade('goldbuy');
+	upgrade('goldbuy');
+}
 
 //main game loop, using date based method
 var delay = (1000 / fps);
@@ -185,9 +184,7 @@ setInterval( function()
 	else
 		tick(true);
 	
-    before = new Date();   
-	localStorage.setItem('time', +new Date);
-	
+    before = new Date();   	
 }, delay);		
 
 }
@@ -261,14 +258,14 @@ function checkVisibility()
 				}	
 				break;
 			case 4:
-				if (Game.ship >= Game.goldbuycost * 0.5 || Game.goldbuy === 1)
+				if (Game.ship >= Game.goldbuycost * 0.5 || Game.goldbuy !== 0)
 				{
 					document.getElementById("goldbuy").style.visibility = "visible";
 					hiddenleft--;
 				}
 				break;
 			case 5:
-				if (Game.foreman >= Game.minerclickcost * 0.5 || Game.clicktype == "miner")
+				if (Game.foreman >= Game.minerclickcost * 0.5 && Game.clicktype !== "miner")
 				{
 					document.getElementById("minerclick").style.visibility = "visible";
 					hiddenleft--;
@@ -415,6 +412,7 @@ function tick(display)
 	// auto save the game
 	if (Game.it % 200 === 0)
 	{
+		localStorage.setItem('time', +new Date);
 		localStorage.setItem('saveObject', JSON.stringify(Game));
 		Game.it2 = 0;
 		save_text.text = "Autosaved...";
@@ -579,9 +577,7 @@ function upgrade(id)
 			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";
 			
 			//remove the drones lost
-			createDrones();
-
-			
+			createDrones();		
 		}
 		else if (Game.goldbuy == 1)
 		{
@@ -602,6 +598,7 @@ function upgrade(id)
 	
 	if (id == "minerclick")
 	{
+		Game.foreman -= minerclickcost;
 		Game.clicktype = "miner";
 		document.getElementById( "minerclick").style.visibility = "hidden";	
 	}	
@@ -663,14 +660,11 @@ function drawExtras()
 	}*/
 }
 
-function createDrones(first)
+function createDrones()
 {
-	if (first == true)
-		var targetdrones = 0;
-	else
-		var targetdrones = 1 + Math.ceil(Math.log(Game.ship));
+	var targetdrones = 1 + Math.ceil(Math.log(Game.ship));
 	
-	console.log("Target " + targetdrones + " Visible " + visibledrones);
+	//console.log("Target " + targetdrones + " Visible " + visibledrones);
 	
 	if (targetdrones != visibledrones)
 	{
