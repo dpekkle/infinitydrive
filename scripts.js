@@ -253,7 +253,11 @@ function updateCosts()
 	}
 	
 	//upgrade costs
-	document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(Game.goldmod) + " " + Game.clicktype;
+	if (Game.clicktype == "gold")
+		document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(Game.goldmod) + " " + Game.clicktype;
+	else if (Game.clicktype == "miner")
+		document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(Game.goldmod) + " gold amd " + formatNumber(Game.goldmod*0.01) + " miners";
+		
 	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  " Costs " + formatNumber(Game.goldupcost) + " gold";
 	document.getElementById( "minerupgradebutton").value = "Upgrade Miners " + formatNumber(Game.minermod) + " Costs " + formatNumber(Game.minerupcost) + " gold";
 	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen " + formatNumber(Game.foremanmod) + " Costs " + formatNumber(Game.foremanupcost) + " gold";
