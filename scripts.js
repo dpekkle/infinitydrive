@@ -157,11 +157,14 @@ if (localStorage.getItem('saveObject') !== null)
 	//dates act funny so can't be simply placed in game object
 	before = new Date(parseInt(localStorage.getItem('time')));  
 	var A = (now.getTime() - before.getTime());
-	var seconds=Math.floor((A/1000)%60);
-	var minutes=Math.floor(A/(1000*60))%60;
-	var hours=Math.floor(A/(1000*60*60))%24;
-
-	setTimeout(function() { alert('Offline progress: ' + hours + 'hrs ' + minutes + 'min ' + seconds + 'sec'); }, 1);
+	
+	if (A > 40000)
+	{
+		var seconds=Math.floor((A/1000)%60);
+		var minutes=Math.floor(A/(1000*60))%60;
+		var hours=Math.floor(A/(1000*60*60))%24;
+		setTimeout(function() { alert('Offline progress: ' + hours + 'hrs ' + minutes + 'min ' + seconds + 'sec'); }, 1);
+	}
 }
 
 initialiseCosts();
@@ -569,6 +572,7 @@ function upgrade(id)
 		if (Game.goldbuy === 0 && Game.ship >= Game.goldbuycost)
 		{
 			Game.ship -= Game.goldbuycost;
+			createDrones();
 			Game.goldbuy = 1;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
 
