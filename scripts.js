@@ -151,7 +151,7 @@ if (localStorage.getItem('saveObject') !== null)
 		upgrade(Game.goldbuy);
 		upgrade(Game.goldbuy);
 	}
-	before = game.logoffdate;	
+	before = Game.logoffdate;	
 	setTimeout(function() { alert('Offline progerss'); }, 1);
 	
 }
