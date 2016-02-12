@@ -198,6 +198,8 @@ function initialiseCosts()
 
 function checkVisibility()
 {
+	console.log("Hidden: " + hiddenleft + " Case: " + (visiblemax - hiddenleft));
+
 	if (hiddenleft > 0)
 	{
 		switch(visiblemax - hiddenleft)
