@@ -1,6 +1,28 @@
+/* ~-------------- PLAN ----------------
+You run into bosses. If you have enough velocity, they explode.
+
+Eventually you reach bosses where the "first try" won't destroy them.
+
+To get around this, you can go into foreman debt to buy drones, causing you to start travelling backwards (negative miners/s), 
+then you will travel forward again at a greater speed.
+
+The time (in turns) it will take to reach back where you started is:
+
+-2*(minerpt)/foremanpt
+
+Best way to do it would be to put a limit on the time you can take to travel backwards, allowing you to only go into debt by that much max. 
+Should scale with based on networth.
+*/
+
+
+
 {
 
 var ranges = [
+  { divider: 1e48 , suffix: 'P' },
+  { divider: 1e45 , suffix: 'O' },
+  { divider: 1e42 , suffix: 'N' },
+  { divider: 1e39 , suffix: 'M' },
   { divider: 1e36 , suffix: 'L' },
   { divider: 1e33 , suffix: 'K' },
   { divider: 1e30 , suffix: 'J' },
@@ -646,10 +668,8 @@ function createDrones(first)
 		for (var i = 0; i < droneArray.length; i++)
 		{
 			droneArray[i].rotation = i*360/droneArray.length;			
-		}	
-		
-	}
-	
+		}		
+	}	
 }
 
 function drawShip()
