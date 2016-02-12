@@ -135,14 +135,18 @@ function NewGame()
 var Game = new NewGame();
 var visibledrones = 0;
 
-//localStorage.removeItem('saveObject');
-
-// if save file does not exist, create one in local storage
+// if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
 {
 	Game = JSON.parse(localStorage.getItem('saveObject'));
 	//need to re-add the drones to canvas, just in case...
 	createDrones();
+	if (Game.goldbuy !== 0)
+	{
+		//switch from default button text for goldbuying back to what it was, fixes graphical confusion
+		upgrade(Game.goldbuy);
+		upgrade(Game.goldbuy);
+	}
 }
 
 
