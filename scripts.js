@@ -306,7 +306,7 @@ function grayButtons()
 	else
 		document.getElementById( "minerupgradebutton").style.backgroundColor = "gray";
 
-	if (Game.gold >= Game.minerupcost)
+	if (Game.gold >= Game.foremanupcost)
 		document.getElementById( "foremanupgradebutton").style.backgroundColor = "lightgray";
 	else
 		document.getElementById( "foremanupgradebutton").style.backgroundColor = "gray";
