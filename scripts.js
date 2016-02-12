@@ -504,14 +504,14 @@ function upgrade(id)
 		Game.goldpt = Game.miner * Game.minermod;
 
 	}
-	if (id == "foreman" && Game.gold >= Game.minerupcost)
+	if (id == "foreman" && Game.gold >= Game.foremanupcost)
 	{
-		Game.gold -= Game.minerupcost;
-		Game.minerupcost *= 3;
-		Game.minermod *= 1.3;
-		Game.minermod = Math.floor(Game.minermod * 100)/100;
+		Game.gold -= Game.foremanupcost;
+		Game.foremanupcost *= 3;
+		Game.foremanmod *= 1.3;
+		Game.foremanmod = Math.floor(Game.foremanmod * 100)/100;
 
-		Game.minerpt = Game.miner * Game.minermod;
+		Game.minerpt = Game.foreman * Game.foremanmod;
 	}
 	
 	if (id == "ship" && Game.gold >= Game.shipupcost)
