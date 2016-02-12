@@ -113,16 +113,15 @@ function NewGame()
 var Game = new NewGame();
 var visibledrones = 0;
 
+//localStorage.removeItem('saveObject');
+
 // if save file does not exist, create one in local storage
-if (localStorage.getItem('saveObject') === null)
-	localStorage.setItem('saveObject', JSON.stringify(Game));
-
-//load file from local storage
-Game = JSON.parse(localStorage.getItem('saveObject'));
-
-//need to re-add the drones to canvas, just in case...
-Game.ship = 0;
-createDrones();
+if (localStorage.getItem('saveObject') !== null)
+{
+	Game = JSON.parse(localStorage.getItem('saveObject'));
+	//need to re-add the drones to canvas, just in case...
+	createDrones();
+}
 
 
 initialiseCosts();
@@ -368,7 +367,7 @@ function tick(display)
 	}
 	
 	// auto save the game
-	if (Game.it % 500 === 0)
+	if (Game.it % 200 === 0)
 	{
 		localStorage.setItem('saveObject', JSON.stringify(Game));
 		Game.it2 = 0;
@@ -617,9 +616,12 @@ function drawExtras()
 	}*/
 }
 
-function createDrones()
+function createDrones(first)
 {
-	var targetdrones = 1 + Math.ceil(Math.log(Game.ship));
+	if (first == true)
+		var targetdrones = 0;
+	else
+		var targetdrones = 1 + Math.ceil(Math.log(Game.ship));
 	
 	console.log("Target " + targetdrones + " Visible " + visibledrones);
 	
@@ -635,7 +637,7 @@ function createDrones()
 			newdrone.start();
 			visibledrones++;
 		}
-		while (targetdrones < visibledrones)
+		while (targetdrones < visibledrones && targetdrones >= 0) //just in case of a bug
 		{
 			image1.removeChildAt(image1.children.length, false);
 			droneArray.pop();
