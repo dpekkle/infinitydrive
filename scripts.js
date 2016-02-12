@@ -131,9 +131,13 @@ function NewGame()
 
 	this.clicktype = "gold";
 	this.minerclickcost = 400000000;
+	
+	this.logoffdate = null;
 }
 var Game = new NewGame();
 var visibledrones = 0;
+
+var now, before = new Date();
 
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
@@ -147,14 +151,14 @@ if (localStorage.getItem('saveObject') !== null)
 		upgrade(Game.goldbuy);
 		upgrade(Game.goldbuy);
 	}
+	before = game.logoffdate;	
+	setTimeout(function() { alert('Offline progerss'); }, 1);
+	
 }
-
-
 initialiseCosts();
 
 //main game loop, using date based method
 var delay = (1000 / fps);
-var now, before = new Date();
 
 setInterval( function() 
 {	
@@ -169,7 +173,8 @@ setInterval( function()
 	else
 		tick(true);
 	
-    before = new Date();    
+    before = new Date();   
+	Game.logoffdate = before;
 }, delay);		
 
 }
