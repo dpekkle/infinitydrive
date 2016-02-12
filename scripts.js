@@ -239,14 +239,14 @@ function checkVisibility()
 				}	
 				break;
 			case 4:
-				if (Game.ship >= Game.goldbuycost * 0.5 && Game.goldbuy === 0)
+				if (Game.ship >= Game.goldbuycost * 0.5 || Game.goldbuy === 1)
 				{
 					document.getElementById("goldbuy").style.visibility = "visible";
 					hiddenleft--;
 				}
 				break;
 			case 5:
-				if (Game.foreman >= Game.minerclickcost * 0.5 && Game.clicktype == "gold")
+				if (Game.foreman >= Game.minerclickcost * 0.5 || Game.clicktype == "miner")
 				{
 					document.getElementById("minerclick").style.visibility = "visible";
 					hiddenleft--;
