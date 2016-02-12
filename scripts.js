@@ -132,12 +132,12 @@ function NewGame()
 	this.clicktype = "gold";
 	this.minerclickcost = 400000000;
 	
-	this.logoffdate = null;
 }
+
 var Game = new NewGame();
 var visibledrones = 0;
 
-var now, before = new Date();
+var now = new Date(), before = new Date();
 
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
@@ -145,16 +145,25 @@ if (localStorage.getItem('saveObject') !== null)
 	Game = JSON.parse(localStorage.getItem('saveObject'));
 	//need to re-add the drones to canvas, just in case...
 	createDrones();
+	
 	if (Game.goldbuy !== 0)
 	{
 		//switch from default button text for goldbuying back to what it was, fixes graphical confusion
 		upgrade(Game.goldbuy);
 		upgrade(Game.goldbuy);
 	}
-	before = Game.logoffdate;	
-	setTimeout(function() { alert('Offline progerss'); }, 1);
 	
+	//load the last date and tell the user we were offline
+	//dates act funny so can't be simply placed in game object
+	before = new Date(parseInt(localStorage.getItem('time')));  
+	var A = (now.getTime() - before.getTime());
+	var seconds=Math.floor((A/1000)%60);
+	var minutes=Math.floor(A/(1000*60))%60;
+	var hours=Math.floor(A/(1000*60*60))%24;
+
+	setTimeout(function() { alert('Offline progress: ' + hours + 'hrs ' + minutes + 'min ' + seconds + 'sec'); }, 1);
 }
+
 initialiseCosts();
 
 //main game loop, using date based method
@@ -166,7 +175,7 @@ setInterval( function()
     var elapsedTime = (now.getTime() - before.getTime());
     if(elapsedTime > delay)
 	{
-        //Recover the motion lost while inactive.
+        //Recover the motion lost while inactive. Covers offline progression
 		for (var i = 0; i < elapsedTime/delay; i++)
 			tick(false); //without updates to canvas etc...
 	}	
@@ -174,7 +183,8 @@ setInterval( function()
 		tick(true);
 	
     before = new Date();   
-	Game.logoffdate = before;
+	localStorage.setItem('time', +new Date);
+	
 }, delay);		
 
 }
