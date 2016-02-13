@@ -698,7 +698,7 @@ function drawShip()
 {	
 	//shipsprite.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
 	background.moveTo(111-canvas.width*Game.progress/Game.levelcost, 0);
-	//shipsprite.moveTo(canvas.width/2, canvas.height/2);
+	shipsprite.moveTo(canvas.width/2 + 50*Math.sin(now.getTime()/2000 % 360), canvas.height/2);
 }
 
 function drawScreen()
