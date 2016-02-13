@@ -138,7 +138,8 @@ function NewGame()
 var Game = new NewGame();
 var visibledrones = 0;
 
-var now = new Date(), before = new Date();
+var now = new Date(), before = new Date(), 
+var savetime;
 var delay = (1000 / fps);
 
 // if save file exists load it
@@ -149,7 +150,7 @@ if (localStorage.getItem('saveObject') !== null)
 	createDrones();	
 	//load the last date and tell the user we were offline
 	//dates act funny so can't be simply placed in game object
-	before = new Date(parseInt(localStorage.getItem('time')));  
+	savetime = new Date(parseInt(localStorage.getItem('time')));  
 	
 	//offline progression
 	offlineticks();
@@ -364,7 +365,7 @@ function grayButtons()
 //~~~~ TICK FUNCTIONS ~~~~
 function offlineticks()
 {
-	var A = (now.getTime() - before.getTime());
+	var A = (now.getTime() - savetime.getTime());
 	
 	if (A > 120000) //2 minutes
 	{		
@@ -389,9 +390,6 @@ function offlineticks()
 		
 		alert('Offline for: ' + hours + 'hr ' + minutes + 'min ' + seconds + 'sec\n' + 'Earned ' + earned + ' gold');
 	}
-	
-	//need to update date so that the subsequent ongoing game ticks don't start from the saved time.
-	before = new Date();
 }
 
 function tick(display, fuzz)
