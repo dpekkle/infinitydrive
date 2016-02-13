@@ -152,32 +152,11 @@ if (localStorage.getItem('saveObject') !== null)
 	//load the last date and tell the user we were offline
 	//dates act funny so can't be simply placed in game object
 	before = new Date(parseInt(localStorage.getItem('time')));  
-	var A = (now.getTime() - before.getTime());
 	
-	
-	
-	if (A > 40000)
-	{
-		if (A > 3600000)
-			A = 3600000;
-		
-		var seconds=Math.floor((A/1000)%60);
-		var minutes=Math.floor(A/(1000*60))%60;
-		var hours=Math.floor(A/(1000*60*60))%24;
-		setTimeout(function() { alert('Offline progress: ' + hours + 'hrs ' + minutes + 'min ' + seconds + 'sec'); }, 1);
-		
-		//do the loop here
-		for (var i = 0; i < A/delay; i++)
-		{
-			tick('offline');
-			if (i % 100 = 0)
-			{
-				drawShip();
-				canvas.redraw();
-			}
-		}
-	}
+	//offline progression
+	offlineticks();
 }
+
 initialiseCosts();
 
 //these must come after initialiseCosts for loaded games
@@ -206,6 +185,35 @@ setInterval( function()
     before = new Date();   	
 }, delay);		
 
+}
+
+function offlineticks()
+{
+	var A = (now.getTime() - before.getTime());
+		
+	if (A > 40000) //40 seconds
+	{
+		if (A > 36000000) //10 hours
+			A = 36000000;
+		
+		var seconds=Math.floor((A/1000)%60);
+		var minutes=Math.floor(A/(1000*60))%60;
+		var hours=Math.floor(A/(1000*60*60))%24;
+		
+		var cur_gold = Game.gold;
+		
+		//do the loop here
+		for (var i = 0; i < A/delay/50; i++)
+		{
+			tick('offline');
+			console.log('i: ' + i);
+		}
+		
+		var new_gold = Game.gold;
+		var earned = formatNumber(new_gold - cur_gold);
+		
+		alert('Offline for: ' + hours + 'hr ' + minutes + 'min ' + seconds + 'sec\n' + 'Earned ' + earned + ' gold');
+	}
 }
 
 function initialiseCosts()
@@ -409,10 +417,20 @@ function grayButtons()
 
 function tick(display)
 {
-	Game.gold += Game.goldpt/50;	
-	Game.progress += Game.goldpt/50;
-	Game.miner += Game.minerpt/50;
-	Game.foreman += Game.foremanpt/50;
+	if (display === 'offline')
+	{
+		Game.gold += Game.goldpt;	
+		Game.progress += Game.goldpt;
+		Game.miner += Game.minerpt;
+		Game.foreman += Game.foremanpt;
+	}
+	else
+	{
+		Game.gold += Game.goldpt/50;	
+		Game.progress += Game.goldpt/50;
+		Game.miner += Game.minerpt/50;
+		Game.foreman += Game.foremanpt/50;
+	}
 	
 	Game.goldpt = Game.miner * Game.minermod;
 	Game.minerpt = Game.foreman * Game.foremanmod;	
@@ -619,7 +637,7 @@ function upgrade(id)
 	
 	if (id == "minerclick")
 	{
-		Game.foreman -= minerclickcost;
+		Game.foreman -= Game.minerclickcost;
 		Game.clicktype = "miner";
 		document.getElementById( "minerclick").style.visibility = "hidden";	
 	}	
