@@ -18,7 +18,6 @@ Should scale with based on networth.
 */
 
 {
-
 var ranges = [
   { divider: 1e48 , suffix: 'P' },
   { divider: 1e45 , suffix: 'O' },
@@ -37,23 +36,33 @@ var ranges = [
   { divider: 1e6 , suffix: 'B' },
   { divider: 1e3 , suffix: 'A' }
 ];
+var totalDistance = 0.0;
+var fps = 60;
+var tickspeed = 2;
+var gameslow = tickspeed * 1.6;
 
 //initialise canvas
 {
-	var fps = 50;
-	var gameslow = 75;
-
 	var canvas = oCanvas.create({canvas: "canvas"});
 
+	var galaxy = canvas.display.image(
+	{
+		x:0,
+		y:canvas.height/2,
+		origin: {x:0, y:"center"},
+		image: "images/3880_galaxy.jpg",
+		height: 5000,
+		width: 10000
+	});
 	
 	var background = canvas.display.image(
 	{
 		x:0, 
-		y:0, 
-		origin: {x:111, y:0},
-		image: "images/earthtest.png",
+		y:canvas.height/2, 
+		origin: {x:-500, y:"center"},
+		image: "images/earth3.png",
 		height:500,
-		width:2000
+		width:3000
 		//zIndex added after added to canvas
 	});
 	
@@ -67,7 +76,7 @@ var ranges = [
 		width: 150,
 		generate: true,
 		direction: "x",
-		duration: 4 * 1000/fps
+		duration: 4 * 10
 	});
 
 	var droneArray = [];
@@ -82,8 +91,8 @@ var ranges = [
 		width: 256,
 		generate: true,
 		direction: "x",
-		duration: 4 * 1000/fps,
-		speed: 1
+		duration: 4 * 30,
+		speed: 60/fps
 	});
 
 	var level_text = canvas.display.text({
@@ -158,11 +167,11 @@ function NewGame()
 
 var Game = new NewGame();
 var visibledrones = 0;
+var backgroundpos = 0;
+var delay = (1000 / tickspeed);
 
 var now = new Date(), before = new Date(); 
 var savetime;
-var delay = (1000 / fps);
-
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
 {
@@ -199,6 +208,8 @@ setInterval( function()
     var elapsedTime = (now.getTime() - before.getTime());
     if(elapsedTime > delay)
 	{
+		console.log("Lag...")
+
         //Recover the motion lost while inactive.
 		for (var i = 0; i < elapsedTime/delay; i++)
 		{
@@ -210,19 +221,55 @@ setInterval( function()
 	{
 		tick('online');
 		tab = 'here';
-		drawScreen();
 	}
-	
     before = new Date();   
 	
 }, delay);		
 
+var progbefore = new Date(), prognow = new Date(); 
+var progtickpt = 50;
+var prograte = delay/progtickpt;
+
+setInterval( function() 
+{	
+    prognow = new Date();
+    var elapsedTime = (prognow.getTime() - progbefore.getTime());
+    if(elapsedTime > prograte)
+		for (var i = 0; i < elapsedTime/prograte; i++)
+			Game.progress += Game.goldpt/gameslow/progtickpt;
+	else
+		Game.progress += Game.goldpt/gameslow/progtickpt;
+    progbefore = new Date();   
+	
+	if (levelup())
+	{
+		if (Game.level % 10 === 0)
+			background.moveTo(111, canvas.height/2);
+	}	
+	
+}, prograte);
+
 setInterval( function()
 {
+	drawScreen();
 	uiTick(tab);
-}, 1);
+}, 1000/fps);
 
 }
+function levelup()
+{
+	if (Game.progress/Game.levelcost >= 1)
+	{
+		Game.level++;
+		Game.progress = 0;
+		//Game.levelcost *= 2;
+		backgroundpos = 0;
+		return true;
+	}
+	else 
+		return false;
+}
+
 
 //~~~~ UI FUNCTIONS ~~~~
 function checkVisibility()
@@ -400,7 +447,7 @@ function grayButtons()
 function offlineticks()
 {
 	var A = (now.getTime() - savetime.getTime());
-	
+	A = 12000000;
 	if (A > 120000) //2 minutes
 	{		
 		var seconds=Math.floor((A/1000)%60);
@@ -413,9 +460,10 @@ function offlineticks()
 		
 		//for longer times offline there will be a degree of inaccuracy, however it should run in a constant amount of time
 		
-		for (var i = 0; i < A/delay/fuzz; i++)
+		for (var i = 0; i < A/delay/fuzz/gameslow; i++)
 		{
 			tick('offline', fuzz);
+			levelup();
 			console.log('i: ' + i);
 		}
 		
@@ -430,15 +478,15 @@ function tick(display, fuzz)
 {
 	if (display === 'offline')
 	{
-		Game.gold += Game.goldpt*fuzz/gameslow;	
-		Game.progress += Game.goldpt*fuzz/gameslow;
-		Game.miner += Game.minerpt*fuzz/gameslow;
-		Game.foreman += Game.foremanpt*fuzz/gameslow;
+		Game.gold += Game.goldpt*fuzz;	
+		Game.progress += Game.goldpt*fuzz;
+		Game.miner += Game.minerpt*fuzz;
+		Game.foreman += Game.foremanpt*fuzz;
 	}
 	else
 	{
-		Game.gold += Game.goldpt/gameslow;	
-		Game.progress += Game.goldpt/gameslow;
+		Game.gold += Game.goldpt/gameslow;
+		//we want smooth game progress while disaply is visible for background moving purposes
 		Game.miner += Game.minerpt/gameslow;
 		Game.foreman += Game.foremanpt/gameslow;
 	}
@@ -447,18 +495,12 @@ function tick(display, fuzz)
 	Game.minerpt = Game.foreman * Game.foremanmod;	
 	Game.foremanpt = Game.ship * Game.shipmod;	
 
-	if (Game.progress/Game.levelcost >= 1)
-	{
-		Game.level += 1;
-		Game.progress = 0;
-		Game.levelcost *= 2;
-	}	
 }
 
 function uiTick(state)
 {
 	// auto save the game
-	if (Game.it % 200 === 0)
+	if (Game.it % 500 === 0)
 	{
 		localStorage.setItem('time', +new Date);
 		localStorage.setItem('saveObject', JSON.stringify(Game));
@@ -665,6 +707,27 @@ function drawExtras()
 		droneArray[i].rotation -= droneArray[i].speed;	
 }
 
+function drawBackground()
+{
+	var backdist = 1/Math.log(Game.level/10 + 2);
+	background.moveTo(111 - 100*backdist * ((Game.level % 10) + Game.progress/Game.levelcost), canvas.height/2);
+	background.scale(backdist, backdist);
+}
+
+function drawShip()
+{	
+	var shiptime = new Date().getTime();
+	shipsprite.moveTo(canvas.width/2 + 50*Math.sin(shiptime/2000 % 360), canvas.height/2);
+}
+
+function drawScreen()
+{	
+	drawExtras();
+	drawShip();
+	drawBackground();
+	canvas.redraw();
+}
+
 function createDrones()
 {
 	var targetdrones = 1 + Math.ceil(Math.log(Game.ship));
@@ -694,19 +757,6 @@ function createDrones()
 	}	
 }
 
-function drawShip()
-{	
-	//shipsprite.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
-	background.moveTo(111-canvas.width*Game.progress/Game.levelcost, 0);
-	shipsprite.moveTo(canvas.width/2 + 50*Math.sin(now.getTime()/2000 % 360), canvas.height/2);
-}
-
-function drawScreen()
-{
-	drawExtras();
-	drawShip();
-	canvas.redraw();
-}
 
 //~~~~ AUXILLARY FUNCTIONS ~~~~
 function initialiseCosts()
@@ -728,7 +778,7 @@ function initialiseCosts()
 	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + Game.shipupcost + " gold";
 
 	//Initialise canvas text
-	level_text.text = "Level " + Game.level;
+	level_text.text = "Level " + Math.log2(Game.level);
 
 	//amount of elements not visible
 	visiblemax = 6;
