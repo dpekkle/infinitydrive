@@ -138,7 +138,7 @@ function NewGame()
 var Game = new NewGame();
 var visibledrones = 0;
 
-var now = new Date(), before = new Date(), 
+var now = new Date(), before = new Date(); 
 var savetime;
 var delay = (1000 / fps);
 
