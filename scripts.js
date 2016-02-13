@@ -44,16 +44,17 @@ var ranges = [
 
 	var canvas = oCanvas.create({canvas: "canvas"});
 
-	/*
-	var image1 = canvas.display.image(
+	
+	var background = canvas.display.image(
 	{
-		x:30, 
-		y:30, 
-		origin: {x:"center", y:"center"},
-		image: "images/defaultship.png",
-		height:150,
-		width:150
-	});*/
+		x:0, 
+		y:0, 
+		origin: {x:0, y:0},
+		image: "images/earthbg.png",
+		height:500,
+		width:1111
+		//zIndex added after added to canvas
+	});
 	
 	var shipsprite = canvas.display.sprite(
 	{
@@ -90,7 +91,7 @@ var ranges = [
 		origin: { x: "left", y: "bottom" },
 		font: "bold 24px sans-serif",
 		text: "Level",
-		fill: "#000"
+		fill: "#0aa"
 	});
 
 	var save_text = canvas.display.text({
@@ -99,9 +100,11 @@ var ranges = [
 		origin: { x: "right", y: "bottom" },
 		font: "bold 24px sans-serif",
 		text: "",
-		fill: "#000"
+		fill: "#0aa"
 	});
 	
+	canvas.addChild(background);
+	background.zIndex = "back"; 
 	canvas.addChild(shipsprite);
 	shipsprite.rotate(90);
 	shipsprite.start();
