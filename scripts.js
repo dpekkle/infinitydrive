@@ -44,6 +44,7 @@ var ranges = [
 
 	var canvas = oCanvas.create({canvas: "canvas"});
 
+	/*
 	var image1 = canvas.display.image(
 	{
 		x:30, 
@@ -52,6 +53,19 @@ var ranges = [
 		image: "images/defaultship.png",
 		height:150,
 		width:150
+	});*/
+	
+	var shipsprite = canvas.display.sprite(
+	{
+		x:0,
+		y:0,
+		origin: {x:"center", y:"center"},
+		image: "images/shipsheet.png",
+		height:150,
+		width: 150,
+		generate: true,
+		direction: "x",
+		duration: 4 * 1000/fps
 	});
 
 	var droneArray = [];
@@ -87,8 +101,11 @@ var ranges = [
 		text: "",
 		fill: "#000"
 	});
-
-	canvas.addChild(image1);
+	
+	canvas.addChild(shipsprite);
+	shipsprite.rotate(90);
+	shipsprite.start();
+	
 	canvas.addChild(level_text);
 	canvas.addChild(save_text);
 }
@@ -614,7 +631,7 @@ function buyminer(mode)
 		}
 	}
 	
-	if (id == "minerclick")
+	if (id == "minerclick" && Game.foreman >= Game.minerclickcost)
 	{
 		Game.foreman -= Game.minerclickcost;
 		Game.clicktype = "miner";
@@ -644,14 +661,14 @@ function createDrones()
 			var newdrone = dronesprite.clone();
 			newdrone.scale(0.25,0.25);
 			
-			image1.addChild(newdrone);
+			shipsprite.addChild(newdrone);
 			droneArray.push(newdrone);
 			newdrone.start();
 			visibledrones++;
 		}
 		while (targetdrones < visibledrones && targetdrones >= 0) //just in case of a bug
 		{
-			image1.removeChildAt(image1.children.length-1, false);
+			shipsprite.removeChildAt(shipsprite.children.length-1, false);
 			droneArray.pop();
 			visibledrones--;
 		}
@@ -664,7 +681,7 @@ function createDrones()
 
 function drawShip()
 {	
-	image1.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
+	shipsprite.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
 }
 
 function drawScreen()
