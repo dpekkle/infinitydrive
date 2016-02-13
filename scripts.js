@@ -1,4 +1,7 @@
-/* ~-------------- PLAN ----------------
+/* 
+New upgrade idea: your visible drones provide you some autoclicks. Maybe this starts their animation!
+
+~-------------- PLAN ----------------
 You run into bosses. If you have enough velocity, they explode.
 
 Eventually you reach bosses where the "first try" won't destroy them.
@@ -138,6 +141,7 @@ var Game = new NewGame();
 var visibledrones = 0;
 
 var now = new Date(), before = new Date();
+var delay = (1000 / fps);
 
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
@@ -150,12 +154,28 @@ if (localStorage.getItem('saveObject') !== null)
 	before = new Date(parseInt(localStorage.getItem('time')));  
 	var A = (now.getTime() - before.getTime());
 	
+	
+	
 	if (A > 40000)
 	{
+		if (A > 3600000)
+			A = 3600000;
+		
 		var seconds=Math.floor((A/1000)%60);
 		var minutes=Math.floor(A/(1000*60))%60;
 		var hours=Math.floor(A/(1000*60*60))%24;
 		setTimeout(function() { alert('Offline progress: ' + hours + 'hrs ' + minutes + 'min ' + seconds + 'sec'); }, 1);
+		
+		//do the loop here
+		for (var i = 0; i < A/delay; i++)
+		{
+			tick('offline');
+			if (i % 100 = 0)
+			{
+				drawShip();
+				canvas.redraw();
+			}
+		}
 	}
 }
 initialiseCosts();
@@ -169,7 +189,6 @@ if (Game.goldbuy !== 0)
 }
 
 //main game loop, using date based method
-var delay = (1000 / fps);
 
 setInterval( function() 
 {	
@@ -179,10 +198,10 @@ setInterval( function()
 	{
         //Recover the motion lost while inactive. Covers offline progression
 		for (var i = 0; i < elapsedTime/delay; i++)
-			tick(false); //without updates to canvas etc...
+			tick('away'); //without updates to canvas etc...
 	}	
 	else
-		tick(true);
+		tick('here');
 	
     before = new Date();   	
 }, delay);		
@@ -390,7 +409,6 @@ function grayButtons()
 
 function tick(display)
 {
-	
 	Game.gold += Game.goldpt/50;	
 	Game.progress += Game.goldpt/50;
 	Game.miner += Game.minerpt/50;
@@ -405,39 +423,42 @@ function tick(display)
 		Game.level += 1;
 		Game.progress = 0;
 		Game.levelcost *= 2;
-		level_text.text = "level " + Game.level;
-
 	}
 	
-	// auto save the game
-	if (Game.it % 200 === 0)
+	if (display !== 'offline')
 	{
-		localStorage.setItem('time', +new Date);
-		localStorage.setItem('saveObject', JSON.stringify(Game));
-		Game.it2 = 0;
-		save_text.text = "Autosaved...";
-	}	
-	//only update ui when the tab is selected
-	if (display === true)
-	{		
-		if (Game.it < 1000)
-			Game.it++;	
-		else
-			Game.it = 0;
-		
-		//run ui functions
-		if (Game.it % 6 === 0)
+		// auto save the game
+		if (Game.it % 200 === 0)
 		{
-			updateCosts();
+			localStorage.setItem('time', +new Date);
+			localStorage.setItem('saveObject', JSON.stringify(Game));
+			Game.it2 = 0;
+			save_text.text = "Autosaved...";
+		}	
+		//only update ui when the tab is selected
+		if (display === 'here')
+		{		
+			if (Game.it < 1000)
+				Game.it++;	
+			else
+				Game.it = 0;
+			
+			//run ui functions
+			if (Game.it % 6 === 0)
+			{
+				updateCosts();
+				level_text.text = "level " + Game.level;
+
+			}
+			if (Game.it % 20 === 0)
+			{
+				grayButtons();
+				checkVisibility();
+				save_text.text = "";
+			}			
+			updateAmounts();			
+			drawScreen();
 		}
-		if (Game.it % 20 === 0)
-		{
-			grayButtons();
-			checkVisibility();
-			save_text.text = "";
-		}			
-		updateAmounts();			
-		drawScreen();
 	}
 }
 
