@@ -39,6 +39,7 @@ var ranges = [
 var fps = 60;
 var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
+var shipspeed = 5;
 
 //initialise canvas
 {
@@ -58,7 +59,7 @@ var gameslow = tickspeed * 1.6;
 	{
 		x:0, 
 		y:canvas.height/2, 
-		origin: {x:-500, y:"center"},
+		origin: {x:0, y:"center"},
 		image: "images/earth3.png",
 		height:500,
 		width:3000
@@ -166,7 +167,6 @@ function NewGame()
 
 var Game = new NewGame();
 var visibledrones = 0;
-var backgroundpos = 0;
 var delay = (1000 / tickspeed);
 
 var now = new Date(), before = new Date(); 
@@ -242,7 +242,7 @@ setInterval( function()
 	
 	if (levelup())
 	{
-		if (Game.level % 10 === 0)
+		if (Game.level % 1000/shipspeed === 0) //here modifies speed
 			background.moveTo(111, canvas.height/2);
 	}	
 	
@@ -262,7 +262,6 @@ function levelup()
 		Game.level++;
 		Game.progress = 0;
 		//Game.levelcost *= 2;
-		backgroundpos = 0;
 		return true;
 	}
 	else 
@@ -516,7 +515,7 @@ function uiTick(state)
 		if (Game.it % 6 === 0)
 		{
 			updateCosts();
-			level_text.text = "level " + Game.level;
+			level_text.text = "level " + Math.floor((1 + Math.log2(Game.level)));
 
 		}
 		if (Game.it % 20 === 0)
@@ -707,9 +706,9 @@ function drawExtras()
 
 function drawBackground()
 {
-	var backdist = 1/Math.log(Game.level/10 + 2);
-	background.moveTo(111 - 100*backdist * ((Game.level % 10) + Game.progress/Game.levelcost), canvas.height/2);
-	background.scale(backdist, backdist);
+	//var backdist = 1/Math.log(Game.level/100 + 2);
+	background.moveTo(111 - shipspeed * ((Game.level % (1000/shipspeed)) + Game.progress/Game.levelcost), canvas.height/2); //here modifies speed
+	//background.scale(backdist, backdist);
 }
 
 function drawShip()
@@ -776,7 +775,7 @@ function initialiseCosts()
 	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + Game.shipupcost + " gold";
 
 	//Initialise canvas text
-	level_text.text = "Level " + Math.log2(Game.level);
+	level_text.text = "Level " + Game.level;
 
 	//amount of elements not visible
 	visiblemax = 6;
