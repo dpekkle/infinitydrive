@@ -366,7 +366,7 @@ function offlineticks()
 {
 	var A = (now.getTime() - before.getTime());
 	
-	if (A > 40000) //40 seconds
+	if (A > 120000) //2 minutes
 	{		
 		var seconds=Math.floor((A/1000)%60);
 		var minutes=Math.floor(A/(1000*60))%60;
@@ -389,6 +389,9 @@ function offlineticks()
 		
 		alert('Offline for: ' + hours + 'hr ' + minutes + 'min ' + seconds + 'sec\n' + 'Earned ' + earned + ' gold');
 	}
+	
+	//need to update date so that the subsequent ongoing game ticks don't start from the saved time.
+	before = new Date();
 }
 
 function tick(display, fuzz)
