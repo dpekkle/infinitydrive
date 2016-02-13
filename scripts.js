@@ -36,7 +36,6 @@ var ranges = [
   { divider: 1e6 , suffix: 'B' },
   { divider: 1e3 , suffix: 'A' }
 ];
-var totalDistance = 0.0;
 var fps = 60;
 var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
@@ -447,7 +446,6 @@ function grayButtons()
 function offlineticks()
 {
 	var A = (now.getTime() - savetime.getTime());
-	A = 12000000;
 	if (A > 120000) //2 minutes
 	{		
 		var seconds=Math.floor((A/1000)%60);
