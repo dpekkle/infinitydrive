@@ -40,7 +40,8 @@ var ranges = [
 
 //initialise canvas
 {
-	var fps = 30;
+	var fps = 50;
+	var gameslow = 75;
 
 	var canvas = oCanvas.create({canvas: "canvas"});
 
@@ -49,17 +50,17 @@ var ranges = [
 	{
 		x:0, 
 		y:0, 
-		origin: {x:0, y:0},
-		image: "images/earthbg.png",
+		origin: {x:111, y:0},
+		image: "images/earthtest.png",
 		height:500,
-		width:1111
+		width:2000
 		//zIndex added after added to canvas
 	});
 	
 	var shipsprite = canvas.display.sprite(
 	{
-		x:0,
-		y:0,
+		x:canvas.width/2,
+		y:canvas.height/2,
 		origin: {x:"center", y:"center"},
 		image: "images/shipsheet.png",
 		height:150,
@@ -147,7 +148,7 @@ function NewGame()
 	this.levelcost = canvas.width;
 	this.progress = 0;
 	this.it = 0;
-	this.it2 = 0;
+	this.it2 = 0; //unused
 	this.longtick = 5;
 
 	this.clicktype = "gold";
@@ -191,22 +192,35 @@ if (Game.goldbuy !== 0)
 }
 
 //main game loop, using date based method
-
+var tab = 'here';
 setInterval( function() 
 {	
     now = new Date();
     var elapsedTime = (now.getTime() - before.getTime());
     if(elapsedTime > delay)
 	{
-        //Recover the motion lost while inactive. Covers offline progression
+        //Recover the motion lost while inactive.
 		for (var i = 0; i < elapsedTime/delay; i++)
-			tick('away'); //without updates to canvas etc...
+		{
+			tick('online');
+			tab = 'away';
+		}
 	}	
 	else
-		tick('here');
+	{
+		tick('online');
+		tab = 'here';
+		drawScreen();
+	}
 	
-    before = new Date();   	
+    before = new Date();   
+	
 }, delay);		
+
+setInterval( function()
+{
+	uiTick(tab);
+}, 1);
 
 }
 
@@ -399,7 +413,7 @@ function offlineticks()
 		
 		//for longer times offline there will be a degree of inaccuracy, however it should run in a constant amount of time
 		
-		for (var i = 0; i < A/delay/fuzz/50; i++)
+		for (var i = 0; i < A/delay/fuzz; i++)
 		{
 			tick('offline', fuzz);
 			console.log('i: ' + i);
@@ -416,17 +430,17 @@ function tick(display, fuzz)
 {
 	if (display === 'offline')
 	{
-		Game.gold += Game.goldpt*fuzz;	
-		Game.progress += Game.goldpt*fuzz;
-		Game.miner += Game.minerpt*fuzz;
-		Game.foreman += Game.foremanpt*fuzz;
+		Game.gold += Game.goldpt*fuzz/gameslow;	
+		Game.progress += Game.goldpt*fuzz/gameslow;
+		Game.miner += Game.minerpt*fuzz/gameslow;
+		Game.foreman += Game.foremanpt*fuzz/gameslow;
 	}
 	else
 	{
-		Game.gold += Game.goldpt/50;	
-		Game.progress += Game.goldpt/50;
-		Game.miner += Game.minerpt/50;
-		Game.foreman += Game.foremanpt/50;
+		Game.gold += Game.goldpt/gameslow;	
+		Game.progress += Game.goldpt/gameslow;
+		Game.miner += Game.minerpt/gameslow;
+		Game.foreman += Game.foremanpt/gameslow;
 	}
 	
 	Game.goldpt = Game.miner * Game.minermod;
@@ -438,43 +452,41 @@ function tick(display, fuzz)
 		Game.level += 1;
 		Game.progress = 0;
 		Game.levelcost *= 2;
-	}
-	
-	if (display !== 'offline')
-	{
-		// auto save the game
-		if (Game.it % 200 === 0)
-		{
-			localStorage.setItem('time', +new Date);
-			localStorage.setItem('saveObject', JSON.stringify(Game));
-			Game.it2 = 0;
-			save_text.text = "Autosaved...";
-		}	
-		//only update ui when the tab is selected
-		if (display === 'here')
-		{		
-			if (Game.it < 1000)
-				Game.it++;	
-			else
-				Game.it = 0;
-			
-			//run ui functions
-			if (Game.it % 6 === 0)
-			{
-				updateCosts();
-				level_text.text = "level " + Game.level;
+	}	
+}
 
-			}
-			if (Game.it % 20 === 0)
-			{
-				grayButtons();
-				checkVisibility();
-				save_text.text = "";
-			}			
-			updateAmounts();			
-			drawScreen();
+function uiTick(state)
+{
+	// auto save the game
+	if (Game.it % 200 === 0)
+	{
+		localStorage.setItem('time', +new Date);
+		localStorage.setItem('saveObject', JSON.stringify(Game));
+		save_text.text = "Autosaved...";
+	}	
+	//only update ui when the tab is selected
+	if (state === 'here')
+	{		
+		if (Game.it < 1000)
+			Game.it++;	
+		else
+			Game.it = 0;
+		
+		//run ui functions
+		if (Game.it % 6 === 0)
+		{
+			updateCosts();
+			level_text.text = "level " + Game.level;
+
 		}
-	}
+		if (Game.it % 20 === 0)
+		{
+			grayButtons();
+			checkVisibility();
+			save_text.text = "";
+		}			
+		updateAmounts();			
+	}	
 }
 
 //~~~~ BUTTON FUNCTIONS ~~~~
@@ -684,7 +696,9 @@ function createDrones()
 
 function drawShip()
 {	
-	shipsprite.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
+	//shipsprite.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
+	background.moveTo(111-canvas.width*Game.progress/Game.levelcost, 0);
+	//shipsprite.moveTo(canvas.width/2, canvas.height/2);
 }
 
 function drawScreen()
