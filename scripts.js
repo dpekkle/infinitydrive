@@ -17,8 +17,6 @@ Best way to do it would be to put a limit on the time you can take to travel bac
 Should scale with based on networth.
 */
 
-
-
 {
 
 var ranges = [
@@ -155,9 +153,13 @@ if (localStorage.getItem('saveObject') !== null)
 	
 	//offline progression
 	offlineticks();
+	
+	console.log("Done with offline");
 }
 
 initialiseCosts();
+
+console.log("Done with initialise");
 
 //these must come after initialiseCosts for loaded games
 if (Game.goldbuy !== 0)
@@ -187,65 +189,9 @@ setInterval( function()
 
 }
 
-function offlineticks()
-{
-	var A = (now.getTime() - before.getTime());
-		
-	if (A > 40000) //40 seconds
-	{
-		if (A > 36000000) //10 hours
-			A = 36000000;
-		
-		var seconds=Math.floor((A/1000)%60);
-		var minutes=Math.floor(A/(1000*60))%60;
-		var hours=Math.floor(A/(1000*60*60))%24;
-		
-		var cur_gold = Game.gold;
-		
-		//do the loop here
-		for (var i = 0; i < A/delay/50; i++)
-		{
-			tick('offline');
-			console.log('i: ' + i);
-		}
-		
-		var new_gold = Game.gold;
-		var earned = formatNumber(new_gold - cur_gold);
-		
-		alert('Offline for: ' + hours + 'hr ' + minutes + 'min ' + seconds + 'sec\n' + 'Earned ' + earned + ' gold');
-	}
-}
-
-function initialiseCosts()
-{
-	//set first two elements to be visible
-	document.getElementById( "goldbutton").style.backgroundColor = "lightgray";
-	document.getElementById( "goldbutton").style.visibility = "visible";
-	document.getElementById( "gold").style.visibility = "visible";
-
-	//give values to the buttons based off of javascript variables
-	document.getElementById( "goldbutton").value = "Click  " + "+ " + Game.goldmod + " gold";
-	document.getElementById( "foremanbutton").value = "Foremans  " + " Costs " + Game.foremancost + " miners";
-	document.getElementById( "minerbutton").value = "Miners  " + " Costs " + Game.minercost + " gold";
-	document.getElementById( "shipbutton").value = "Drones  " + " Costs " + Game.shipcost + " foremen";
-
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + " Costs " + Game.goldupcost + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + " Costs " + Game.minerupcost + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + Game.foremanupcost + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + Game.shipupcost + " gold";
-
-	//Initialise canvas text
-	level_text.text = "Level " + Game.level;
-
-	//amount of elements not visible
-	visiblemax = 6;
-	hiddenleft = visiblemax;
-}
-
+//~~~~ UI FUNCTIONS ~~~~
 function checkVisibility()
 {
-	console.log("Hidden: " + hiddenleft + " Case: " + (visiblemax - hiddenleft));
-
 	if (hiddenleft > 0)
 	{
 		switch(visiblemax - hiddenleft)
@@ -415,14 +361,44 @@ function grayButtons()
 		document.getElementById( "minerclick").style.backgroundColor = "gray";	
 }
 
-function tick(display)
+//~~~~ TICK FUNCTIONS ~~~~
+function offlineticks()
+{
+	var A = (now.getTime() - before.getTime());
+	
+	if (A > 40000) //40 seconds
+	{		
+		var seconds=Math.floor((A/1000)%60);
+		var minutes=Math.floor(A/(1000*60))%60;
+		var hours=Math.floor(A/(1000*60*60));
+		
+		var fuzz = A/3600000; //one hour will have a fuzz of 1
+		
+		var cur_gold = Game.gold;
+		
+		//for longer times offline there will be a degree of inaccuracy, however it should run in a constant amount of time
+		
+		for (var i = 0; i < A/delay/fuzz/50; i++)
+		{
+			tick('offline', fuzz);
+			console.log('i: ' + i);
+		}
+		
+		var new_gold = Game.gold;
+		var earned = formatNumber(new_gold - cur_gold);
+		
+		alert('Offline for: ' + hours + 'hr ' + minutes + 'min ' + seconds + 'sec\n' + 'Earned ' + earned + ' gold');
+	}
+}
+
+function tick(display, fuzz)
 {
 	if (display === 'offline')
 	{
-		Game.gold += Game.goldpt;	
-		Game.progress += Game.goldpt;
-		Game.miner += Game.minerpt;
-		Game.foreman += Game.foremanpt;
+		Game.gold += Game.goldpt*fuzz;	
+		Game.progress += Game.goldpt*fuzz;
+		Game.miner += Game.minerpt*fuzz;
+		Game.foreman += Game.foremanpt*fuzz;
 	}
 	else
 	{
@@ -480,6 +456,7 @@ function tick(display)
 	}
 }
 
+//~~~~ BUTTON FUNCTIONS ~~~~
 function count() 
 {
 	if (Game.clicktype == "gold")
@@ -495,7 +472,7 @@ function count()
 		Game.miner += 0.1*Game.goldmod;
 	}
 } 
- 
+
 function buyunit(id)
 {
 	if (id == "miner")
@@ -505,6 +482,7 @@ function buyunit(id)
 	else if (id == "ship")
 		buyship(Game.goldbuy);	
 }
+
 function buyminer(mode)
 {
 	if (Game.gold >= Game.minercost)
@@ -516,9 +494,9 @@ function buyminer(mode)
 		
 		grayButtons();		
 	}
- }
- 
-function buyforeman(mode)
+ } 
+
+ function buyforeman(mode)
 {
 	var currency;
 	if (mode == 1)
@@ -541,7 +519,7 @@ function buyforeman(mode)
 	}
 
  }
- 
+
  function buyship(mode)
 {
 	var currency;
@@ -566,8 +544,8 @@ function buyforeman(mode)
 	}
 
  }
- 
-function upgrade(id)
+
+ function upgrade(id)
 {
 	if (id == "gold" && Game.gold >= Game.goldupcost)
 	{
@@ -645,8 +623,85 @@ function upgrade(id)
 	updateAmounts();		
 }
 
-// number handling
-function formatNumber(n) {
+//~~~~ CANVAS FUNCTIONS ~~~~
+
+function drawExtras()
+{	
+	//move drones
+	for (var i = 0; i < droneArray.length; i++)
+		droneArray[i].rotation -= droneArray[i].speed;	
+}
+
+function createDrones()
+{
+	var targetdrones = 1 + Math.ceil(Math.log(Game.ship));
+		
+	if (targetdrones != visibledrones)
+	{
+		while (targetdrones > visibledrones)
+		{
+			var newdrone = dronesprite.clone();
+			newdrone.scale(0.25,0.25);
+			
+			image1.addChild(newdrone);
+			droneArray.push(newdrone);
+			newdrone.start();
+			visibledrones++;
+		}
+		while (targetdrones < visibledrones && targetdrones >= 0) //just in case of a bug
+		{
+			image1.removeChildAt(image1.children.length-1, false);
+			droneArray.pop();
+			visibledrones--;
+		}
+		for (var i = 0; i < droneArray.length; i++)
+		{
+			droneArray[i].rotation = i*360/droneArray.length;			
+		}		
+	}	
+}
+
+function drawShip()
+{	
+	image1.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
+}
+
+function drawScreen()
+{
+	drawExtras();
+	drawShip();
+	canvas.redraw();
+}
+
+//~~~~ AUXILLARY FUNCTIONS ~~~~
+function initialiseCosts()
+{
+	//set first two elements to be visible
+	document.getElementById( "goldbutton").style.backgroundColor = "lightgray";
+	document.getElementById( "goldbutton").style.visibility = "visible";
+	document.getElementById( "gold").style.visibility = "visible";
+
+	//give values to the buttons based off of javascript variables
+	document.getElementById( "goldbutton").value = "Click  " + "+ " + Game.goldmod + " gold";
+	document.getElementById( "foremanbutton").value = "Foremans  " + " Costs " + Game.foremancost + " miners";
+	document.getElementById( "minerbutton").value = "Miners  " + " Costs " + Game.minercost + " gold";
+	document.getElementById( "shipbutton").value = "Drones  " + " Costs " + Game.shipcost + " foremen";
+
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + " Costs " + Game.goldupcost + " gold";
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + " Costs " + Game.minerupcost + " gold";
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + Game.foremanupcost + " gold";
+	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + Game.shipupcost + " gold";
+
+	//Initialise canvas text
+	level_text.text = "Level " + Game.level;
+
+	//amount of elements not visible
+	visiblemax = 6;
+	hiddenleft = visiblemax;
+}
+
+function formatNumber(n) 
+{
   for (var i = 0; i < ranges.length; i++) 
   {
     if (n >= ranges[i].divider) 
@@ -677,68 +732,6 @@ function formatNumber(n) {
 	  return temp.toString() + ".0";
   
   return temp.toString();
-}
-
-// canvas drawing
-
-//ocanvas
-
-function drawExtras()
-{	
-	//move drones
-	for (var i = 0; i < droneArray.length; i++)
-		droneArray[i].rotation -= droneArray[i].speed;
-	
-	//text
-	
-	/*	
-	if (level >= 50)
-	{
-		ctx.font = "36px Times New Roman";
-		ctx.fillText("You did it!",450,50);		
-	}*/
-}
-
-function createDrones()
-{
-	var targetdrones = 1 + Math.ceil(Math.log(Game.ship));
-	
-	//console.log("Target " + targetdrones + " Visible " + visibledrones);
-	
-	if (targetdrones != visibledrones)
-	{
-		while (targetdrones > visibledrones)
-		{
-			var newdrone = dronesprite.clone();
-			newdrone.scale(0.25,0.25);
-			
-			image1.addChild(newdrone);
-			droneArray.push(newdrone);
-			newdrone.start();
-			visibledrones++;
-		}
-		while (targetdrones < visibledrones && targetdrones >= 0) //just in case of a bug
-		{
-			image1.removeChildAt(image1.children.length-1, false);
-			droneArray.pop();
-			visibledrones--;
-		}
-		for (var i = 0; i < droneArray.length; i++)
-		{
-			droneArray[i].rotation = i*360/droneArray.length;			
-		}		
-	}	
-}
-
-function drawShip()
-{	
-	image1.moveTo(-75 + (canvas.width+150)*Game.progress/Game.levelcost, canvas.height/2);
-}
-function drawScreen()
-{
-	drawExtras();
-	drawShip();
-	canvas.redraw();
 }
 
 function deleteSave()
