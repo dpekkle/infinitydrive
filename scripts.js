@@ -1,6 +1,4 @@
 /* 
-New upgrade idea: your visible drones provide you some autoclicks. Maybe this starts their animation!
-
 ~-------------- PLAN ----------------
 You run into bosses. If you have enough velocity, they explode.
 
@@ -706,7 +704,7 @@ function drawExtras()
 
 function drawBackground()
 {
-	//var backdist = 1/Math.log(Game.level/100 + 2);
+	//var backdist = 1/Math.log(Game.level/10 + 2);
 	background.moveTo(111 - shipspeed * ((Game.level % (1000/shipspeed)) + Game.progress/Game.levelcost), canvas.height/2); //here modifies speed
 	//background.scale(backdist, backdist);
 }

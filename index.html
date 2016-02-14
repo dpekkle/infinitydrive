@@ -41,6 +41,14 @@
 		margin-left: 50px;
 	}
 	
+	div.plan
+	{
+		margin-right: 50px;
+		position: relative;
+		top: 50%;
+		text-align: right;
+	}
+	
 	input.buy
 	{
 		visibility:hidden;
@@ -81,12 +89,27 @@
 </style>
 <body>
 
-<div style="height:100%;">
-    <div style="position:relative;top:50%;text-align:center">	
-		<font color= #0aa > v.0.1.4</font><br>
-		<font color= #0aa> Ship now moves through space</font>	
+	<div style="height:100%;">
+		<div style="position:relative;top:50%;text-align:center">	
+			<font color= #0aa > v.0.1.4</font><br>
+			<font color= #0aa> Ship now moves through space</font>	
+			<font color= #0aa >Ideas</font>	
+		</div>
+		<div style="position:relative;top:50%;text-align:left">	
+			<font color= #0aa >
+				- Space: Far background of stars, closer entities including planets,<br> hyperspace animations, closest entities including enemies.
+				<br>
+				- Multi-buy feature.
+				<br>
+				- Firing animation.
+				<br>
+				- Engines. Shields. Weapons.
+				<br>
+				- New upgrade idea: your visible drones provide you some autoclicks.<br> Maybe this starts their animation!
+				<br>
+			</font>
+		</div>
 	</div>
-</div>
 	
 	
 	<!-- Game window -->
@@ -97,36 +120,39 @@
 	</div>
 	
 	<div style="text-align: left"> 
-	<div class="buy"/>
-		<input id = "goldbutton" type ="button" value = "Click        " onclick = "count()" class="buy" />
-		<input id = "minerbutton" type ="button" value = "Miners        " onclick = "buyunit('miner')" class="buy"/>
-		<input id = "foremanbutton" type ="button" value = "Foremans        " onclick = "buyunit('foreman')" class="buy"/>
-		<input id = "shipbutton" type ="button" value = "Ships        " onclick = "buyunit('ship')" class="buy"/>
-		
-	</div>
-	<div class="amounts"/>
-		<input id = "gold" type = "text" class="amounts"/> 
-		<input id = "miners" type = "text" class="amounts"/> 
-		<input id = "foremans" type = "text" class="amounts"/> 
-		<input id = "ships" type = "text" class="amounts"/> 
+		<div class="buy"/>
+			<input id = "goldbutton" type ="button" value = "Click        " onclick = "count()" class="buy" />
+			<input id = "minerbutton" type ="button" value = "Miners        " onclick = "buyunit('miner')" class="buy"/>
+			<input id = "foremanbutton" type ="button" value = "Foremans        " onclick = "buyunit('foreman')" class="buy"/>
+			<input id = "shipbutton" type ="button" value = "Ships        " onclick = "buyunit('ship')" class="buy"/>
+			
+		</div>
+		<div class="amounts"/>
+			<input id = "gold" type = "text" class="amounts"/> 
+			<input id = "miners" type = "text" class="amounts"/> 
+			<input id = "foremans" type = "text" class="amounts"/> 
+			<input id = "ships" type = "text" class="amounts"/> 
 
-	</div>
-	<div class="upgrade"/>
-		<input id = "goldupgradebutton" type ="button" value = "Gold        " onclick = "upgrade('gold')" class="upgrade"/>    
-		<input id = "minerupgradebutton" type ="button" value = "Miners        " onclick = "upgrade('miner')" class="upgrade"/>    
-		<input id = "foremanupgradebutton" type ="button" value = "Foremen        " onclick = "upgrade('foreman')" class="upgrade"/>
-		<input id = "shipupgradebutton" type ="button" value = "Ships        " onclick = "upgrade('ship')" class="upgrade"/>
-		<input id = "goldbuy" type = "button" value = "Buy units with gold, costs 100 drones" onclick = "upgrade('goldbuy')" class = "upgrade"/>
-		<input id = "minerclick" type = "button" value = "Clicks also create 0.1 base miners, costs 10 B foremen" onclick = "upgrade('minerclick')" class = "upgrade"/>
+		</div>
+		<div class="upgrade"/>
+			<input id = "goldupgradebutton" type ="button" value = "Gold        " onclick = "upgrade('gold')" class="upgrade"/>    
+			<input id = "minerupgradebutton" type ="button" value = "Miners        " onclick = "upgrade('miner')" class="upgrade"/>    
+			<input id = "foremanupgradebutton" type ="button" value = "Foremen        " onclick = "upgrade('foreman')" class="upgrade"/>
+			<input id = "shipupgradebutton" type ="button" value = "Ships        " onclick = "upgrade('ship')" class="upgrade"/>
+			<input id = "goldbuy" type = "button" value = "Buy units with gold, costs 100 drones" onclick = "upgrade('goldbuy')" class = "upgrade"/>
+			<input id = "minerclick" type = "button" value = "Clicks also create 0.1 base miners, costs 10 B foremen" onclick = "upgrade('minerclick')" class = "upgrade"/>
 
-	</div>
-	<div class="rate"/>
-		<input id = "goldpt" type = "text" class="rate"/> 
-		<input id = "minerspt" type = "text" class="rate"/> 
-		<input id = "foremanspt" type = "text" class="rate"/> 
-		<input id = "shipspt" type = "text" class="rate"/> 
+		</div>
+		<div class="rate"/>
+			<input id = "goldpt" type = "text" class="rate"/> 
+			<input id = "minerspt" type = "text" class="rate"/> 
+			<input id = "foremanspt" type = "text" class="rate"/> 
+			<input id = "shipspt" type = "text" class="rate"/> 
 
+		</div>
 	</div>
+	
+
 
 	<script defer src="ocanvas-2.8.3.js"></script>
 	<script defer src="scripts.js"></script>
