@@ -34,7 +34,7 @@ var ranges = [
   { divider: 1e6 , suffix: 'B' },
   { divider: 1e3 , suffix: 'A' }
 ];
-var fps = 60;
+var fps = 144;
 var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
 var shipspeed = 5;
@@ -135,7 +135,7 @@ function NewGame()
 	this.minermod = 1;
 	this.minerupcost = 1500;
 	 
-	this.foreman = 10;
+	this.foreman = 0;
 	this.foremancost = 15;
 	this.foremanpt = 0;
 	this.foremanmod = 1;
