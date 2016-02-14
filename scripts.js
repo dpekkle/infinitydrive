@@ -379,17 +379,17 @@ function updateAmounts()
 
 function updateCosts()
 {
-	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + formatNumber(Game.minercost) + Game.goldname;
+	document.getElementById( "minerbutton").value = Game.minername + " Costs " + formatNumber(Game.minercost) + Game.goldname;
 
 	if (Game.goldbuy == 1)
 	{
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(Game.foremancost) + Game.goldname;
-		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(Game.shipcost) + Game.goldname;
+		document.getElementById( "foremanbutton").value = Game.foremanname + " Costs " + formatNumber(Game.foremancost) + Game.goldname;
+		document.getElementById( "shipbutton").value = Game.shipname + " Costs " + formatNumber(Game.shipcost) + Game.goldname;
 	}
 	else
 	{
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(Game.foremancost) + Game.minername;
-		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(Game.shipcost) + Game.foremanname;
+		document.getElementById( "foremanbutton").value = Game.foremanname + " Costs " + formatNumber(Game.foremancost) + Game.minername;
+		document.getElementById( "shipbutton").value = Game.shipname + " Costs " + formatNumber(Game.shipcost) + Game.foremanname;
 	}
 	
 	//upgrade costs
