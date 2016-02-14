@@ -91,8 +91,8 @@
 
 	<div style="height:100%;">
 		<div style="position:relative;top:50%;text-align:center">	
-			<font color= #0aa > v.0.1.4</font><br>
-			<font color= #0aa> Ship now moves through space</font><br>
+			<font color= #0aa > v.0.1.5</font><br>
+			<font color= #0aa> Ship can now fire a particle weapon (click it to try)</font><br>
 		</div>
 		<div style="position:relative;top:50%;text-align:left">	
 			<font color= #0aa size= 1px>
@@ -102,15 +102,9 @@
 				<br>
 				- Multi-buy feature.
 				<br>
-				- Firing animation.
+				- Combat.
 				<br>
-				- Engines. Shields. Weapons.
-				<br>
-				- New upgrade idea: your visible drones provide you some autoclicks.<br> Maybe this starts their animation!
-				<br>
-				- Backend -
-				<br>
-				- Add tick calculations to web worker for efficiency
+				- More and longer progression: Autoclicking drones. Engines. Shields. Weapons.
 				<br>
 				
 			</font>
@@ -124,7 +118,7 @@
 				<br>
 				Gold earned will help power your ships engines.
 				<br>
-				Spend gold to purchase units that will earn gold for you. 
+				Spend gold to purchase units that will earn resources for you. 
 				<br>
 			</font>
 		<div>
@@ -132,7 +126,7 @@
 	
 	
 	<!-- Game window -->
-	<body bgcolor="#000000">
+	<body bgcolor="#222222">
 	<div class = "window"/>
 		<canvas id="canvas" width="1000" height="500" style="background-color: #000"></canvas>
 		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>

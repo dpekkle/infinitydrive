@@ -1,4 +1,7 @@
 /* 
+- Backend -
+- Add tick calculations to web worker for efficiency
+
 ~-------------- PLAN ----------------
 You run into bosses. If you have enough velocity, they explode.
 
@@ -37,20 +40,23 @@ var ranges = [
 var fps = 144;
 var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
-var shipspeed = 5;
+var shipspeed = 50;
 
 //initialise canvas
 {
 	var canvas = oCanvas.create({canvas: "canvas"});
-
-	var galaxy = canvas.display.image(
+	
+	var weaponfire = canvas.display.sprite(
 	{
-		x:0,
-		y:canvas.height/2,
-		origin: {x:0, y:"center"},
-		image: "images/3880_galaxy.jpg",
-		height: 5000,
-		width: 10000
+			x:0, 
+			y:canvas.height/2, //visually this is actually positive x since it's parent is rotated
+			origin: {x:"center", y:"center"},
+			image: "images/firinganim.png",
+			height: 512,
+			width: 512,
+			generate: true,
+			direction: "x",
+			duration: 2 * 10,
 	});
 	
 	var background = canvas.display.image(
@@ -115,10 +121,34 @@ var shipspeed = 5;
 	background.zIndex = "back"; 
 	canvas.addChild(shipsprite);
 	shipsprite.rotate(90);
-	shipsprite.start();
+	shipsprite.startAnimation();
 	
 	canvas.addChild(level_text);
 	canvas.addChild(save_text);
+	
+	canvas.bind("click tap", function()
+	{
+		fireGuns();
+	});
+	
+	//input function
+	/*canvas.bind("keydown", function()
+	{
+		var keys = canvas.keyboard.getKeysDown();
+		for (var i = 0; i < canvas.keyboard.numKeysDown(); i++)
+		{
+			switch(keys[i])
+			{
+				case 32:
+					console.log("Space held down");
+					canvas.stopPropagation();
+					break;
+				default:
+					break;				
+			}	
+		}
+	})*/
+	
 }
 
 function NewGame()
@@ -128,24 +158,28 @@ function NewGame()
 	this.goldpt = 0;
 	this.goldmod = 1;
 	this.goldupcost = 10;
+	this.goldname = " Fuel";
 	 
 	this.miner = 0;
 	this.minercost = 20;
 	this.minerpt = 0;
 	this.minermod = 1;
 	this.minerupcost = 1500;
+	this.minername = " Miners";
 	 
 	this.foreman = 0;
 	this.foremancost = 15;
 	this.foremanpt = 0;
 	this.foremanmod = 1;
 	this.foremanupcost = 25000;
+	this.foremanname = " Asteroids";
 
 	this.ship = 0;
 	this.shipcost = 10;
 	this.shippt = 0;
 	this.shipmod = 2;
 	this.shipupcost = 5000000;
+	this.shipname = " Drones";
 
 	//upgrades
 	this.goldbuy = 0;
@@ -155,7 +189,6 @@ function NewGame()
 	this.levelcost = canvas.width;
 	this.progress = 0;
 	this.it = 0;
-	this.it2 = 0; //unused
 	this.longtick = 5;
 
 	this.clicktype = "gold";
@@ -259,7 +292,8 @@ function levelup()
 	{
 		Game.level++;
 		Game.progress = 0;
-		//Game.levelcost *= 2;
+		Game.levelcost *= 1.001;
+		
 		return true;
 	}
 	else 
@@ -335,39 +369,39 @@ function updateAmounts()
 	document.getElementById( "foremans" ).value = formatNumber(Game.foreman);
 	document.getElementById( "ships" ).value = formatNumber(Game.ship);
 	
-	document.getElementById( "goldpt" ).value = formatNumber(Game.goldpt) + " /sec";	
-	document.getElementById( "minerspt" ).value = formatNumber(Game.minerpt) + " /sec";	
-	document.getElementById( "foremanspt" ).value = formatNumber(Game.foremanpt) + " /sec";
-	document.getElementById( "shipspt" ).value = formatNumber(Game.shippt) + " /sec";
+	document.getElementById( "goldpt" ).value = formatNumber(Game.goldpt) + " /tick";	
+	document.getElementById( "minerspt" ).value = formatNumber(Game.minerpt) + " /tick";	
+	document.getElementById( "foremanspt" ).value = formatNumber(Game.foremanpt) + " /tick";
+	document.getElementById( "shipspt" ).value = formatNumber(Game.shippt) + " /tick";
 	
 	
 }
 
 function updateCosts()
 {
-	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + formatNumber(Game.minercost) + " gold";
+	document.getElementById( "minerbutton").value = "Miners  " + "Costs " + formatNumber(Game.minercost) + Game.goldname;
 
 	if (Game.goldbuy == 1)
 	{
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(Game.foremancost) + " gold";
-		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(Game.shipcost) + " gold";
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(Game.foremancost) + Game.goldname;
+		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(Game.shipcost) + Game.goldname;
 	}
 	else
 	{
-		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(Game.foremancost) + " miners";
-		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(Game.shipcost) + " foreman";
+		document.getElementById( "foremanbutton").value = "Foremans  " + "Costs " + formatNumber(Game.foremancost) + Game.minername;
+		document.getElementById( "shipbutton").value = "Drones  " + "Costs " + formatNumber(Game.shipcost) + Game.foremanname;
 	}
 	
 	//upgrade costs
 	if (Game.clicktype == "gold")
-		document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(Game.goldmod) + " " + Game.clicktype;
+		document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(Game.goldmod) + " " + Game.goldname;
 	else if (Game.clicktype == "miner")
-		document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(Game.goldmod) + " gold amd " + formatNumber(Game.goldmod*0.1) + " miners";
+		document.getElementById( "goldbutton").value = "Click  " + "+ " + formatNumber(Game.goldmod) + Game.goldname + " and " + formatNumber(Game.goldmod*0.1) + " " + Game.minername;
 		
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  " Costs " + formatNumber(Game.goldupcost) + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners " + formatNumber(Game.minermod) + " Costs " + formatNumber(Game.minerupcost) + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen " + formatNumber(Game.foremanmod) + " Costs " + formatNumber(Game.foremanupcost) + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Drones " + formatNumber(Game.shipmod) + " Costs " + formatNumber(Game.shipupcost) + " gold";
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " +  " Costs " + formatNumber(Game.goldupcost) + Game.goldname;
+	document.getElementById( "minerupgradebutton").value = "Upgrade" + Game.minername + " " + formatNumber(Game.minermod) + " Costs " + formatNumber(Game.minerupcost) + Game.goldname;
+	document.getElementById( "foremanupgradebutton").value = "Upgrade" + Game.foremanname + " " + formatNumber(Game.foremanmod) + " Costs " + formatNumber(Game.foremanupcost) + Game.goldname;
+	document.getElementById( "shipupgradebutton").value = "Upgrade" + Game.shipname + " " + formatNumber(Game.shipmod) + " Costs " + formatNumber(Game.shipupcost) + Game.goldname;
 
 	
 }
@@ -712,7 +746,7 @@ function drawBackground()
 function drawShip()
 {	
 	var shiptime = new Date().getTime();
-	shipsprite.moveTo(canvas.width/2 + 50*Math.sin(shiptime/2000 % 360), canvas.height/2);
+	shipsprite.moveTo(canvas.width/2 + 30*Math.sin(shiptime/2000 % 360), canvas.height/2 + 50*Math.sin(shiptime/9999 % 360));
 }
 
 function drawScreen()
@@ -752,6 +786,38 @@ function createDrones()
 	}	
 }
 
+function fireGuns()
+{
+	//make a new sprite
+	if (canvas.children.length < 10)
+	{
+		var newShot = weaponfire.clone({
+			x: shipsprite.x + 100,
+			y: shipsprite.y
+		});
+		canvas.addChild(newShot);
+		newShot.rotate(90);
+		newShot.scale(0.25, 0.25);
+		newShot.startAnimation();
+		
+		console.log("Firing guns ");
+
+		newShot.animate(
+		{
+			x: canvas.width
+		},
+		{
+			duration: weaponfire.duration * weaponfire.frames.length - 10,
+			easing: "ease-in-quad",
+			callback: function()
+			{
+				this.finish();
+				canvas.removeChild(this);
+			}
+		});
+	}
+	
+}
 
 //~~~~ AUXILLARY FUNCTIONS ~~~~
 function initialiseCosts()
@@ -762,15 +828,15 @@ function initialiseCosts()
 	document.getElementById( "gold").style.visibility = "visible";
 
 	//give values to the buttons based off of javascript variables
-	document.getElementById( "goldbutton").value = "Click  " + "+ " + Game.goldmod + " gold";
-	document.getElementById( "foremanbutton").value = "Foremans  " + " Costs " + Game.foremancost + " miners";
-	document.getElementById( "minerbutton").value = "Miners  " + " Costs " + Game.minercost + " gold";
-	document.getElementById( "shipbutton").value = "Drones  " + " Costs " + Game.shipcost + " foremen";
+	document.getElementById( "goldbutton").value = "Click " + "+ " + Game.goldmod + Game.goldname;
+	document.getElementById( "foremanbutton").value = "Foremans  " + " Costs " + Game.foremancost + Game.minername;
+	document.getElementById( "minerbutton").value = "Miners  " + " Costs " + Game.minercost + Game.goldname;
+	document.getElementById( "shipbutton").value = "Drones  " + " Costs " + Game.shipcost + Game.foremanname;
 
-	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + " Costs " + Game.goldupcost + " gold";
-	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + " Costs " + Game.minerupcost + " gold";
-	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + Game.foremanupcost + " gold";
-	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + Game.shipupcost + " gold";
+	document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + " Costs " + Game.goldupcost + Game.goldname;
+	document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + " Costs " + Game.minerupcost + Game.goldname;
+	document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + Game.foremanupcost + Game.goldname;
+	document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + Game.shipupcost + Game.goldname;
 
 	//Initialise canvas text
 	level_text.text = "Level " + Game.level;
