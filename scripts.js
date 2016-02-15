@@ -57,6 +57,7 @@ var shipspeed = 50;
 			generate: true,
 			direction: "x",
 			duration: 2 * 10,
+			loop: false
 	});
 	
 	var background = canvas.display.image(
@@ -72,7 +73,7 @@ var shipspeed = 50;
 	
 	var shipsprite = canvas.display.sprite(
 	{
-		x:canvas.width/2,
+		x:canvas.width/4,
 		y:canvas.height/2,
 		origin: {x:"center", y:"center"},
 		image: "images/shipsheet.png",
@@ -116,6 +117,15 @@ var shipspeed = 50;
 		text: "",
 		fill: "#0aa"
 	});
+	
+	//second ship
+	
+	var enemy = shipsprite.clone({
+		x:3*canvas.width/4,
+	});
+	canvas.addChild(enemy);
+	enemy.rotate(-90);
+	enemy.startAnimation();
 	
 	canvas.addChild(background);
 	background.zIndex = "back"; 
@@ -746,7 +756,8 @@ function drawBackground()
 function drawShip()
 {	
 	var shiptime = new Date().getTime();
-	shipsprite.moveTo(canvas.width/2 + 30*Math.sin(shiptime/2000 % 360), canvas.height/2 + 50*Math.sin(shiptime/9999 % 360));
+	shipsprite.moveTo(canvas.width/4 + 30*Math.sin(shiptime/2000 % 360), canvas.height/2 + 50*Math.sin(shiptime/9999 % 360));
+	enemy.moveTo(canvas.width - 100, shipsprite.y);
 }
 
 function drawScreen()
@@ -799,16 +810,17 @@ function fireGuns()
 		newShot.rotate(90);
 		newShot.scale(0.25, 0.25);
 		newShot.startAnimation();
-		
+				
 		console.log("Firing guns ");
-
+		
+		
 		newShot.animate(
 		{
-			x: canvas.width
+			x: canvas.width - 120
 		},
 		{
-			duration: weaponfire.duration * weaponfire.frames.length - 10,
-			easing: "ease-in-quad",
+			duration:  700,
+			easing: "ease-out-quint",
 			callback: function()
 			{
 				this.finish();
