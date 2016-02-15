@@ -175,7 +175,7 @@ function NewGame()
 	this.minerpt = 0;
 	this.minermod = 1;
 	this.minerupcost = 1500;
-	this.minername = " Miners";
+	this.minername = " Crew";
 	 
 	this.foreman = 0;
 	this.foremancost = 15;
@@ -816,7 +816,7 @@ function fireGuns()
 		
 		newShot.animate(
 		{
-			x: canvas.width - 160
+			x: canvas.width - 140
 		},
 		{
 			duration:  700,
