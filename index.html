@@ -26,7 +26,7 @@
 
 		margin-top:0px;
 	}
-	
+		
 	div.rate
 	{
 		width:20px;
@@ -86,50 +86,49 @@
 		white-space: pre-wrap	
 	}
 	
+	div.upgradestack
+	{
+		width:20px;
+		height:0px;
+		margin-left:800px;
+		margin-top:0px;
+		white-space:normal;
+	}
+	
+	ul.upgradestack
+	{
+		width = 200px;
+		list-style-type:none;
+	}
+	
 </style>
 <body>
 
 	<div style="height:100%;">
 		<div style="position:relative;top:50%;text-align:center">	
-			<font color= #0aa > v.0.1.5</font><br>
-			<font color= #0aa> Ship can now fire a particle weapon (click it to try)</font><br>
+			<font color= #0aa > v.0.1.6</font><br>
+			<font color= #0aa> Music. Background. Droneclicking. </font><br>
 		</div>
-		<div style="position:relative;top:50%;text-align:left">	
-			<font color= #0aa size= 1px>
-				- Planned features -
-				<br>
-				- Space: Far background of stars, closer entities including planets,<br> hyperspace animations, closest entities including enemies.
-				<br>
-				- Multi-buy feature.
-				<br>
-				- Combat.
-				<br>
-				- More and longer progression: Autoclicking drones. Engines. Shields. Weapons.
-				<br>
-				
-			</font>
-		</div>
-		<br>
-		<div style="position:relative;top:50%;text-align:left">	
-			<font color= #0aa size= 3px>
-				- Instructions - 
-				<br>
-				Click the button to earn fuel. 
-				<br>
-				Fuel will help power your ships engines.
-				<br>
-				Spend fuel to purchase units and upgrades. 
-				<br>
-			</font>
-		<div>
 	</div>
+	<div style="position:relative;top:50%;text-align:left">	
+		<font color= #0aa size= 3px>
+			- Instructions - 
+			<br>
+			Click the button to earn fuel. 
+			<br>
+			Spend fuel to purchase units and upgrades. 
+			<br>
+			Units can help convert your fuel into thrust.
+			<br>
+			Some units will create other units.
+		</font>
+	<div>	
 	
 	
 	<!-- Game window -->
 	<body bgcolor="#222222">
 	<div class = "window"/>
 		<canvas id="canvas" width="1000" height="500" style="background-color: #000"></canvas>
-		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
 	</div>
 	
 	<div style="text-align: left"> 
@@ -152,20 +151,46 @@
 			<input id = "minerupgradebutton" type ="button" value = "Miners        " onclick = "upgrade('miner')" class="upgrade"/>    
 			<input id = "foremanupgradebutton" type ="button" value = "Foremen        " onclick = "upgrade('foreman')" class="upgrade"/>
 			<input id = "shipupgradebutton" type ="button" value = "Ships        " onclick = "upgrade('ship')" class="upgrade"/>
-			<input id = "goldbuy" type = "button" value = "Buy units with gold, costs 100 drones" onclick = "upgrade('goldbuy')" class = "upgrade"/>
-			<input id = "minerclick" type = "button" value = "Clicks also create 0.1 base miners, costs 10 B foremen" onclick = "upgrade('minerclick')" class = "upgrade"/>
-
 		</div>
 		<div class="rate"/>
 			<input id = "goldpt" type = "text" class="rate"/> 
 			<input id = "minerspt" type = "text" class="rate"/> 
 			<input id = "foremanspt" type = "text" class="rate"/> 
 			<input id = "shipspt" type = "text" class="rate"/> 
-
 		</div>
+		
+		<div class="upgradestack"/>
+		<ul id = "list" class = "upgradestack">
+		</div>
+		</ul>
+		
 	</div>
 	
 
+	<div style="margin-top:275px; height:100px;">
+		<br>
+		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
+		<div style="position:relative;top:50%;text-align:left">	
+			<font color= #0aa size= 1px>
+				- Planned features -
+				<br>
+				- Space: More planets/stars,<br> more levels of parallax.
+				<br>
+				- Multi-buy feature.
+				<br>
+				- Combat.
+				<br>
+				- More and longer progression: Engines. Shields. Weapons.
+				<br>
+				
+			</font>
+		</div>		
+	</div>
+	
+	<!-- Audio !-->
+	<audio id= "music">
+		<source src="audio/track1.ogg" type="audio/ogg">
+	</audio>
 
 	<script defer src="ocanvas-2.8.3.js"></script>
 	<script defer src="scripts.js"></script>
