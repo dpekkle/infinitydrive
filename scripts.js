@@ -816,11 +816,11 @@ function fireGuns()
 		
 		newShot.animate(
 		{
-			x: canvas.width - 120
+			x: canvas.width - 160
 		},
 		{
 			duration:  700,
-			easing: "ease-out-quint",
+			easing: "ease-in-out-quint",
 			callback: function()
 			{
 				this.finish();
