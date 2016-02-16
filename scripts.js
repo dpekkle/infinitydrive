@@ -244,7 +244,8 @@ function grayButtons()
 {
 function offlineticks()
 {
-	var A = (now.getTime() - savetime.getTime());
+	var currenttime = new Date();
+	var A = (currenttime.getTime() - savetime.getTime());
 	if (A > 120000) //2 minutes
 	{		
 		var seconds=Math.floor((A/1000)%60);
@@ -284,7 +285,7 @@ function tick(display, fuzz)
 		modifierB = gameslow;	
 		if (Game.droneclick)
 			for (var i = 0; i < visibledrones; i++)
-				count("drone");
+				count();
 	}
 	
 	Game.gold += Game.goldpt*modifierA/modifierB;
@@ -336,19 +337,14 @@ function uiTick(state)
 }
 //~~~~ BUTTON FUNCTIONS ~~~~
 {
-function count(who) 
+function count() 
 {
-	var modifier = 1;
-	if (who == "drone")
-		modifier = 0;
 	if (Game.clicktype == "gold")
 	{
-		//Game.progress += 1*Game.goldmod*modifier;
 		Game.gold += 1*Game.goldmod;
 	}
 	else if (Game.clicktype == "miner")
 	{
-		//Game.progress += 1*Game.goldmod*modifier;
 		Game.gold += 1*Game.goldmod;
 		
 		Game.miner += 0.1*Game.goldmod;
@@ -531,7 +527,7 @@ function initialiseCanvas()
 	
 	controlpane = canvas.display.rectangle(
 	{
-		x: canvas.width - 100,
+		x: canvas.width - 120,
 		y: 10,
 		width: 90,
 		height: 50,
@@ -539,7 +535,7 @@ function initialiseCanvas()
 
 	musicsymbol = canvas.display.sprite(
 	{
-		x: 60,
+		x: 45,
 		y: 25,
 		origin: {x:"center", y:"center"},
 		image: "images/musicsymbol.png",
@@ -685,26 +681,35 @@ function initialiseCanvas()
 	canvas.addChild(weaponfire);
 	canvas.removeChild(weaponfire); //preload the weapon fire sprite
 	
-	//music pane
+//music pane
 	canvas.addChild(controlpane);
 	controlpane.addChild(musicsymbol);
 	musicsymbol.scale(0.25, 0.25);
 	
 	upVol = triangle.clone({
-		x: 15,
+		x: 0,
 		y: 18,
 		rotation: 270
 	});
 	controlpane.addChild(upVol);
 	
 	downVol = triangle.clone({
-		x: 15,
+		x: 0,
 		y: 36,
 		rotation: 90
 	});
 	controlpane.addChild(downVol);
 	
+	nextSong = triangle.clone({
+		x: 80,
+		y: 27,
+		rotation: 0
+	});
+	controlpane.addChild(nextSong);
+	
+	
 	//bindings
+	nextSong.bind("click tap", function(){playNextSong();});
 	upVol.bind("click tap", function(){upVolume();});	
 	downVol.bind("click tap", function(){downVolume();});	
 	shipsprite.bind("click tap", function(){fireGuns();});	
@@ -958,30 +963,68 @@ function levelup()
 {
 function initialiseMusic()
 {
+	function Song(track, codec, bpm)
+	{
+		this.track = track;
+		this.codec = codec;
+		this.bpm = bpm;
+	}
+	
+	playlistiter = 0;
+	var playlistsize = 3;
+	playlist = new Array();
+
+	playlist.push(new Song("audio/track1.ogg", "audio/ogg", 120));
+	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 120));
+	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 240));	
+	
 	musicplaying = false;
-	var audio = document.getElementById("music");
-	audio.loop = true;
-	audio.volume = 0.5;
+	music = document.getElementById("music");
+	
+	music.addEventListener("ended", function()
+	{
+		playNextSong();
+	});
+	
+	music.loop = false;
+	music.volume = 0.5;
+	musicPress();
+}
+
+function playNextSong()
+{
+	playlistiter++;
+	if (playlistiter > playlist.length-1)
+		playlistiter = 0;
+	
+	var songobj = playlist[playlistiter];
+	
+	console.log(songobj.track);
+	music.type = songobj.codec;
+	music.src = songobj.track;	
+	
+	musicsymbol.duration = 60*1000/songobj.bpm;
+	musicsymbol.stopAnimation();
+	
+	musicplaying = false;
+	musicPress();
 }
 
 function upVolume()
 {
-	var audio = document.getElementById("music");
-	if (audio.volume <= 0.9)
-		audio.volume += 0.1;
+	if (music.volume <= 0.9)
+		music.volume += 0.1;
 	
 }
 
 function downVolume()
 {
-	var audio = document.getElementById("music");
-	if (audio.volume >= 0.1)
-		audio.volume -= 0.1;
+	if (music.volume >= 0.1)
+		music.volume -= 0.1;
 }
 
 function musicPress()
 {	
-	var audio = document.getElementById("music");
 	if (musicplaying == true) 
 	{
 		music.pause();
@@ -1073,13 +1116,14 @@ function NewGame()
 	this.droneclick = false;
 	this.droneclickcost = 10000000;
 	
+	this.tab = "here";
+	
 }
 
 var Game = new NewGame();
 var visibledrones = 0;
 var delay = (1000 / tickspeed);
 
-var now = new Date(), before = new Date(); 
 var savetime;
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
@@ -1116,31 +1160,41 @@ initialiseCosts();
 
 console.log("Done with initialise");
 
-//main game loop, using date based method
-var tab = 'here';
-setInterval( function() 
-{	
-    now = new Date();
-    var elapsedTime = (now.getTime() - before.getTime());
-    if(elapsedTime > delay)
-	{
-		console.log("Lag...")
+// ~~~~~~~~~~~~~~~~~~~~~~WEBWORKER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        //Recover the motion lost while inactive.
-		for (var i = 0; i < elapsedTime/delay; i++)
-		{
-			tick('online');
-			tab = 'away';
-		}
-	}	
-	else
+
+//main game loop, using date based method
+Game.tab = 'here';
+
+var w;
+//tell web worker to start here
+if(typeof(Worker) !== "undefined") 
+{
+    if(typeof(w) == "undefined") 
 	{
-		tick('online');
-		tab = 'here';
-	}
-    before = new Date();   
-	
-}, delay);		
+        w = new Worker("webworker.js");
+		w.postMessage(JSON.stringify(Game));
+		
+    }
+    w.onmessage = function(event) 
+	{
+		var updatedgame = JSON.parse(event);
+		Game.gold = updatedgame.gold;
+		Game.miner = updatedgame.miner;
+		Game.foreman = updatedgame.foreman;
+		
+		Game.goldpt = updatedgame.goldpt;
+		Game.minerpt = updatedgame.minerpt;	
+		Game.foremanpt = updatedgame.foremanpt;	
+	};
+} 
+else 
+{
+	console.log("Sorry! No Web Worker support.");
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~WEBWORKER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
  //progress loop
 var progbefore = new Date(), prognow = new Date(); 
@@ -1166,7 +1220,7 @@ setInterval( function()
 setInterval( function() 
 {
 	drawScreen();
-	uiTick(tab);
+	uiTick(Game.tab);
 }, 1000/fps);
 
 /*
