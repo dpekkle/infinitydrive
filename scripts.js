@@ -315,7 +315,13 @@ function uiTick(state)
 		if (Game.it % 6 === 0)
 		{
 			updateCosts();
-			level_text.text = "Level " + Math.floor((1 + Math.log2(Game.level)));
+			
+			var loglev = Math.floor((1 + Math.log2(Game.level)));
+			level_text.text = "Level " + loglev;
+			
+			var prog = Game.level / Math.pow(2, loglev);
+			progress_text.text = "Progress " + Math.floor(10000*prog)/100 + "%";
+			
 			console.log("level" + Game.level);
 
 		}
@@ -592,12 +598,22 @@ function initialiseCanvas()
 	
 	level_text = canvas.display.text({
 		x: 20,
-		y: canvas.height - 24,
+		y: canvas.height - 48,
 		origin: { x: "left", y: "bottom" },
 		font: "bold 24px sans-serif",
 		text: "Level",
 		fill: "#0aa"
 	});
+	
+	progress_text = canvas.display.text({
+		x: 20,
+		y: canvas.height - 24,
+		origin: { x: "left", y: "bottom" },
+		font: "bold 20px sans-serif",
+		text: "Progress ",
+		fill: "#0aa"
+	});
+
 
 	save_text = canvas.display.text({
 		x: canvas.width - 20,
@@ -664,6 +680,7 @@ function initialiseCanvas()
 	shipsprite.startAnimation();
 	
 	canvas.addChild(level_text);
+	canvas.addChild(progress_text);
 	canvas.addChild(save_text);
 	
 	canvas.addChild(weaponfire);
@@ -713,8 +730,8 @@ function drawBackground()
 		We take the log of all this as a means of slowing down the speeds involved.
 	*/
 	var xwidth = earth.width/3 - earth.tile_spacing_x;	
-	earth.moveTo(500 - (((shipspeed * ((Math.log2(Game.level + Game.progress/Game.levelcost)) - 1)) % (xwidth+earth.tile_spacing_x)) + 1), canvas.height/2);
-	distantgalaxy.moveTo((-100 - (((shipspeed * (0.1 * (Math.log2(Game.level + Game.progress/Game.levelcost)) - 1)) % (distantgalaxy.width)) + 1)), 0);
+	earth.moveTo(500 - (((shipspeed * ((Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)) - 1)) % (xwidth+earth.tile_spacing_x)) + 1), canvas.height/2);
+	distantgalaxy.moveTo((-100 - (((shipspeed * (0.1 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)) - 1)) % (distantgalaxy.width)) + 1)), 0);
 	
 	//background.scale(backdist, backdist);
 }
@@ -746,7 +763,7 @@ function createDrones(clear)
 	if (clear == "clear")
 		targetdrones = 0;		
 	else
-		var targetdrones = 1 + Math.ceil(Math.log(Game.ship));
+		var targetdrones = 1 + Math.ceil(Math.log2(Game.ship));
 		
 	if (targetdrones != visibledrones)
 	{
