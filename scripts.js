@@ -104,7 +104,15 @@ var savetime;
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
 {
-	Game = JSON.parse(localStorage.getItem('saveObject'));
+	try
+	{
+		Game = JSON.parse(localStorage.getItem('saveObject'));		
+	}
+	catch(e)
+	{
+		alert(e);
+		deleteSave();		
+	}
 	//need to re-add the drones to canvas, just in case...
 	createDrones();	
 	//load the last date and tell the user we were offline
