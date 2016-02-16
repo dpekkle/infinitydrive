@@ -18,187 +18,6 @@ Best way to do it would be to put a limit on the time you can take to travel bac
 Should scale with based on networth.
 */
 
-{
-var ranges = [
-  { divider: 1e48 , suffix: 'P' },
-  { divider: 1e45 , suffix: 'O' },
-  { divider: 1e42 , suffix: 'N' },
-  { divider: 1e39 , suffix: 'M' },
-  { divider: 1e36 , suffix: 'L' },
-  { divider: 1e33 , suffix: 'K' },
-  { divider: 1e30 , suffix: 'J' },
-  { divider: 1e27 , suffix: 'I' },
-  { divider: 1e24 , suffix: 'H' },
-  { divider: 1e21 , suffix: 'G' },
-  { divider: 1e18 , suffix: 'F' },
-  { divider: 1e15 , suffix: 'E' },
-  { divider: 1e12 , suffix: 'D' },
-  { divider: 1e9 , suffix: 'C' },
-  { divider: 1e6 , suffix: 'B' },
-  { divider: 1e3 , suffix: 'A' }
-];
-var fps = 144;
-var tickspeed = 2;
-var gameslow = tickspeed * 1.6;
-var shipspeed = 100;
-
-initialiseCanvas();
-initialiseMusic();
-
-//initialise canvas
-
-function NewGame()
-{
-	this.gold = 0;
-	this.gold = 0;
-	this.goldpt = 0;
-	this.goldmod = 1;
-	this.goldupcost = 10;
-	this.goldname = " Fuel";
-	 
-	this.miner = 0;
-	this.minercost = 20;
-	this.minerpt = 0;
-	this.minermod = 1;
-	this.minerupcost = 1500;
-	this.minername = " Crew";
-
-	this.foreman = 0;
-	this.foremancost = 10;
-	this.foremanpt = 0;
-	this.foremanmod = 1;
-	this.foremanupcost = 25000;
-	this.foremanname = " Asteroids";
-
-	this.ship = 0;
-	this.shipcost = 20;
-	this.shippt = 0;
-	this.shipmod = 2;
-	this.shipupcost = 5000000;
-	this.shipname = " Drones";
-
-	//upgrades
-	this.goldbuy = 0;
-	this.goldbuycost = 100;
-
-	this.level = 1;
-	this.levelcost = canvas.width;
-	this.progress = 0;
-	this.it = 0;
-	this.longtick = 5;
-
-	this.clicktype = "gold";
-	this.minerclickcost = 400000000;
-	
-	this.droneclick = false;
-	this.droneclickcost = 10000000;
-	
-}
-
-var Game = new NewGame();
-var visibledrones = 0;
-var delay = (1000 / tickspeed);
-
-var now = new Date(), before = new Date(); 
-var savetime;
-// if save file exists load it
-if (localStorage.getItem('saveObject') !== null)
-{
-	try
-	{
-		var success = true;
-		Game = JSON.parse(localStorage.getItem('saveObject'));		
-	}
-	catch(e)
-	{
-		success = false;
-		alert(e);
-		deleteSave();	
-		console.log("invalid file");
-	}
-	if (success)
-	{
-		//need to re-add the drones to canvas, just in case...
-		createDrones();	
-		//load the last date and tell the user we were offline
-		//dates act funny so can't be simply placed in game object
-		savetime = new Date(parseInt(localStorage.getItem('time')));  
-		
-		//offline progression
-		offlineticks();
-		
-		console.log("Done with offline");		
-	}
-}
-
-initialiseCosts();
-
-
-console.log("Done with initialise");
-
-//main game loop, using date based method
-var tab = 'here';
-setInterval( function() 
-{	
-    now = new Date();
-    var elapsedTime = (now.getTime() - before.getTime());
-    if(elapsedTime > delay)
-	{
-		console.log("Lag...")
-
-        //Recover the motion lost while inactive.
-		for (var i = 0; i < elapsedTime/delay; i++)
-		{
-			tick('online');
-			tab = 'away';
-		}
-	}	
-	else
-	{
-		tick('online');
-		tab = 'here';
-	}
-    before = new Date();   
-	
-}, delay);		
-
- //progress loop
-var progbefore = new Date(), prognow = new Date(); 
-var progtickpt = 50;
-var prograte = delay/progtickpt;
-
-setInterval( function()
-{	
-    prognow = new Date();
-    var elapsedTime = (prognow.getTime() - progbefore.getTime());
-    if(elapsedTime > prograte)
-		for (var i = 0; i < elapsedTime/prograte; i++)
-			Game.progress += Game.goldpt/gameslow/progtickpt;
-	else
-		Game.progress += Game.goldpt/gameslow/progtickpt;
-    progbefore = new Date();   
-	
-	levelup();
-	adjustBackgroundProgress();	
-}, prograte);
-
-// screen loop
-setInterval( function() 
-{
-	drawScreen();
-	uiTick(tab);
-}, 1000/fps);
-
-/*
-setInterval( function()
-{
-	if (musicplaying)
-		fireGuns();
-}, 60*1000/60);*/
-
-}
-
-
 //~~~~ UI FUNCTIONS ~~~~
 {
 function checkVisibility()
@@ -693,6 +512,7 @@ function buyminer(mode)
 }
 //~~~~ CANVAS FUNCTIONS ~~~~
 {
+	
 function initialiseCanvas()
 {
 	canvas = oCanvas.create({canvas: "canvas"});
@@ -874,6 +694,7 @@ function initialiseCanvas()
 	shipsprite.bind("click tap", function(){fireGuns();});	
 	musicsymbol.bind("click tap", function(){musicPress();});
 }
+
 
 function drawExtras()
 {	
@@ -1158,3 +979,185 @@ function musicPress()
 	musicplaying = !musicplaying;
 }
 }
+
+//~~~~ Game Code ~~~~~
+{
+var ranges = [
+  { divider: 1e48 , suffix: 'P' },
+  { divider: 1e45 , suffix: 'O' },
+  { divider: 1e42 , suffix: 'N' },
+  { divider: 1e39 , suffix: 'M' },
+  { divider: 1e36 , suffix: 'L' },
+  { divider: 1e33 , suffix: 'K' },
+  { divider: 1e30 , suffix: 'J' },
+  { divider: 1e27 , suffix: 'I' },
+  { divider: 1e24 , suffix: 'H' },
+  { divider: 1e21 , suffix: 'G' },
+  { divider: 1e18 , suffix: 'F' },
+  { divider: 1e15 , suffix: 'E' },
+  { divider: 1e12 , suffix: 'D' },
+  { divider: 1e9 , suffix: 'C' },
+  { divider: 1e6 , suffix: 'B' },
+  { divider: 1e3 , suffix: 'A' }
+];
+var fps = 144;
+var tickspeed = 2;
+var gameslow = tickspeed * 1.6;
+var shipspeed = 100;
+
+initialiseCanvas();
+initialiseMusic();
+
+//initialise canvas
+
+function NewGame()
+{
+	this.gold = 0;
+	this.gold = 0;
+	this.goldpt = 0;
+	this.goldmod = 1;
+	this.goldupcost = 10;
+	this.goldname = " Fuel";
+	 
+	this.miner = 0;
+	this.minercost = 20;
+	this.minerpt = 0;
+	this.minermod = 1;
+	this.minerupcost = 1500;
+	this.minername = " Crew";
+
+	this.foreman = 0;
+	this.foremancost = 10;
+	this.foremanpt = 0;
+	this.foremanmod = 1;
+	this.foremanupcost = 25000;
+	this.foremanname = " Asteroids";
+
+	this.ship = 0;
+	this.shipcost = 20;
+	this.shippt = 0;
+	this.shipmod = 2;
+	this.shipupcost = 5000000;
+	this.shipname = " Drones";
+
+	//upgrades
+	this.goldbuy = 0;
+	this.goldbuycost = 100;
+
+	this.level = 1;
+	this.levelcost = canvas.width;
+	this.progress = 0;
+	this.it = 0;
+	this.longtick = 5;
+
+	this.clicktype = "gold";
+	this.minerclickcost = 400000000;
+	
+	this.droneclick = false;
+	this.droneclickcost = 10000000;
+	
+}
+
+var Game = new NewGame();
+var visibledrones = 0;
+var delay = (1000 / tickspeed);
+
+var now = new Date(), before = new Date(); 
+var savetime;
+// if save file exists load it
+if (localStorage.getItem('saveObject') !== null)
+{
+	try
+	{
+		var success = true;
+		Game = JSON.parse(localStorage.getItem('saveObject'));		
+	}
+	catch(e)
+	{
+		success = false;
+		alert(e);
+		deleteSave();	
+		console.log("invalid file");
+	}
+	if (success)
+	{
+		//need to re-add the drones to canvas, just in case...
+		createDrones();	
+		//load the last date and tell the user we were offline
+		//dates act funny so can't be simply placed in game object
+		savetime = new Date(parseInt(localStorage.getItem('time')));  
+		
+		//offline progression
+		offlineticks();
+		
+		console.log("Done with offline");		
+	}
+}
+
+initialiseCosts();
+
+
+console.log("Done with initialise");
+
+//main game loop, using date based method
+var tab = 'here';
+setInterval( function() 
+{	
+    now = new Date();
+    var elapsedTime = (now.getTime() - before.getTime());
+    if(elapsedTime > delay)
+	{
+		console.log("Lag...")
+
+        //Recover the motion lost while inactive.
+		for (var i = 0; i < elapsedTime/delay; i++)
+		{
+			tick('online');
+			tab = 'away';
+		}
+	}	
+	else
+	{
+		tick('online');
+		tab = 'here';
+	}
+    before = new Date();   
+	
+}, delay);		
+
+ //progress loop
+var progbefore = new Date(), prognow = new Date(); 
+var progtickpt = 50;
+var prograte = delay/progtickpt;
+
+setInterval( function()
+{	
+    prognow = new Date();
+    var elapsedTime = (prognow.getTime() - progbefore.getTime());
+    if(elapsedTime > prograte)
+		for (var i = 0; i < elapsedTime/prograte; i++)
+			Game.progress += Game.goldpt/gameslow/progtickpt;
+	else
+		Game.progress += Game.goldpt/gameslow/progtickpt;
+    progbefore = new Date();   
+	
+	levelup();
+	adjustBackgroundProgress();	
+}, prograte);
+
+// screen loop
+setInterval( function() 
+{
+	drawScreen();
+	uiTick(tab);
+}, 1000/fps);
+
+/*
+setInterval( function()
+{
+	if (musicplaying)
+		fireGuns();
+}, 60*1000/60);*/
+
+}
+
