@@ -714,7 +714,7 @@ function drawBackground()
 	*/
 	var xwidth = earth.width/3 - earth.tile_spacing_x;	
 	earth.moveTo(500 - (((shipspeed * ((Math.log2(Game.level + Game.progress/Game.levelcost)) - 1)) % (xwidth+earth.tile_spacing_x)) + 1), canvas.height/2);
-	distantgalaxy.moveTo((0 - (((shipspeed * (0.1 * (Math.log2(Game.level + Game.progress/Game.levelcost)) - 1)) % (distantgalaxy.x)) + 1)), 0);
+	distantgalaxy.moveTo((-100 - (((shipspeed * (0.1 * (Math.log2(Game.level + Game.progress/Game.levelcost)) - 1)) % (distantgalaxy.width)) + 1)), 0);
 	
 	//background.scale(backdist, backdist);
 }
@@ -789,9 +789,10 @@ function fireGuns()
 		newShot.startAnimation();
 		canvas.redraw();		
 		
+		
 		newShot.animate(
 		{
-			x: canvas.width - 140
+			x: canvas.width - 140,
 		},
 		{
 			duration:  700,
