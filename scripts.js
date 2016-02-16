@@ -315,7 +315,7 @@ function uiTick(state)
 			Game.it = 0;
 		
 		//run ui functions
-		if (Game.it % 6 === 0)
+		if (Game.it % 10 === 0)
 		{
 			updateCosts();
 			
@@ -324,14 +324,15 @@ function uiTick(state)
 			var prog = Game.level / Math.pow(2, loglev);
 			progress_text.text = "Progress " + Math.floor(10000*prog)/100 + "%";
 		}
-		if (Game.it % 20 === 0)
+		if (Game.it % 15 === 0)
 		{
 			grayButtons();
 			checkVisibility();
 			save_text.text = "";
 		}			
-		updateAmounts();			
 	}	
+	
+	updateAmounts();			
 }
 }
 //~~~~ BUTTON FUNCTIONS ~~~~
