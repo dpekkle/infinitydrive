@@ -133,7 +133,7 @@
 	
 	<div style="text-align: left"> 
 		<div class="buy"/>
-			<input id = "goldbutton" type ="button" value = "Click        " onclick = "count()" class="buy" />
+			<input id = "goldbutton" type ="button" value = "Click        " onclick = "fireGuns()" class="buy" />
 			<input id = "minerbutton" type ="button" value = "Miners        " onclick = "buyunit('miner')" class="buy"/>
 			<input id = "foremanbutton" type ="button" value = "Foremans        " onclick = "buyunit('foreman')" class="buy"/>
 			<input id = "shipbutton" type ="button" value = "Ships        " onclick = "buyunit('ship')" class="buy"/>
@@ -169,6 +169,7 @@
 
 	<div style="margin-top:275px; height:100px;">
 		<br>
+		<input id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
 		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
 		<div style="position:relative;top:50%;text-align:left">	
 			<font color= #0aa size= 1px>
@@ -188,7 +189,7 @@
 	</div>
 	
 	<!-- Audio !-->
-	<audio id= "music" src="audio/track1.ogg" type="audio/mp3">
+	<audio id= "music" src="audio/Melancholics Anonymous - S3rge Rybak.mp3" type="audio/mp3">
 	</audio>
 
 	<script defer src="ocanvas-2.8.3.js"></script>

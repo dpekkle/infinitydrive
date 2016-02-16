@@ -297,7 +297,7 @@ function tick(display, fuzz)
 
 }
 
-function uiTick(state)
+function uiTick()
 {
 	// auto save the game
 	if (Game.it % 500 === 0)
@@ -306,33 +306,36 @@ function uiTick(state)
 		localStorage.setItem('saveObject', JSON.stringify(Game));
 		save_text.text = "Autosaved...";
 	}	
-	//only update ui when the tab is selected
-	if (state === 'here')
-	{		
-		if (Game.it < 1000)
-			Game.it++;	
-		else
-			Game.it = 0;
-		
-		//run ui functions
-		if (Game.it % 10 === 0)
-		{
-			updateCosts();
-			
-			var loglev = Math.floor((1 + Math.log2(Game.level)));
-			level_text.text = "Level " + loglev;
-			var prog = Game.level / Math.pow(2, loglev);
-			progress_text.text = "Progress " + Math.floor(10000*prog)/100 + "%";
-		}
-		if (Game.it % 15 === 0)
-		{
-			grayButtons();
-			checkVisibility();
-			save_text.text = "";
-		}			
-	}	
 	
-	updateAmounts();			
+	if (Game.it < 1000)
+		Game.it++;	
+	else
+		Game.it = 0;
+	
+	//run ui functions
+	if (Game.it % 10 === 0)
+	{
+		updateCosts();
+		
+		var loglev = Math.floor((1 + Math.log2(Game.level)));
+		
+		var lastlev = Math.pow(2, loglev - 1);
+		var nextlev = Math.pow(2, loglev);
+		
+		level_text.text = "Level " + loglev;
+		
+		var prog = (Game.level + Game.progress/Game.levelcost - lastlev)/(nextlev - lastlev);
+		
+		progress_text.text = "Progress " + Math.floor(10000*prog)/100 + "%";
+	}
+	if (Game.it % 15 === 0)
+	{
+		grayButtons();
+		checkVisibility();
+		save_text.text = "";
+	}	
+	updateAmounts();				
+	
 }
 }
 //~~~~ BUTTON FUNCTIONS ~~~~
@@ -625,7 +628,7 @@ function initialiseCanvas()
 	});
 
 //background elements
-
+	
 	earth = canvas.display.image(
 	{
 		x:0, 
@@ -642,6 +645,23 @@ function initialiseCanvas()
 		tile_spacing_y: 0,
 	});
 
+	starfield = canvas.display.image(
+	{
+		x:0,
+		y:canvas.height/2,
+		origin:{x:"left", y:"top"},
+		image: "images/starfield.png",
+		height: 500,
+		width: 1250*2,
+		
+		tile: true,
+		tile_width: 1250,
+		tile_height: 500,
+		tile_spacing_x: 0,
+		tile_spacing_y: 0,		
+		
+	});
+	
 	distantgalaxy = canvas.display.image(
 	{
 		x:0,
@@ -664,10 +684,9 @@ function initialiseCanvas()
 	
 	canvas.addChild(distantgalaxy);
 	distantgalaxy.zIndex = "back";
-	
+	canvas.addChild(starfield);
 	canvas.addChild(earth);
-	earth.zIndex = "front"; 
-	
+		
 	enemy = shipsprite.clone({
 		x:3*canvas.width/4,
 	});
@@ -731,7 +750,7 @@ function drawExtras()
 
 function drawBackground()
 {
-	//var backdist = 1/Math.log(Game.level/10 + 2);
+	//var backdist = 8/Math.log(Game.level/10 + 100);
 	
 	/* 	We want to move the earth in the range of their tiles, so whatever our result we take the mod of earth's actual width + the space between tiles/
 		Now the variable we will be using for that can't just be based on level, 
@@ -739,11 +758,13 @@ function drawBackground()
 		We take the log of all this as a means of slowing down the speeds involved.
 	*/
 	var xwidth = earth.width/3 - earth.tile_spacing_x;	
-	earth.moveTo(500 - (((shipspeed * ((Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)) - 1)) % (xwidth+earth.tile_spacing_x)) + 1), canvas.height/2);
-	distantgalaxy.moveTo((-100 - (((shipspeed * (0.1 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)) - 1)) % (distantgalaxy.width)) + 1)), 0);
+	earth.moveTo(500 - ((shipspeed * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
+	starfield.moveTo(-100 - (((shipspeed * (0.3 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (starfield.width/2))), 0);
+	distantgalaxy.moveTo(-100 - (((shipspeed * (0.1 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (distantgalaxy.width/2))), 0);
 	
-	//background.scale(backdist, backdist);
+	//earth.scale(backdist, backdist);
 }
+
 
 function adjustBackgroundProgress()
 {
@@ -752,10 +773,10 @@ function adjustBackgroundProgress()
 
 function drawShip()
 {	
-	var shiptime = new Date().getTime();
+	shiptime = new Date().getTime();
 	//some variance in x and y position of the ship
 	shipsprite.moveTo(canvas.width/4 + 30*Math.sin(shiptime/2000 % 360), canvas.height/2 + 50*Math.sin(shiptime/9999 % 360));
-	enemy.moveTo(canvas.width - 100, shipsprite.y);
+	enemy.moveTo(canvas.width - 100, canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360));
 }
 
 function drawScreen()
@@ -802,34 +823,42 @@ function createDrones(clear)
 
 function fireGuns()
 {
-	//make a new sprite
-	if (canvas.children.length < 20)
+	count();
+	if (Game.displayProjectiles)
 	{
-		var newShot = weaponfire.clone({
-			x: shipsprite.x + 100,
-			y: shipsprite.y
-		});
-		canvas.addChild(newShot);
-		newShot.rotate(90);
-		newShot.scale(0.25, 0.25);
-		newShot.startAnimation();
-		canvas.redraw();		
-		
-		
-		newShot.animate(
+		//make a new sprite
+		if (totalshots < 5)
 		{
-			x: canvas.width - 140,
-		},
-		{
-			duration:  700,
-			easing: "ease-in-out-quint",
-			callback: function()
+			totalshots++;
+
+			var newShot = weaponfire.clone({
+				x: shipsprite.x + 100,
+				y: shipsprite.y
+			});
+			canvas.addChild(newShot);
+			newShot.rotate(90);
+			newShot.scale(0.25, 0.25);
+			newShot.startAnimation();
+			canvas.redraw();		
+			
+			
+			newShot.animate(
 			{
-				this.finish();
-				canvas.removeChild(this);
-				canvas.redraw();
-			}
-		});
+				x: canvas.width - 140,
+				y: canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360),
+			},
+			{
+				duration:  700,
+				easing: "ease-in-out-quint",
+				callback: function()
+				{
+					totalshots--;
+					this.finish();
+					canvas.removeChild(this);
+					canvas.redraw();
+				}
+			});
+		}
 	}
 	
 }
@@ -865,7 +894,7 @@ function removeUpgrade(id)
 		element.parentNode.removeChild(element);
 }
 
-function initialiseCosts()
+function initialiseUI()
 {
 	//set first two elements to be visible
 	document.getElementById( "goldbutton").style.backgroundColor = "lightgray";
@@ -880,11 +909,6 @@ function initialiseCosts()
 	document.getElementById( "minerbutton").title = "Hire some hands to help power your engine and mine for more " + Game.goldname;
 	document.getElementById( "shipbutton").value = "Drones  " + " Costs " + Game.shipcost + Game.foremanname;
 	document.getElementById( "shipbutton").title = "These helpful robots will automatically bring you " + Game.foremanname;	
-
-	//document.getElementById( "goldupgradebutton").value = "Upgrade Clicks  " + " Costs " + Game.goldupcost + Game.goldname;
-	//document.getElementById( "minerupgradebutton").value = "Upgrade Miners  " + " Costs " + Game.minerupcost + Game.goldname;
-	//document.getElementById( "foremanupgradebutton").value = "Upgrade Foremen  " + " Costs " + Game.foremanupcost + Game.goldname;
-	//document.getElementById( "shipupgradebutton").value = "Upgrade Drones  " + " Costs " + Game.shipupcost + Game.goldname;
 
 	//Initialise canvas text
 	level_text.text = "Level " + Game.level;
@@ -906,6 +930,14 @@ function initialiseCosts()
 		upgrade('goldbuy');
 		upgrade('goldbuy');
 	}
+	
+	if (Game.displayProjectiles)
+		document.getElementById( "toggleprojectiles").style.backgroundColor = "lightgray";
+	else
+		document.getElementById( "toggleprojectiles").style.backgroundColor = "gray";	
+	
+	document.getElementById( "deletesave").style.backgroundColor = "lightgray";
+	
 }
 
 function formatNumber(n) 
@@ -963,6 +995,17 @@ function levelup()
 	else 
 		return false;
 }
+
+function toggleProjectiles()
+{
+	Game.displayProjectiles = !Game.displayProjectiles;
+	
+	if (Game.displayProjectiles)
+		document.getElementById( "toggleprojectiles").style.backgroundColor = "lightgray";
+	else
+		document.getElementById( "toggleprojectiles").style.backgroundColor = "gray";		
+}
+
 }
 //~~~~ AUDIO FUNCTION ~~~~
 {
@@ -978,10 +1021,10 @@ function initialiseMusic()
 	playlistiter = 0;
 	var playlistsize = 3;
 	playlist = new Array();
-
-	playlist.push(new Song("audio/track1.ogg", "audio/ogg", 120));
-	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 120));
+	
 	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 240));	
+	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 120));
+	playlist.push(new Song("audio/track1.ogg", "audio/ogg", 120));
 	
 	musicplaying = false;
 	music = document.getElementById("music");
@@ -1069,6 +1112,7 @@ var fps = 144;
 var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
 var shipspeed = 100;
+var totalshots = 0;
 
 initialiseCanvas();
 initialiseMusic();
@@ -1121,6 +1165,8 @@ function NewGame()
 	this.droneclick = false;
 	this.droneclickcost = 10000000000;
 	
+	//settings
+	this.displayProjectiles = true;
 }
 
 var Game = new NewGame();
@@ -1159,13 +1205,11 @@ if (localStorage.getItem('saveObject') !== null)
 	}
 }
 
-initialiseCosts();
-
+initialiseUI();
 
 console.log("Done with initialise");
 
 //main game loop, using date based method
-var tab = 'here';
 setInterval( function() 
 {	
     now = new Date();
@@ -1176,16 +1220,10 @@ setInterval( function()
 
         //Recover the motion lost while inactive.
 		for (var i = 0; i < elapsedTime/delay; i++)
-		{
 			tick('online');
-			tab = 'away';
-		}
 	}	
 	else
-	{
 		tick('online');
-		tab = 'here';
-	}
     before = new Date();   
 	
 }, delay);		
@@ -1214,7 +1252,7 @@ setInterval( function()
 setInterval( function() 
 {
 	drawScreen();
-	uiTick(tab);
+	uiTick();
 }, 1000/fps);
 
 /*
