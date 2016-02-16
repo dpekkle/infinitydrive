@@ -261,7 +261,6 @@ function offlineticks()
 		{
 			tick('offline', fuzz);
 			levelup();
-			console.log('i: ' + i);
 		}
 		
 		var new_gold = Game.gold;
@@ -322,12 +321,8 @@ function uiTick(state)
 			
 			var loglev = Math.floor((1 + Math.log2(Game.level)));
 			level_text.text = "Level " + loglev;
-			
 			var prog = Game.level / Math.pow(2, loglev);
 			progress_text.text = "Progress " + Math.floor(10000*prog)/100 + "%";
-			
-			console.log("level" + Game.level);
-
 		}
 		if (Game.it % 20 === 0)
 		{
