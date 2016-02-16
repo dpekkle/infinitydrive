@@ -73,9 +73,11 @@ function checkVisibility()
 					hiddenleft--;
 					console.log("show ships");
 				}
+				else (Game.droneclick == true)
+					hiddenleft--;
 				break;
 			case 5:
-				if (Game.ship >= Game.goldbuycost * 0.5 || Game.goldbuy !== 0)
+				if (Game.ship >= Game.goldbuycost * 0.5 && Game.goldbuy === 0)
 				{
 					createUpgrade(
 					"goldbuy", 
@@ -87,6 +89,8 @@ function checkVisibility()
 					hiddenleft--;
 					console.log("show droneclick");
 				}
+				else(Game.goldbuy !== 0)
+					hiddenleft--;
 				break;
 
 			case 6:
