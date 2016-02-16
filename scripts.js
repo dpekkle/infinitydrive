@@ -66,7 +66,7 @@ function checkVisibility()
 					createUpgrade(
 					"droneclick", 
 					"button", 
-					"Drones click, costs 10 F " + Game.goldname, 
+					"Drones click, costs " + formatNumber(droneclickcost) + " " + Game.goldname, 
 					"upgrade", 
 					"Your visible drones (the amount you see, not the amount you own) will each click once per tick. The fuel earned from this doesn't increase your movement, just allows you to buy more things"
 					);
@@ -82,7 +82,7 @@ function checkVisibility()
 					createUpgrade(
 					"goldbuy", 
 					"button", 
-					"Buy units with " + Game.goldname + ", costs 100 " + Game.shipname, 
+					"Buy units with " + Game.goldname + ", costs " + goldbuycost + " " + Game.shipname, 
 					"upgrade",
 					"Will let you spend " + Game.goldname + " to buy "+ Game.shipname + ", best to leave this on as it increases the cost of using other units too"
 					);
@@ -99,7 +99,7 @@ function checkVisibility()
 					createUpgrade(
 					"minerclick", 
 					"button", 
-					"Clicks create " + Game.minername + ", costs 10 B " + Game.foremanname, 
+					"Clicks create " + Game.minername + ", costs " + formatNumber(minerclickcost) + " " + Game.foremanname, 
 					"upgrade", 
 					"Each click grants 0.1 base miners, multiplied by your click upgrade");
 					hiddenleft--;
@@ -1016,15 +1016,15 @@ function playNextSong()
 
 function upVolume()
 {
-	if (music.volume <= 0.9)
-		music.volume += 0.1;
+	if (music.volume <= 0.95)
+		music.volume += 0.05;
 	
 }
 
 function downVolume()
 {
-	if (music.volume >= 0.1)
-		music.volume -= 0.1;
+	if (music.volume >= 0.05)
+		music.volume -= 0.05;
 }
 
 function musicPress()
@@ -1118,7 +1118,7 @@ function NewGame()
 	this.minerclickcost = 400000000;
 	
 	this.droneclick = false;
-	this.droneclickcost = 10000000;
+	this.droneclickcost = 10000000000;
 	
 }
 
