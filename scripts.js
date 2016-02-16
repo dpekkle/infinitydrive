@@ -62,7 +62,7 @@ function NewGame()
 	this.minermod = 1;
 	this.minerupcost = 1500;
 	this.minername = " Crew";
-	 
+
 	this.foreman = 0;
 	this.foremancost = 10;
 	this.foremanpt = 0;
@@ -106,23 +106,29 @@ if (localStorage.getItem('saveObject') !== null)
 {
 	try
 	{
+		var success = true;
 		Game = JSON.parse(localStorage.getItem('saveObject'));		
 	}
 	catch(e)
 	{
+		success = false;
 		alert(e);
-		deleteSave();		
+		deleteSave();	
+		console.log("invalid file");
 	}
-	//need to re-add the drones to canvas, just in case...
-	createDrones();	
-	//load the last date and tell the user we were offline
-	//dates act funny so can't be simply placed in game object
-	savetime = new Date(parseInt(localStorage.getItem('time')));  
-	
-	//offline progression
-	offlineticks();
-	
-	console.log("Done with offline");
+	if (success)
+	{
+		//need to re-add the drones to canvas, just in case...
+		createDrones();	
+		//load the last date and tell the user we were offline
+		//dates act funny so can't be simply placed in game object
+		savetime = new Date(parseInt(localStorage.getItem('time')));  
+		
+		//offline progression
+		offlineticks();
+		
+		console.log("Done with offline");		
+	}
 }
 
 initialiseCosts();
