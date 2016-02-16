@@ -244,8 +244,7 @@ function grayButtons()
 {
 function offlineticks()
 {
-	var currenttime = new Date();
-	var A = (currenttime.getTime() - savetime.getTime());
+	var A = (now.getTime() - savetime.getTime());
 	if (A > 120000) //2 minutes
 	{		
 		var seconds=Math.floor((A/1000)%60);
@@ -285,7 +284,7 @@ function tick(display, fuzz)
 		modifierB = gameslow;	
 		if (Game.droneclick)
 			for (var i = 0; i < visibledrones; i++)
-				count();
+				count("drone");
 	}
 	
 	Game.gold += Game.goldpt*modifierA/modifierB;
@@ -337,14 +336,19 @@ function uiTick(state)
 }
 //~~~~ BUTTON FUNCTIONS ~~~~
 {
-function count() 
+function count(who) 
 {
+	var modifier = 1;
+	if (who == "drone")
+		modifier = 0;
 	if (Game.clicktype == "gold")
 	{
+		//Game.progress += 1*Game.goldmod*modifier;
 		Game.gold += 1*Game.goldmod;
 	}
 	else if (Game.clicktype == "miner")
 	{
+		//Game.progress += 1*Game.goldmod*modifier;
 		Game.gold += 1*Game.goldmod;
 		
 		Game.miner += 0.1*Game.goldmod;
@@ -1116,14 +1120,13 @@ function NewGame()
 	this.droneclick = false;
 	this.droneclickcost = 10000000;
 	
-	this.tab = "here";
-	
 }
 
 var Game = new NewGame();
 var visibledrones = 0;
 var delay = (1000 / tickspeed);
 
+var now = new Date(), before = new Date(); 
 var savetime;
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
@@ -1160,41 +1163,31 @@ initialiseCosts();
 
 console.log("Done with initialise");
 
-// ~~~~~~~~~~~~~~~~~~~~~~WEBWORKER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 //main game loop, using date based method
-Game.tab = 'here';
-
-var w;
-//tell web worker to start here
-if(typeof(Worker) !== "undefined") 
-{
-    if(typeof(w) == "undefined") 
+var tab = 'here';
+setInterval( function() 
+{	
+    now = new Date();
+    var elapsedTime = (now.getTime() - before.getTime());
+    if(elapsedTime > delay)
 	{
-        w = new Worker("webworker.js");
-		w.postMessage(JSON.stringify(Game));
-		
-    }
-    w.onmessage = function(event) 
+		console.log("Lag...")
+
+        //Recover the motion lost while inactive.
+		for (var i = 0; i < elapsedTime/delay; i++)
+		{
+			tick('online');
+			tab = 'away';
+		}
+	}	
+	else
 	{
-		var updatedgame = JSON.parse(event);
-		Game.gold = updatedgame.gold;
-		Game.miner = updatedgame.miner;
-		Game.foreman = updatedgame.foreman;
-		
-		Game.goldpt = updatedgame.goldpt;
-		Game.minerpt = updatedgame.minerpt;	
-		Game.foremanpt = updatedgame.foremanpt;	
-	};
-} 
-else 
-{
-	console.log("Sorry! No Web Worker support.");
-}
-
-// ~~~~~~~~~~~~~~~~~~~~~~WEBWORKER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+		tick('online');
+		tab = 'here';
+	}
+    before = new Date();   
+	
+}, delay);		
 
  //progress loop
 var progbefore = new Date(), prognow = new Date(); 
@@ -1220,7 +1213,7 @@ setInterval( function()
 setInterval( function() 
 {
 	drawScreen();
-	uiTick(Game.tab);
+	uiTick(tab);
 }, 1000/fps);
 
 /*
