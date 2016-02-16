@@ -4,7 +4,7 @@ var gameslow = tickspeed * 1.6;
 
 onmessage = function(e)
 {
-	var Game = JSON.parse(e);
+	var Game = e;
 	
 	var now = new Date(), before = new Date(); 
 	
