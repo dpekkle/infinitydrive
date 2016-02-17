@@ -57,6 +57,7 @@ function checkVisibility()
 					document.getElementById("shipbutton").style.visibility = "visible";
 					document.getElementById("foremanspt").style.visibility = "visible";		
 					document.getElementById("shipupgradebutton").style.visibility = "visible";	
+					document.getElementById("resetdrones").style.visibility = "visible";	
 					hiddenleft--;	
 				}	
 				break;
@@ -426,7 +427,7 @@ function buyminer(mode)
 		Game.ship += 1;				
 		Game.shipcost *= 1.1;
 		Game.shipcost = Math.round(Game.shipcost);
-		createDrones();
+		createDrones(dronestyle[Game.dronestyle]);	
 		
 		grayButtons();		
 	}
@@ -476,14 +477,14 @@ function buyminer(mode)
 		if (Game.goldbuy === 0 && Game.ship >= Game.goldbuycost)
 		{
 			Game.ship -= Game.goldbuycost;
-			createDrones();
+			createDrones(dronestyle[Game.dronestyle]);	
 			Game.goldbuy = 1;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
 
 			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";
 			
 			//remove the drones lost
-			createDrones();		
+			createDrones(dronestyle[Game.dronestyle]);	
 		}
 		else if (Game.goldbuy == 1)
 		{
@@ -515,7 +516,7 @@ function buyminer(mode)
 		removeUpgrade("droneclick");	
 		//start the animations for drones
 		createDrones("clear");
-		createDrones();
+		createDrones(dronestyle[Game.dronestyle]);	
 	}	
 	
 	updateAmounts();		
@@ -527,6 +528,8 @@ function buyminer(mode)
 function initialiseCanvas()
 {
 	canvas = oCanvas.create({canvas: "canvas"});
+
+	
 	
 //music shapes
 	triangle = canvas.display.polygon({
@@ -535,30 +538,32 @@ function initialiseCanvas()
 		fill: "#0aa"
 	});
 	
-	controlpane = canvas.display.rectangle(
+	/*controlpane = canvas.display.rectangle(
 	{
 		x: canvas.width - 120,
 		y: 10,
 		width: 90,
 		height: 50,
-	});
+		fill: "#111"
+	});*/
 
 	musicsymbol = canvas.display.sprite(
 	{
-		x: 45,
-		y: 25,
+		x: canvas.width - 120 + 45,
+		y: 35,
 		origin: {x:"center", y:"center"},
 		image: "images/musicsymbol.png",
-		height: 188,
-		width: 120,
+		height: 47,
+		width: 30,
 		generate: true,
 		loop: true,
 		duration: 60*1000/120
 	});
+	
 //unit assets	
 	weaponfire = canvas.display.sprite(
 	{
-			x:-200, 
+			x: -200, 
 			y:canvas.height/2, //visually this is actually positive x since it's parent is rotated
 			origin: {x:"center", y:"center"},
 			image: "images/firinganim.png",
@@ -627,6 +632,16 @@ function initialiseCanvas()
 		font: "bold 24px sans-serif",
 		text: "",
 		fill: "#0aa"
+	});
+	
+	music_text = canvas.display.text({
+		x:canvas.width - 120 + 110,
+		y: 70,
+		origin: {x:"right", y:"top"},
+		font: "bold 16px sans-serif",
+		text: "Track",
+		fill: "#0aa",
+		align: "right"
 	});
 
 //background elements
@@ -736,38 +751,36 @@ function initialiseCanvas()
 	canvas.removeChild(weaponfire); //preload the weapon fire sprite
 	
 //music pane
-	canvas.addChild(controlpane);
-	controlpane.addChild(musicsymbol);
-	musicsymbol.scale(0.25, 0.25);
+	canvas.addChild(music_text);
 	
 	upVol = triangle.clone({
-		x: 0,
-		y: 18,
+		x: canvas.width - 120,
+		y: 28,
 		rotation: 270
 	});
-	controlpane.addChild(upVol);
+	canvas.addChild(upVol);
 	
 	downVol = triangle.clone({
-		x: 0,
-		y: 36,
+		x: canvas.width - 120,
+		y: 46,
 		rotation: 90
 	});
-	controlpane.addChild(downVol);
+	canvas.addChild(downVol);
 	
 	nextSong = triangle.clone({
-		x: 80,
-		y: 27,
+		x: canvas.width - 120 + 80,
+		y: 37,
 		rotation: 0
 	});
-	controlpane.addChild(nextSong);
+	canvas.addChild(nextSong);
 	
 	
 	//bindings
+	music_text.bind("click tap", function(){linkMusic();});
 	nextSong.bind("click tap", function(){playNextSong();});
 	upVol.bind("click tap", function(){upVolume();});	
 	downVol.bind("click tap", function(){downVolume();});	
-	shipsprite.bind("click tap", function(){fireGuns();});	
-	musicsymbol.bind("click tap", function(){musicPress();});
+	shipsprite.bind("click tap", function(){fireGuns();});		
 }
 
 
@@ -828,19 +841,45 @@ function drawScreen()
 	canvas.redraw();
 }
 
-function createDrones(clear)
+function createDrones(style)
 {
-	var targetdrones;
-	if (clear == "clear")
-		targetdrones = 0;		
-	else
-		var targetdrones = 1 + Math.ceil(Math.log2(Game.ship));
-		
+	var targetdrones = 1 + Math.ceil(Math.log2(Game.ship));
+	
+	if (style == "clear")
+		targetdrones = 0;
+	
 	if (targetdrones != visibledrones)
 	{
+		console.log("Target" + targetdrones + " Visible" + visibledrones);
+		var startframe = 1;
+		var frameit = 0;
+		
+		if (style !== null)
+		{
+			switch(style)
+			{
+				case "sync":
+					startframe = 1;
+					frameit = 0;
+					break;
+				case "clock":
+					startframe = targetdrones;
+					frameit = -1;
+					break;
+				case "anti":
+					startframe = 1;
+					frameit = 1;
+					break;
+				default:
+					break;
+			}
+		}
+		
 		while (targetdrones > visibledrones)
 		{
-			var newdrone = dronesprite.clone();
+			console.log("Frame: " + startframe);
+			var newdrone = dronesprite.clone({frame: startframe});
+			startframe += frameit;			
 			newdrone.scale(0.25,0.25);
 			
 			shipsprite.addChild(newdrone);
@@ -856,9 +895,7 @@ function createDrones(clear)
 			visibledrones--;
 		}
 		for (var i = 0; i < droneArray.length; i++)
-		{
 			droneArray[i].rotation = i*360/droneArray.length;			
-		}		
 	}	
 }
 
@@ -1050,8 +1087,15 @@ function toggleProjectiles()
 
 function resetDrones()
 {
+	Game.dronestyle++;
+	if (Game.dronestyle > 3)
+		Game.dronestyle = 1;
+	
+	document.getElementById( "resetdrones").value = "Drone style:" + dronestyle[Game.dronestyle];
 	createDrones("clear");
-	createDrones();
+	console.log("Attempt" + dronestyle[Game.dronestyle]);
+	
+	createDrones(dronestyle[Game.dronestyle]);
 }
 
 }
@@ -1059,20 +1103,24 @@ function resetDrones()
 {
 function initialiseMusic()
 {
-	function Song(track, codec, bpm)
+	function Song(track, codec, bpm, author, title)
 	{
 		this.track = track;
 		this.codec = codec;
 		this.bpm = bpm;
+		this.author = author;
+		this.title = title;
 	}
 	
-	playlistiter = 0;
+	playlistiter = -1;
 	var playlistsize = 3;
 	playlist = new Array();
 	
-	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 240));	
-	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 120));
-	playlist.push(new Song("audio/track1.ogg", "audio/ogg", 120));
+	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous"));	
+	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline"));
+	playlist.push(new Song("audio/track1.ogg", "audio/ogg", 120, "Death of Sound", "Look at me"));
+	
+	playlist.push(new Song("", "", "", 120, "", ""));
 	
 	musicplaying = false;
 	music = document.getElementById("music");
@@ -1084,7 +1132,13 @@ function initialiseMusic()
 	
 	music.loop = false;
 	music.volume = 0.5;
-	musicPress();
+	
+	//this is immediately replaced with the appropriate BPM version, but we need it here because that function requires starting by removing it!
+	musicsymbolnew = musicsymbol.clone({
+		duration: 60*1000/120,
+	});
+	
+	playNextSong();
 }
 
 function playNextSong()
@@ -1098,19 +1152,18 @@ function playNextSong()
 	console.log(songobj.track);
 	music.type = songobj.codec;
 	music.src = songobj.track;	
-	
-	musicsymbol.duration = 60*1000/songobj.bpm;
-	musicsymbol.stopAnimation();
-	
+		
 	musicplaying = false;
+	adjustBPM();	
 	musicPress();
+	
+	music_text.text = songobj.author + "\n" + songobj.title;
 }
 
 function upVolume()
 {
 	if (music.volume <= 0.95)
 		music.volume += 0.05;
-	
 }
 
 function downVolume()
@@ -1124,16 +1177,39 @@ function musicPress()
 	if (musicplaying == true) 
 	{
 		music.pause();
-		musicsymbol.stopAnimation();
+		musicsymbolnew.stopAnimation();
 	}
 	else
 	{
 		music.play();
-		musicsymbol.startAnimation();
+		musicsymbolnew.startAnimation();
 	}
 	
 	musicplaying = !musicplaying;
 }
+
+function adjustBPM()
+{	
+	canvas.removeChild(musicsymbolnew);
+
+	musicsymbolnew = musicsymbol.clone({
+		duration: 60*1000/playlist[playlistiter].bpm,
+		frame: 2,
+	});
+
+	canvas.addChild(musicsymbolnew);
+	musicsymbolnew.bind("click tap", function(){musicPress();});
+	
+	//musicsymbol = musicsymbolnew;
+		
+	console.log(musicsymbol.duration);
+}
+
+function linkMusic()
+{
+	
+}
+
 }
 
 //~~~~ Game Code ~~~~~
@@ -1183,6 +1259,7 @@ initialiseCanvas();
 initialiseMusic();
 
 //initialise canvas
+var dronestyle = {1:"sync", 2:"clock", 3:"anti"};
 
 function NewGame()
 {
@@ -1232,6 +1309,7 @@ function NewGame()
 	
 	//settings
 	this.displayProjectiles = true;
+	this.dronestyle = 1;
 }
 
 var Game = new NewGame();
@@ -1258,7 +1336,7 @@ if (localStorage.getItem('saveObject') !== null)
 	if (success)
 	{
 		//need to re-add the drones to canvas, just in case...
-		createDrones();	
+		createDrones(dronestyle[Game.dronestyle]);	
 		//load the last date and tell the user we were offline
 		//dates act funny so can't be simply placed in game object
 		savetime = new Date(parseInt(localStorage.getItem('time')));  
