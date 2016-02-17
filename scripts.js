@@ -863,7 +863,7 @@ function createDrones(style)
 					frameit = 0;
 					break;
 				case "clock":
-					startframe = targetdrones;
+					startframe = targetdrones; // = 12
 					frameit = -1;
 					break;
 				case "anti":
@@ -878,13 +878,14 @@ function createDrones(style)
 		
 		while (targetdrones > visibledrones)
 		{
-			startframe = startframe % 10; // theres only 10 frames for drones
-			if (startframe == 0)
+			if(startframe < 0)
 				startframe += frameit;
 
+			startframe = startframe % 10; // theres only 10 frames for drones
+
 			console.log("Frame: " + startframe);
-			
-			var newdrone = dronesprite.clone({frame: startframe});
+			if (startframe > 0)
+				var newdrone = dronesprite.clone({frame: startframe});
 			startframe += frameit;			
 			newdrone.scale(0.25,0.25);
 			
