@@ -875,6 +875,8 @@ function createDrones(style)
 			}
 		}
 		
+		startframe = startframe % 10; // theres only 10 frames for drones
+		
 		while (targetdrones > visibledrones)
 		{
 			console.log("Frame: " + startframe);
@@ -1336,7 +1338,7 @@ if (localStorage.getItem('saveObject') !== null)
 	if (success)
 	{
 		//need to re-add the drones to canvas, just in case...
-		createDrones(dronestyle[Game.dronestyle]);	
+		resetDrones(dronestyle[Game.dronestyle]);
 		//load the last date and tell the user we were offline
 		//dates act funny so can't be simply placed in game object
 		savetime = new Date(parseInt(localStorage.getItem('time')));  
