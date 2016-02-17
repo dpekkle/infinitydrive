@@ -320,10 +320,10 @@ function uiTick()
 	{
 		updateCosts();
 		
-		var loglev = Math.floor((1 + Math.log2(Game.level)));
+		var loglev = Math.floor((1 + Math.log2(Game.level)/Math.log2(1.5)));
 		
-		var lastlev = Math.pow(2, loglev - 1);
-		var nextlev = Math.pow(2, loglev);
+		var lastlev = Math.pow(1.5, loglev - 1);
+		var nextlev = Math.pow(1.5, loglev);
 		
 		level_text.text = "Level " + loglev;
 		
@@ -1075,7 +1075,7 @@ function levelup()
 	{
 		Game.level++;
 		Game.progress = 0;
-		Game.levelcost *= 1.01;
+		Game.levelcost *= 1.005;
 		return true;
 	}
 	else 
