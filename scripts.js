@@ -1093,7 +1093,7 @@ function toggleProjectiles()
 
 function resetDrones(init)
 {
-	if (init == "onload")
+	if (init != "onload")
 	{
 	Game.dronestyle++;
 	if (Game.dronestyle > 3)
