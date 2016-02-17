@@ -1108,7 +1108,7 @@ var ranges = [
   { divider: 1e6 , suffix: 'B' },
   { divider: 1e3 , suffix: 'A' }
 ];
-var fps = 144;
+var fps = 60;
 var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
 var shipspeed = 100;
@@ -1252,7 +1252,12 @@ setInterval( function()
 setInterval( function() 
 {
 	drawScreen();
-	uiTick();
+}, 1000/fps);
+
+// ui loop
+setInterval( function()
+{
+	uiTick();	
 }, 1000/fps);
 
 /*
