@@ -878,14 +878,14 @@ function createDrones(style)
 		
 		while (targetdrones > visibledrones)
 		{
-			if(startframe < 0)
+			if(startframe <= 0)
 				startframe += frameit;
-
-			startframe = startframe % 10; // theres only 10 frames for drones
-
+			startframe = startframe % 10; // theres only 10 frames for drones,  
+			if(startframe <= 0)
+				startframe += frameit;
+							
 			console.log("Frame: " + startframe);
-			if (startframe > 0)
-				var newdrone = dronesprite.clone({frame: startframe});
+				var newdrone = dronesprite.clone({frame: Math.abs(startframe)}); // mod is keeping negative numbers for some reason
 			startframe += frameit;			
 			newdrone.scale(0.25,0.25);
 			
