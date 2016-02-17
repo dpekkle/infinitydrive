@@ -1037,7 +1037,6 @@ function levelup()
 
 function toggleProjectiles()
 {
-	shipspeed *=2;
 	Game.displayProjectiles = !Game.displayProjectiles;
 	
 	if (Game.displayProjectiles)
