@@ -82,7 +82,7 @@ function checkVisibility()
 					createUpgrade(
 					"goldbuy", 
 					"button", 
-					"Buy units with " + Game.goldname + ", costs " + goldbuycost + " " + Game.shipname, 
+					"Buy units with " + Game.goldname + ", costs " + Game.goldbuycost + " " + Game.shipname, 
 					"upgrade",
 					"Will let you spend " + Game.goldname + " to buy "+ Game.shipname + ", best to leave this on as it increases the cost of using other units too"
 					);
