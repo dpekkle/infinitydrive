@@ -976,6 +976,7 @@ function initialiseUI()
 		document.getElementById( "toggleprojectiles").style.backgroundColor = "gray";	
 	
 	document.getElementById( "deletesave").style.backgroundColor = "lightgray";
+	document.getElementById( "resetdrones").style.backgroundColor = "lightgray";
 	
 }
 
@@ -1043,6 +1044,12 @@ function toggleProjectiles()
 		document.getElementById( "toggleprojectiles").style.backgroundColor = "lightgray";
 	else
 		document.getElementById( "toggleprojectiles").style.backgroundColor = "gray";		
+}
+
+function resetDrones()
+{
+	createDrones("clear");
+	createDrones();
 }
 
 }
