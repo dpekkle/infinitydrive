@@ -875,13 +875,16 @@ function createDrones(style)
 			}
 		}
 		
-		startframe = 1 + startframe % 10; // theres only 10 frames for drones
 		
 		while (targetdrones > visibledrones)
 		{
+			startframe = 1 + startframe % 10; // theres only 10 frames for drones
+
 			console.log("Frame: " + startframe);
 			var newdrone = dronesprite.clone({frame: startframe});
 			startframe += frameit;			
+			if (startframe == 0)
+				startframe += frameit;
 			newdrone.scale(0.25,0.25);
 			
 			shipsprite.addChild(newdrone);
