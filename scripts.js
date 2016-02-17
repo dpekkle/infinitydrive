@@ -875,7 +875,7 @@ function createDrones(style)
 			}
 		}
 		
-		startframe = startframe % 10; // theres only 10 frames for drones
+		startframe = 1 + startframe % 10; // theres only 10 frames for drones
 		
 		while (targetdrones > visibledrones)
 		{
