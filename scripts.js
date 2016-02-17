@@ -859,17 +859,20 @@ function createDrones(style)
 			switch(style)
 			{
 				case "sync":
-					startframe = 1;
-					frameit = 0;
+					startframe = 0;
+					frameit = -1;
 					break;
 				case "clock":
 					startframe = targetdrones; // = 12
-					frameit = -1;
+					frameit = -2;
 					break;
 				case "anti":
-					startframe = 1;
-					frameit = 1;
+					startframe = 0;
+					frameit = 0;
 					break;
+				case "desync":
+					startframe = 0;
+					frameit = -1-(targetdrones/3);
 				default:
 					break;
 			}
@@ -878,21 +881,23 @@ function createDrones(style)
 		
 		while (targetdrones > visibledrones)
 		{
-			if(startframe <= 0)
-				startframe += frameit;
-			startframe = startframe % 10; // theres only 10 frames for drones,  
-			if(startframe <= 0)
-				startframe += frameit;
-							
+			//if(startframe <= 0)
+				//startframe += frameit;
+			
+			// javascript % is not a true modulo expression, negative numbers will be screwy without this
+			startframe = 1 + (((startframe % 10) + 10) % 10); 
+			//if(startframe <= 0)
+				//startframe += frameit;
 			console.log("Frame: " + startframe);
-				var newdrone = dronesprite.clone({frame: Math.abs(startframe)}); // mod is keeping negative numbers for some reason
-			startframe += frameit;			
+			
+			var newdrone = dronesprite.clone({frame: Math.abs(startframe)}); 
+			startframe += frameit;	
 			newdrone.scale(0.25,0.25);
 			
 			shipsprite.addChild(newdrone);
 			droneArray.push(newdrone);
 			if (Game.droneclick)
-				newdrone.start();
+				newdrone.startAnimation();
 			visibledrones++;
 		}
 		while (targetdrones < visibledrones && targetdrones >= 0) //just in case of a bug
@@ -1096,9 +1101,9 @@ function resetDrones(init)
 {
 	if (init != "onload")
 	{
-	Game.dronestyle++;
-	if (Game.dronestyle > 3)
-		Game.dronestyle = 1;
+		Game.dronestyle++;
+		if (Game.dronestyle > 4)
+			Game.dronestyle = 1;
 		createDrones("clear");
 	}
 	document.getElementById( "resetdrones").value = "Drone style:" + dronestyle[Game.dronestyle];
@@ -1268,7 +1273,7 @@ initialiseCanvas();
 initialiseMusic();
 
 //initialise canvas
-var dronestyle = {1:"sync", 2:"clock", 3:"anti"};
+var dronestyle = {1:"sync", 2:"clock", 3:"anti", 4:"desync"};
 
 function NewGame()
 {
