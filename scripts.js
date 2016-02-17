@@ -878,9 +878,10 @@ function createDrones(style)
 		
 		while (targetdrones > visibledrones)
 		{
-			startframe = 1 + startframe % 10; // theres only 10 frames for drones
+			startframe = startframe % 10; // theres only 10 frames for drones
 
 			console.log("Frame: " + startframe);
+			
 			var newdrone = dronesprite.clone({frame: startframe});
 			startframe += frameit;			
 			if (startframe == 0)
@@ -1090,14 +1091,16 @@ function toggleProjectiles()
 		document.getElementById( "toggleprojectiles").style.backgroundColor = "gray";		
 }
 
-function resetDrones()
+function resetDrones(init)
 {
+	if (init == "onload")
+	{
 	Game.dronestyle++;
 	if (Game.dronestyle > 3)
 		Game.dronestyle = 1;
-	
+		createDrones("clear");
+	}
 	document.getElementById( "resetdrones").value = "Drone style:" + dronestyle[Game.dronestyle];
-	createDrones("clear");
 	console.log("Attempt" + dronestyle[Game.dronestyle]);
 	
 	createDrones(dronestyle[Game.dronestyle]);
@@ -1341,7 +1344,7 @@ if (localStorage.getItem('saveObject') !== null)
 	if (success)
 	{
 		//need to re-add the drones to canvas, just in case...
-		resetDrones(dronestyle[Game.dronestyle]);
+		resetDrones("onload");
 		//load the last date and tell the user we were offline
 		//dates act funny so can't be simply placed in game object
 		savetime = new Date(parseInt(localStorage.getItem('time')));  
