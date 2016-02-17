@@ -99,9 +99,9 @@ function checkVisibility()
 					createUpgrade(
 					"minerclick", 
 					"button", 
-					"Clicks create " + Game.minername + ", costs " + formatNumber(Game.minerclickcost) + " " + Game.foremanname, 
+					"Clicks create" + Game.minername + ", costs " + formatNumber(Game.minerclickcost) + " " + Game.foremanname, 
 					"upgrade", 
-					"Each click grants 0.1 base miners, multiplied by your click upgrade");
+					"Each click grants 0.1 base" + Game.minername + ", multiplied by your click upgrade");
 					hiddenleft--;
 				}
 				break;
@@ -643,23 +643,24 @@ function initialiseCanvas()
 		tile_height: 467,
 		tile_spacing_x: 5000,
 		tile_spacing_y: 0,
+		speed: 1,
 	});
 
 	starfield = canvas.display.image(
 	{
 		x:0,
-		y:canvas.height/2,
+		y:0,
 		origin:{x:"left", y:"top"},
 		image: "images/starfield.png",
-		height: 500,
-		width: 1250*2,
+		height: 800,
+		width: 2000*2,
 		
 		tile: true,
-		tile_width: 1250,
-		tile_height: 500,
+		tile_width: 2000,
+		tile_height: 800,
 		tile_spacing_x: 0,
-		tile_spacing_y: 0,		
-		
+		tile_spacing_y: 0,	
+		speed:0.002,
 	});
 	
 	distantgalaxy = canvas.display.image(
@@ -676,15 +677,42 @@ function initialiseCanvas()
 		tile_height: 1800,
 		tile_spacing_x: 0,
 		tile_spacing_y: 0,
+		speed: 0.001,
 	});
 
 	
 //second ship
-		
+	
 	
 	canvas.addChild(distantgalaxy);
 	distantgalaxy.zIndex = "back";
+			
 	canvas.addChild(starfield);
+	starfield.scale(0.7, 0.7);
+	
+	starfield2 = starfield.clone(
+	{
+		y:25,
+		speed:0.005,
+	});
+	canvas.addChild(starfield2);
+	starfield2.scale(0.8, 0.8);
+	
+	starfield3 = starfield.clone(
+	{
+		y:-25,
+		speed:0.01,
+	});
+	canvas.addChild(starfield3);
+	starfield.scale(0.9, 0.9);
+	
+	starfield4 = starfield.clone(
+	{
+		y:-75,
+		speed:0.02,
+	});
+	canvas.addChild(starfield4);
+	
 	canvas.addChild(earth);
 		
 	enemy = shipsprite.clone({
@@ -758,9 +786,20 @@ function drawBackground()
 		We take the log of all this as a means of slowing down the speeds involved.
 	*/
 	var xwidth = earth.width/3 - earth.tile_spacing_x;	
-	earth.moveTo(500 - ((shipspeed * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
-	starfield.moveTo(-100 - (((shipspeed * (0.3 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (starfield.width/2))), 0);
-	distantgalaxy.moveTo(-100 - (((shipspeed * (0.1 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (distantgalaxy.width/2))), 0);
+	earth.moveTo(500 - ((shipspeed * (earth.speed * (Game.level + Game.progress/Game.levelcost))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
+	
+		
+	starfield.moveTo(-100 - (((shipspeed * (starfield.speed * (Game.level + Game.progress/Game.levelcost))) % (starfield.width/2))), starfield.y);
+	starfield2.moveTo(-100 - (((shipspeed * (starfield2.speed * (Game.level + Game.progress/Game.levelcost))) % (starfield2.width/2))), starfield2.y);
+	starfield3.moveTo(-100 - (((shipspeed * (starfield3.speed * (Game.level + Game.progress/Game.levelcost))) % (starfield3.width/2))), starfield3.y);
+	starfield4.moveTo(-100 - (((shipspeed * (starfield4.speed * (Game.level + Game.progress/Game.levelcost))) % (starfield4.width/2))), starfield4.y);
+	
+	distantgalaxy.moveTo(-100 - (((shipspeed * (distantgalaxy.speed * (Game.level + Game.progress/Game.levelcost))) % (distantgalaxy.width/2))), 0);
+
+	//earth.moveTo(500 - ((shipspeed * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
+	//starfield.moveTo(-100 - (((shipspeed * (0.3 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (starfield.width/2))), 0);
+	//distantgalaxy.moveTo(-100 - (((shipspeed * (0.1 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (distantgalaxy.width/2))), 0);
+
 	
 	//earth.scale(backdist, backdist);
 }
@@ -989,7 +1028,7 @@ function levelup()
 	{
 		Game.level++;
 		Game.progress = 0;
-		//Game.levelcost *= 1.001;
+		Game.levelcost *= 1.01;
 		return true;
 	}
 	else 
@@ -998,6 +1037,7 @@ function levelup()
 
 function toggleProjectiles()
 {
+	shipspeed *=2;
 	Game.displayProjectiles = !Game.displayProjectiles;
 	
 	if (Game.displayProjectiles)
@@ -1091,6 +1131,23 @@ function musicPress()
 //~~~~ Game Code ~~~~~
 {
 var ranges = [
+  { divider: 1e99 , suffix: 'AG' },
+  { divider: 1e96 , suffix: 'AF' },
+  { divider: 1e93 , suffix: 'AE' },
+  { divider: 1e90 , suffix: 'AD' },
+  { divider: 1e87 , suffix: 'AC' },
+  { divider: 1e84 , suffix: 'AB' },
+  { divider: 1e81 , suffix: 'AA' },
+  { divider: 1e78 , suffix: 'Z' },
+  { divider: 1e75 , suffix: 'Y' },
+  { divider: 1e72 , suffix: 'X' },
+  { divider: 1e69 , suffix: 'W' },
+  { divider: 1e66 , suffix: 'V' },
+  { divider: 1e63 , suffix: 'U' },
+  { divider: 1e60 , suffix: 'T' },
+  { divider: 1e57 , suffix: 'S' },
+  { divider: 1e54 , suffix: 'R' },
+  { divider: 1e51 , suffix: 'Q' },
   { divider: 1e48 , suffix: 'P' },
   { divider: 1e45 , suffix: 'O' },
   { divider: 1e42 , suffix: 'N' },
@@ -1216,7 +1273,7 @@ setInterval( function()
     var elapsedTime = (now.getTime() - before.getTime());
     if(elapsedTime > delay)
 	{
-		console.log("Lag...")
+		//console.log("Lag...")
 
         //Recover the motion lost while inactive.
 		for (var i = 0; i < elapsedTime/delay; i++)
