@@ -99,7 +99,7 @@ function checkVisibility()
 					createUpgrade(
 					"minerclick", 
 					"button", 
-					"Clicks create " + Game.minername + ", costs " + formatNumber(minerclickcost) + " " + Game.foremanname, 
+					"Clicks create " + Game.minername + ", costs " + formatNumber(Game.minerclickcost) + " " + Game.foremanname, 
 					"upgrade", 
 					"Each click grants 0.1 base miners, multiplied by your click upgrade");
 					hiddenleft--;
