@@ -66,7 +66,7 @@ function checkVisibility()
 					createUpgrade(
 					"droneclick", 
 					"button", 
-					"Drones click, costs " + formatNumber(droneclickcost) + " " + Game.goldname, 
+					"Drones click, costs " + formatNumber(Game.droneclickcost) + " " + Game.goldname, 
 					"upgrade", 
 					"Your visible drones (the amount you see, not the amount you own) will each click once per tick. The fuel earned from this doesn't increase your movement, just allows you to buy more things"
 					);
@@ -82,9 +82,9 @@ function checkVisibility()
 					createUpgrade(
 					"goldbuy", 
 					"button", 
-					"Buy units with " + Game.goldname + ", costs " + Game.goldbuycost + " " + Game.shipname, 
+					"Buy units with" + Game.goldname + ", costs " + Game.goldbuycost + " " + Game.shipname, 
 					"upgrade",
-					"Will let you spend " + Game.goldname + " to buy "+ Game.shipname + ", best to leave this on as it increases the cost of using other units too"
+					"Will let you spend" + Game.goldname + " to buy"+ Game.shipname + ", best to leave this on as it increases the cost of using other units too"
 					);
 					hiddenleft--;
 					console.log("show droneclick");
