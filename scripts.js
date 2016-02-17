@@ -61,7 +61,9 @@ function checkVisibility()
 				}	
 				break;
 			case 4:
-				if (Game.gold >= Game.droneclickcost * 0.5 && Game.droneclick == false)
+				if (Game.droneclick == true)
+					hiddenleft--;
+				else if (Game.gold >= Game.droneclickcost * 0.5 && Game.droneclick == false)
 				{
 					createUpgrade(
 					"droneclick", 
@@ -73,11 +75,11 @@ function checkVisibility()
 					hiddenleft--;
 					console.log("show ships");
 				}
-				else (Game.droneclick == true)
-					hiddenleft--;
 				break;
 			case 5:
-				if (Game.ship >= Game.goldbuycost * 0.5 && Game.goldbuy === 0)
+				if (Game.goldbuy !== 0)
+					hiddenleft--;
+				else if (Game.ship >= Game.goldbuycost * 0.5)
 				{
 					createUpgrade(
 					"goldbuy", 
@@ -89,12 +91,12 @@ function checkVisibility()
 					hiddenleft--;
 					console.log("show droneclick");
 				}
-				else(Game.goldbuy !== 0)
-					hiddenleft--;
 				break;
 
 			case 6:
-				if (Game.foreman >= Game.minerclickcost * 0.5 && Game.clicktype !== "miner")
+				if (Game.clicktype == "miner")
+					hiddenleft--;
+				else if (Game.foreman >= Game.minerclickcost * 0.5)
 				{
 					createUpgrade(
 					"minerclick", 
