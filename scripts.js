@@ -1117,25 +1117,25 @@ function resetDrones(init)
 {
 function initialiseMusic()
 {
-	function Song(track, codec, bpm, author, title)
+	function Song(track, codec, bpm, author, title, volmod)
 	{
 		this.track = track;
 		this.codec = codec;
 		this.bpm = bpm;
 		this.author = author;
 		this.title = title;
+		this.volmod = volmod; //unused
 	}
 	
 	playlistiter = -1;
-	var playlistsize = 3;
+	var playlistsize = 4;
 	playlist = new Array();
 	
-	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous"));	
-	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline"));
-	playlist.push(new Song("audio/track1.ogg", "audio/ogg", 120, "Death of Sound", "Look at me"));
-	
-	playlist.push(new Song("", "", "", 120, "", ""));
-	
+	playlist.push(new Song("audio/Startrek.mp3", "audio/mp3", 30, "ender4life", "Star Trek Bridge Ambience", 1));
+	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous", 0.7));	
+	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline", 0.3));
+	playlist.push(new Song("audio/track1.ogg", "audio/ogg", 120, "Death of Sound", "Look at me", 0.4));
+		
 	musicplaying = false;
 	music = document.getElementById("music");
 	
@@ -1171,7 +1171,7 @@ function playNextSong()
 	adjustBPM();	
 	musicPress();
 	
-	music_text.text = songobj.author + "\n" + songobj.title;
+	music_text.text = songobj.title + "\n" + songobj.author;
 }
 
 function upVolume()
@@ -1324,6 +1324,8 @@ function NewGame()
 	//settings
 	this.displayProjectiles = true;
 	this.dronestyle = 1;
+	this.vol = 0.5;
+
 }
 
 var Game = new NewGame();
