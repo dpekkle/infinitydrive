@@ -129,10 +129,10 @@ function updateAmounts()
 	document.getElementById( "foremans" ).value = formatNumber(Game.foreman);
 	document.getElementById( "ships" ).value = formatNumber(Game.ship);
 	
-	document.getElementById( "goldpt" ).value = formatNumber(Game.goldpt) + " /tick";	
-	document.getElementById( "minerspt" ).value = formatNumber(Game.minerpt) + " /tick";	
-	document.getElementById( "foremanspt" ).value = formatNumber(Game.foremanpt) + " /tick";
-	document.getElementById( "shipspt" ).value = formatNumber(Game.shippt) + " /tick";
+	document.getElementById( "goldpt" ).value = formatNumber(tickspeed*Game.goldpt/gameslow) + " /sec";	
+	document.getElementById( "minerspt" ).value = formatNumber(tickspeed*Game.minerpt/gameslow) + " /sec";	
+	document.getElementById( "foremanspt" ).value = formatNumber(tickspeed*Game.foremanpt/gameslow) + " /sec";
+	document.getElementById( "shipspt" ).value = formatNumber(tickspeed*Game.shippt/gameslow) + " /sec";
 	
 	
 }
@@ -268,8 +268,15 @@ function offlineticks()
 		
 		var new_gold = Game.gold;
 		var earned = formatNumber(new_gold - cur_gold);
+		var offlinestr = 'Offline for: ' + hours + 'hr ' + minutes + 'min ' + seconds + 'sec\n' + 'Earned ' + earned + ' gold';
 		
-		alert('Offline for: ' + hours + 'hr ' + minutes + 'min ' + seconds + 'sec\n' + 'Earned ' + earned + ' gold');
+		swal({
+			title: "Offline Progress",
+			text: offlinestr,
+			type: "info",
+			confirmButtonText: "Ok!",
+			confirmButtonColor: "#004444"
+		});
 	}
 }
 
@@ -313,30 +320,33 @@ function uiTick()
 	if (Game.it < 1000)
 		Game.it++;	
 	else
-		Game.it = 0;
+	{
+		Game.it = 0;		
+	}
 	
 	//run ui functions
 	if (Game.it % 10 === 0)
 	{
 		updateCosts();
+		var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5)
 		
-		var loglev = Math.floor((1 + Math.log2(Game.level)/Math.log2(1.5)));
-		
-		var lastlev = Math.pow(1.5, loglev - 1);
-		var nextlev = Math.pow(1.5, loglev);
-		
+		var loglev = Math.floor(taperlevels);		
 		level_text.text = "Level " + loglev;
 		
-		var prog = (Game.level + Game.progress/Game.levelcost - lastlev)/(nextlev - lastlev);
-		
-		progress_text.text = "Progress " + Math.floor(10000*prog)/100 + "%";
+		var prog = (taperlevels % loglev);	
+		progress_text.text = "Progress " + formatNumber(prog*100) + "%";
 	}
 	if (Game.it % 15 === 0)
 	{
 		grayButtons();
 		checkVisibility();
-		save_text.text = "";
+		outspeed = Game.goldpt/gameslow/progtickpt;
+		thrust_text.text = formatNumber(outspeed*100) + " Thrust"; 
 	}	
+	if (Game.it == 100)
+	{
+		save_text.text = "";
+	}
 	updateAmounts();				
 	
 }
@@ -529,24 +539,12 @@ function initialiseCanvas()
 {
 	canvas = oCanvas.create({canvas: "canvas"});
 
-	
-	
 //music shapes
 	triangle = canvas.display.polygon({
 		sides:3,
-		radius: 12,
+		radius: 13,
 		fill: "#0aa"
 	});
-	
-	/*controlpane = canvas.display.rectangle(
-	{
-		x: canvas.width - 120,
-		y: 10,
-		width: 90,
-		height: 50,
-		fill: "#111"
-	});*/
-
 	musicsymbol = canvas.display.sprite(
 	{
 		x: canvas.width - 120 + 45,
@@ -573,8 +571,7 @@ function initialiseCanvas()
 			direction: "x",
 			duration: 2 * 10,
 			loop: false
-	});
-		
+	});		
 	shipsprite = canvas.display.sprite(
 	{
 		x:canvas.width/4,
@@ -589,7 +586,6 @@ function initialiseCanvas()
 	});
 
 	droneArray = [];
-
 	dronesprite = canvas.display.sprite(
 	{
 		x:0,
@@ -613,8 +609,7 @@ function initialiseCanvas()
 		font: "bold 24px sans-serif",
 		text: "Level",
 		fill: "#0aa"
-	});
-	
+	});	
 	progress_text = canvas.display.text({
 		x: 20,
 		y: canvas.height - 24,
@@ -623,17 +618,14 @@ function initialiseCanvas()
 		text: "Progress ",
 		fill: "#0aa"
 	});
-
-
 	save_text = canvas.display.text({
-		x: canvas.width - 20,
-		y: canvas.height - 24,
-		origin: { x: "right", y: "bottom" },
-		font: "bold 24px sans-serif",
+		x: 20,
+		y: 24,
+		origin: { x: "left", y: "top" },
+		font: "bold 20px sans-serif",
 		text: "",
 		fill: "#0aa"
 	});
-	
 	music_text = canvas.display.text({
 		x:canvas.width - 120 + 110,
 		y: 70,
@@ -643,9 +635,17 @@ function initialiseCanvas()
 		fill: "#0aa",
 		align: "right"
 	});
+	thrust_text = canvas.display.text({
+		x:canvas.width - 120 + 110,
+		y: canvas.height - 24,
+		origin: {x:"right", y:"bottom"},
+		font: "bold 20px sans-serif",
+		text: "",
+		fill: "#0aa",
+		align: "right"
+	});
 
 //background elements
-	
 	earth = canvas.display.image(
 	{
 		x:0, 
@@ -653,16 +653,15 @@ function initialiseCanvas()
 		origin: {x:"left", y:"center"},
 		image: "images/earthsolo.png",
 		height:467,
-		width:(467 + 5000)*3,		
+		width:(467 + 50000)*3,		
 		
 		tile: true,
 		tile_width: 464,
 		tile_height: 467,
-		tile_spacing_x: 5000,
+		tile_spacing_x: 50000,
 		tile_spacing_y: 0,
 		speed: 1,
 	});
-
 	starfield = canvas.display.image(
 	{
 		x:0,
@@ -679,7 +678,6 @@ function initialiseCanvas()
 		tile_spacing_y: 0,	
 		speed:0.002,
 	});
-	
 	distantgalaxy = canvas.display.image(
 	{
 		x:0,
@@ -709,7 +707,8 @@ function initialiseCanvas()
 	
 	starfield2 = starfield.clone(
 	{
-		y:25,
+		image:"images/starfield180.png",
+		y:43,
 		speed:0.005,
 	});
 	canvas.addChild(starfield2);
@@ -717,15 +716,16 @@ function initialiseCanvas()
 	
 	starfield3 = starfield.clone(
 	{
-		y:-25,
+		y:-28,
 		speed:0.01,
 	});
 	canvas.addChild(starfield3);
-	starfield.scale(0.9, 0.9);
+	starfield3.scale(0.9, 0.9);
 	
 	starfield4 = starfield.clone(
 	{
-		y:-75,
+		image:"images/starfield180.png",
+		y:-79,
 		speed:0.02,
 	});
 	canvas.addChild(starfield4);
@@ -746,6 +746,7 @@ function initialiseCanvas()
 	canvas.addChild(level_text);
 	canvas.addChild(progress_text);
 	canvas.addChild(save_text);
+	canvas.addChild(thrust_text);
 	
 	canvas.addChild(weaponfire);
 	canvas.removeChild(weaponfire); //preload the weapon fire sprite
@@ -801,15 +802,14 @@ function drawBackground()
 		We take the log of all this as a means of slowing down the speeds involved.
 	*/
 	var xwidth = earth.width/3 - earth.tile_spacing_x;	
-	earth.moveTo(500 - ((shipspeed * (earth.speed * (Game.level + Game.progress/Game.levelcost))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
 	
-		
-	starfield.moveTo(-100 - (((shipspeed * (starfield.speed * (Game.level + Game.progress/Game.levelcost))) % (starfield.width/2))), starfield.y);
-	starfield2.moveTo(-100 - (((shipspeed * (starfield2.speed * (Game.level + Game.progress/Game.levelcost))) % (starfield2.width/2))), starfield2.y);
-	starfield3.moveTo(-100 - (((shipspeed * (starfield3.speed * (Game.level + Game.progress/Game.levelcost))) % (starfield3.width/2))), starfield3.y);
-	starfield4.moveTo(-100 - (((shipspeed * (starfield4.speed * (Game.level + Game.progress/Game.levelcost))) % (starfield4.width/2))), starfield4.y);
-	
-	distantgalaxy.moveTo(-100 - (((shipspeed * (distantgalaxy.speed * (Game.level + Game.progress/Game.levelcost))) % (distantgalaxy.width/2))), 0);
+	progtomove = Game.level + Game.progress/Game.levelcost;	
+	earth.moveTo(500 - ((shipspeed * (earth.speed * (progtomove))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);	
+	starfield.moveTo(-100 - (((shipspeed * (starfield.speed * (progtomove))) % (starfield.width/2))), starfield.y);
+	starfield2.moveTo(-100 - (((shipspeed * (starfield2.speed * (progtomove))) % (starfield2.width/2))), starfield2.y);
+	starfield3.moveTo(-100 - (((shipspeed * (starfield3.speed * (progtomove))) % (starfield3.width/2))), starfield3.y);
+	starfield4.moveTo(-100 - (((shipspeed * (starfield4.speed * (progtomove))) % (starfield4.width/2))), starfield4.y);
+	distantgalaxy.moveTo(-100 - (((shipspeed * (distantgalaxy.speed * (progtomove))) % (distantgalaxy.width/2))), 0);
 
 	//earth.moveTo(500 - ((shipspeed * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
 	//starfield.moveTo(-100 - (((shipspeed * (0.3 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (starfield.width/2))), 0);
@@ -917,7 +917,7 @@ function fireGuns()
 	if (Game.displayProjectiles)
 	{
 		//make a new sprite
-		if (totalshots < 5)
+		if (totalshots < 1)
 		{
 			totalshots++;
 
@@ -934,19 +934,30 @@ function fireGuns()
 			
 			newShot.animate(
 			{
-				x: canvas.width - 140,
+				x: canvas.width - 200,
 				y: canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360),
 			},
 			{
-				duration:  700,
-				easing: "ease-in-out-quint",
+				duration:  500,
+				easing: "ease-in-quint",
 				callback: function()
 				{
 					totalshots--;
+				}
+			});
+			newShot.animate(
+			{
+				x:canvas.width - 150
+			},
+			{
+				duration: 400,
+				//easing: "ease-out-quad",
+				callback: function()
+				{
 					this.finish();
 					canvas.removeChild(this);
-					canvas.redraw();
-				}
+					//canvas.redraw();
+				}			
 			});
 		}
 	}
@@ -993,7 +1004,7 @@ function initialiseUI()
 
 	//give values to the buttons based off of javascript variables
 	document.getElementById( "goldbutton").value = "Click " + "+ " + Game.goldmod + Game.goldname;
-	document.getElementById( "foremanbutton").value = "Foremans  " + " Costs " + Game.foremancost + Game.minername;
+	document.getElementById( "goldbutton").title = "If you want" + Game.goldname + " you're going to have to blast the hell out of some rocks.";
 	document.getElementById( "foremanbutton").title = "Helps attract more" + Game.minername + ", but many lives will be lost in acquiring this";
 	document.getElementById( "minerbutton").value = "Miners  " + " Costs " + Game.minercost + Game.goldname;
 	document.getElementById( "minerbutton").title = "Hire some hands to help power your engine and mine for more " + Game.goldname;
@@ -1066,12 +1077,34 @@ function formatNumber(n)
 }
 
 function deleteSave()
-{
-	if (confirm('Are you sure you want to delete your save file? All progress will be lost'))
-	{
-		localStorage.removeItem('saveObject');
-		window.location.reload(true); //true to get new updates, pulls new page from server
-	}
+{	
+	swal
+	(
+		{   
+			title: "Are you sure?",   
+			text: "You will not be able to recover your save file!",   
+			type: "warning",   
+			showCancelButton: true,   
+			confirmButtonColor: "#004444",   
+			confirmButtonText: "Yes, delete it!",   
+			closeOnConfirm: false 
+		},	
+		function()
+		{  
+			localStorage.removeItem('saveObject');
+			swal
+			(
+				{
+					title: "Deleted!", 
+					text: "Your save file has been deleted.", 
+					type: "success",
+					confirmButtonColor: "#004444",   
+					
+				},
+				function(){window.location.reload(true);}
+			); 
+		}
+	);
 }
 
 function levelup()
@@ -1084,7 +1117,10 @@ function levelup()
 		return true;
 	}
 	else 
+	{
 		return false;
+
+	}
 }
 
 function toggleProjectiles()
@@ -1127,14 +1163,17 @@ function initialiseMusic()
 		this.volmod = volmod; //unused
 	}
 	
-	playlistiter = -1;
 	var playlistsize = 4;
+	playlistiter = Math.floor(Math.random() * playlistsize - 1);
+
 	playlist = new Array();
 	
 	playlist.push(new Song("audio/Startrek.mp3", "audio/mp3", 30, "ender4life", "Star Trek Bridge Ambience", 1));
-	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous", 0.7));	
-	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline", 0.3));
-	playlist.push(new Song("audio/track1.ogg", "audio/ogg", 120, "Death of Sound", "Look at me", 0.4));
+	playlist.push(new Song("audio/	Klaud 9 AGAIN.ogg", "audio/ogg", 160, "LySeRGe", "Klaud 9", 0.9));
+	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous", 0.9));	
+	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline", 0.6));
+	playlist.push(new Song("audio/Look at me.ogg", "audio/ogg", 120, "Death of Sound", "Look at me", 0.8));
+	
 		
 	musicplaying = false;
 	music = document.getElementById("music");
@@ -1145,18 +1184,21 @@ function initialiseMusic()
 	});
 	
 	music.loop = false;
-	music.volume = 0.5;
+	music.volume = Game.vol;
 	
 	//this is immediately replaced with the appropriate BPM version, but we need it here because that function requires starting by removing it!
 	musicsymbolnew = musicsymbol.clone({
 		duration: 60*1000/120,
 	});
 	
-	playNextSong();
+	playNextSong("init");
 }
 
-function playNextSong()
+function playNextSong(init)
 {
+	if (init != "init")
+		adjustRealVol("end", playlist[playlistiter].volmod); //end the previous songs volmod impact on html5 audio volume
+
 	playlistiter++;
 	if (playlistiter > playlist.length-1)
 		playlistiter = 0;
@@ -1170,20 +1212,37 @@ function playNextSong()
 	musicplaying = false;
 	adjustBPM();	
 	musicPress();
+	adjustRealVol("begin", songobj.volmod);
 	
 	music_text.text = songobj.title + "\n" + songobj.author;
 }
 
+function adjustRealVol(state, mod)
+{
+	if (state == "begin")
+		music.volume = music.volume * mod;
+	else if (state == "end")
+	{
+		music.volume = (music.volume/mod) ;
+	}
+}
+
 function upVolume()
 {
-	if (music.volume <= 0.95)
+	if (music.volume/playlist[playlistiter].volmod <= 0.95)
 		music.volume += 0.05;
+
+	Game.vol = music.volume/playlist[playlistiter].volmod;
 }
 
 function downVolume()
 {
-	if (music.volume >= 0.05)
+	if (music.volume/playlist[playlistiter].volmod >= 0.05)
+	{
 		music.volume -= 0.05;
+	}
+	
+	Game.vol = music.volume/playlist[playlistiter].volmod;
 }
 
 function musicPress()
@@ -1213,9 +1272,7 @@ function adjustBPM()
 
 	canvas.addChild(musicsymbolnew);
 	musicsymbolnew.bind("click tap", function(){musicPress();});
-	
-	//musicsymbol = musicsymbolnew;
-		
+			
 	console.log(musicsymbol.duration);
 }
 
@@ -1270,7 +1327,6 @@ var shipspeed = 100;
 var totalshots = 0;
 
 initialiseCanvas();
-initialiseMusic();
 
 //initialise canvas
 var dronestyle = {1:"sync", 2:"clock", 3:"anti", 4:"desync"};
@@ -1324,14 +1380,12 @@ function NewGame()
 	//settings
 	this.displayProjectiles = true;
 	this.dronestyle = 1;
-	this.vol = 0.5;
-
+	this.vol = 0.7;
 }
 
 var Game = new NewGame();
 var visibledrones = 0;
 var delay = (1000 / tickspeed);
-
 var now = new Date(), before = new Date(); 
 var savetime;
 // if save file exists load it
@@ -1363,8 +1417,19 @@ if (localStorage.getItem('saveObject') !== null)
 		console.log("Done with offline");		
 	}
 }
+else
+{
+	swal(
+	{
+		title: "Welcome!",
+		text:"1. Click the ship or \'Click\' button to mine fuel. \n\n2.Spend fuel to purchase units that create thrust for you.\n\n3.See how far you can travel into deep space!",
+		confirmButtonText: "Let's go!",
+		confirmButtonColor: "#004444"
 
+	});
+}
 initialiseUI();
+initialiseMusic();
 
 console.log("Done with initialise");
 
@@ -1391,20 +1456,26 @@ setInterval( function()
 var progbefore = new Date(), prognow = new Date(); 
 var progtickpt = 50;
 var prograte = delay/progtickpt;
+var oldprog = 0;
 
 setInterval( function()
 {	
+	var currentprog = Game.goldpt/gameslow/progtickpt;
+	var changeprog = (currentprog + oldprog*999)/1000; //this is used to smoothen out progress and create the sense of inertia in motion
+
     prognow = new Date();
     var elapsedTime = (prognow.getTime() - progbefore.getTime());
     if(elapsedTime > prograte)
 		for (var i = 0; i < elapsedTime/prograte; i++)
-			Game.progress += Game.goldpt/gameslow/progtickpt;
+			Game.progress += changeprog;
 	else
-		Game.progress += Game.goldpt/gameslow/progtickpt;
+		Game.progress += changeprog;
     progbefore = new Date();   
+
+	oldprog = changeprog;
 	
 	levelup();
-	adjustBackgroundProgress();	
+	adjustBackgroundProgress();		
 }, prograte);
 
 // screen loop
@@ -1416,7 +1487,7 @@ setInterval( function()
 // ui loop
 setInterval( function()
 {
-	uiTick();	
+	uiTick();
 }, 1000/fps);
 
 /*

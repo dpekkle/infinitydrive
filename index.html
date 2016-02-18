@@ -128,25 +128,11 @@
 
 	<div style="height:100%;">
 		<div style="position:relative;top:50%;text-align:center">	
-			<font color= #0aa > v.0.1.7</font><br>
-			<font color= #0aa> Parallax. </font><br>
+			<font color= #0aa > v.0.1.8</font><br>
+			<font color= #0aa> New alerts. Inertia. <br> Thrust display. New music. </font><br>
 		</div>
 	</div>
-	<div style="position:relative;top:50%;text-align:left">	
-		<font color= #0aa size= 3px>
-			- Instructions - 
-			<br>
-			Click the button to earn fuel. 
-			<br>
-			Spend fuel to purchase units and upgrades. 
-			<br>
-			Units can help convert your fuel into thrust.
-			<br>
-			Some units will create other units.
-		</font>
-	<div>	
-	
-	
+
 	<!-- Game window -->
 	<body bgcolor="#222222">
 	<div class = "window"/>
@@ -196,7 +182,7 @@
 		<input style = "visibility:hidden;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
 
 		<div style="position:relative;top:50%;text-align:left">	
-			<font color= #0aa size= 1px>
+			<font color= #0aa size= 2px>
 				- Planned features -
 				<br>
 				- Space: More planets and moons
@@ -216,8 +202,10 @@
 	<audio id= "music" src="audio/Melancholics Anonymous - S3rge Rybak.mp3" type="audio/mp3">
 	</audio>
 
-	<script defer src="ocanvas-2.8.3.js"></script>
+	<script defer src="lib/ocanvas-2.8.3.js"></script>
+	<script defer src="lib/sweetalert.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="lib/sweetalert.css">
 	<script defer src="scripts.js"></script>
-
+	
 </body>
 </html>
