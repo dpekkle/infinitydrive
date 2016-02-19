@@ -882,7 +882,7 @@ function createDrones(style)
 					break;
 				case "desync":
 					startframe = 0;
-					frameit = -1-(targetdrones/3);
+					frameit = Math.floor(1+(targetdrones/3));
 				default:
 					break;
 			}
@@ -895,11 +895,13 @@ function createDrones(style)
 				//startframe += frameit;
 			
 			// javascript % is not a true modulo expression, negative numbers will be screwy without this
-			startframe = 1 + (((startframe % 10) + 10) % 10); 
-			if (startframe == 0)
-				startframe++;
+			startframe = 1 + (((startframe % 10) + 10) % 10); //doesnt work with floats
 			console.log("Frame: " + startframe);
-			
+
+			if (startframe == 0)
+			{
+				startframe++;
+			}
 			var newdrone = dronesprite.clone({frame: Math.abs(startframe)}); 
 			startframe += frameit;	
 			newdrone.scale(0.25,0.25);
