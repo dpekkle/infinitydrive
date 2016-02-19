@@ -228,7 +228,7 @@ function grayButtons()
 	}
 	if (document.getElementById("minerclick") != null)
 	{
-		if (Game.miner >= Game.minerclickcost)
+		if (Game.foreman >= Game.minerclickcost)
 			document.getElementById( "minerclick").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
 		else
 			document.getElementById( "minerclick").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
@@ -1177,10 +1177,10 @@ function initialiseMusic()
 	playlist = new Array();
 	
 	playlist.push(new Song("audio/Startrek.mp3", "audio/mp3", 30, "ender4life", "Star Trek Bridge Ambience", 1));
-	playlist.push(new Song("audio/	Klaud 9 AGAIN.ogg", "audio/ogg", 160, "LySeRGe", "Klaud 9", 0.9));
+	playlist.push(new Song("audio/	Klaud 9 AGAIN.ogg", "audio/ogg", 154, "LySeRGe", "Klaud 9", 0.9));
 	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous", 0.9));	
-	playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline", 0.6));
-	playlist.push(new Song("audio/Look at me.ogg", "audio/ogg", 120, "Death of Sound", "Look at me", 0.8));
+	//playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline", 0.6));
+	//playlist.push(new Song("audio/Look at me.ogg", "audio/ogg", 120, "Death of Sound", "Look at me", 0.8));
 	
 		
 	musicplaying = false;
@@ -1380,15 +1380,16 @@ function NewGame()
 	this.longtick = 5;
 
 	this.clicktype = "gold";
-	this.minerclickcost = 400000000;
+	this.minerclickcost = 400000000; //400 B asteroids
 	
 	this.droneclick = false;
-	this.droneclickcost = 10000000000;
+	this.droneclickcost = 10000000000; //10 C fuel
 	
 	//settings
 	this.displayProjectiles = true;
 	this.dronestyle = 1;
 	this.vol = 0.7;
+	this.gameversion = "0.1.8";
 }
 
 var Game = new NewGame();
@@ -1396,7 +1397,9 @@ var visibledrones = 0;
 var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
-var gameupdated = true;
+
+var currentversion = "0.1.8";
+var savefilechanged = false;
 
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
@@ -1415,39 +1418,45 @@ if (localStorage.getItem('saveObject') !== null)
 	}
 	if (success)
 	{
-		if (gameupdated)
+		if (Game.gameversion != currentversion)
 		{
 			swal
 			(
 				{
-					title: "Game updated",
-					text: "Updates: New music.\n\nAs this game is in heavy development\nyour save file may be corrupted due to this update. \nIf you experience difficulties please delete your save file.",
+					title: "v " + currentversion + "\n20/02/2016",
+					text: "Updates: \n-SWAL alerts. \n-Inertia. \n-Thrust display. \n-New music.",
 					type: "info",
 					confirmButtonText: "Thanks for letting me know",
 					confirmButtonColor: "#004444",
-					closeOnConfirm: false 
+					closeOnConfirm: !savefilechanged,		
+					align:"left"
 				},
 				function()
 				{
-					swal 
-					(
-						{
-							title: "Delete save file?",
-							type: "warning",
-							showCancelButton: true,   
-							cancelButtonText: "No",
-							confirmButtonText: "Yes",
-							confirmButtonColor: "#004444",
-							closeOnConfirm: false,		
-						},
-						function()
-						{
-							deleteSave();		
-						}
-					);
+					if (savefilechanged)
+					{
+						swal 
+						(
+							{
+								title: "Delete save file?",
+								text: "The game save file has been changed.\nAs this game is in heavy development your save file may be corrupted due to this update. \nIf you experience difficulties please delete your save file.",
+								type: "warning",
+								showCancelButton: true,   
+								cancelButtonText: "No",
+								confirmButtonText: "Yes",
+								confirmButtonColor: "#004444",
+								closeOnConfirm: false,		
+							},
+							function()
+							{
+								deleteSave();		
+							}
+						);
+					}
 				}
 			);
 		}
+		Game.gameversion = currentversion;
 		//need to re-add the drones to canvas, just in case...
 		resetDrones("onload");
 		//load the last date and tell the user we were offline
