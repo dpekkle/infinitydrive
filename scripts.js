@@ -896,8 +896,8 @@ function createDrones(style)
 			
 			// javascript % is not a true modulo expression, negative numbers will be screwy without this
 			startframe = 1 + (((startframe % 10) + 10) % 10); 
-			//if(startframe <= 0)
-				//startframe += frameit;
+			if (startframe == 0)
+				startframe++;
 			console.log("Frame: " + startframe);
 			
 			var newdrone = dronesprite.clone({frame: Math.abs(startframe)}); 
