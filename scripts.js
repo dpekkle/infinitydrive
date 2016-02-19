@@ -571,7 +571,7 @@ function initialiseCanvas()
 			generate: true,
 			direction: "x",
 			duration: 2 * 10,
-			loop: true
+			loop: false
 	});		
 
 	shipsprite = canvas.display.sprite(
@@ -940,7 +940,7 @@ function fireGuns()
 			
 			newShot.animate(
 			{
-				x: canvas.width - 220,
+				x: canvas.width - 200,
 				y: canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360),
 			},
 			{
@@ -954,8 +954,8 @@ function fireGuns()
 				opacity:0.3
 			},
 			{
-				duration: 800,
-				easing: "ease-in-quad",
+				duration: 400,
+				easing: "ease-out-quad",
 				callback: function()
 				{
 					this.finish();
@@ -1192,7 +1192,6 @@ function initialiseMusic()
 	});
 	
 	music.loop = false;
-	console.log(Game.vol);
 	music.volume = Game.vol;
 	
 	//this is immediately replaced with the appropriate BPM version, but we need it here because that function requires starting by removing it!
@@ -1388,7 +1387,7 @@ function NewGame()
 	//settings
 	this.displayProjectiles = true;
 	this.dronestyle = 1;
-	this.vol = 0.7;
+	this.vol = 0.4;
 	this.gameversion = "0.1.8";
 }
 
