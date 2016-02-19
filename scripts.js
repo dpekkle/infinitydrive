@@ -170,75 +170,75 @@ function grayButtons()
 {
 	//units	
 	if (Game.gold >= Game.minercost)
-		document.getElementById( "minerbutton").style.backgroundColor = "lightgray";
+		document.getElementById( "minerbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	else
-		document.getElementById( "minerbutton").style.backgroundColor = "gray";
+		document.getElementById( "minerbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 	
 	if (Game.goldbuy == 1)
 	{		
 		if (Game.gold >= Game.foremancost)
-			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray";
+			document.getElementById( "foremanbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 		else
-			document.getElementById( "foremanbutton").style.backgroundColor = "gray";
+			document.getElementById( "foremanbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 		
 		if (Game.gold >= Game.shipcost)
-			document.getElementById( "shipbutton").style.backgroundColor = "lightgray";
+			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 		else
-			document.getElementById( "shipbutton").style.backgroundColor = "gray";
+			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 	}
 	else
 	{
 		if (Game.miner >= Game.foremancost)
-			document.getElementById( "foremanbutton").style.backgroundColor = "lightgray";
+			document.getElementById( "foremanbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 		else
-			document.getElementById( "foremanbutton").style.backgroundColor = "gray";
+			document.getElementById( "foremanbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 		
 		if (Game.foreman >= Game.shipcost)
-			document.getElementById( "shipbutton").style.backgroundColor = "lightgray";
+			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 		else
-			document.getElementById( "shipbutton").style.backgroundColor = "gray";
+			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 	}
 	
 	//upgrades	
 	if (Game.gold >= Game.goldupcost)
-		document.getElementById( "goldupgradebutton").style.backgroundColor = "lightgray";
+		document.getElementById( "goldupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	else
-		document.getElementById( "goldupgradebutton").style.backgroundColor = "gray";
+		document.getElementById( "goldupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 
 	if (Game.gold >= Game.minerupcost)
-		document.getElementById( "minerupgradebutton").style.backgroundColor = "lightgray";
+		document.getElementById( "minerupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	else
-		document.getElementById( "minerupgradebutton").style.backgroundColor = "gray";
+		document.getElementById( "minerupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 
 	if (Game.gold >= Game.foremanupcost)
-		document.getElementById( "foremanupgradebutton").style.backgroundColor = "lightgray";
+		document.getElementById( "foremanupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	else
-		document.getElementById( "foremanupgradebutton").style.backgroundColor = "gray";
+		document.getElementById( "foremanupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 	if (Game.gold >= Game.shipupcost)
-		document.getElementById( "shipupgradebutton").style.backgroundColor = "lightgray";
+		document.getElementById( "shipupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	else
-		document.getElementById( "shipupgradebutton").style.backgroundColor = "gray";
+		document.getElementById( "shipupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 	
 	if (document.getElementById("goldbuy") != null && Game.goldbuy === 0)
 	{	
 		if(Game.ship >= Game.goldbuycost)
-			document.getElementById( "goldbuy").style.backgroundColor = "lightgray";		
+			document.getElementById( "goldbuy").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
 		else
-			document.getElementById( "goldbuy").style.backgroundColor = "gray";	
+			document.getElementById( "goldbuy").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
 	}
 	if (document.getElementById("minerclick") != null)
 	{
 		if (Game.miner >= Game.minerclickcost)
-			document.getElementById( "minerclick").style.backgroundColor = "lightgray";		
+			document.getElementById( "minerclick").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
 		else
-			document.getElementById( "minerclick").style.backgroundColor = "gray";	
+			document.getElementById( "minerclick").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
 	}
 	if (document.getElementById("droneclick") != null)
 	{
 		if (Game.gold >= Game.droneclickcost)
-			document.getElementById( "droneclick").style.backgroundColor = "lightgray";		
+			document.getElementById( "droneclick").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
 		else
-			document.getElementById( "droneclick").style.backgroundColor = "gray";	
+			document.getElementById( "droneclick").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
 	}
 	
 }
@@ -554,7 +554,7 @@ function initialiseCanvas()
 		height: 47,
 		width: 30,
 		generate: true,
-		loop: true,
+		loop: false,
 		duration: 60*1000/120
 	});
 	
@@ -570,8 +570,9 @@ function initialiseCanvas()
 			generate: true,
 			direction: "x",
 			duration: 2 * 10,
-			loop: false
+			loop: true
 	});		
+
 	shipsprite = canvas.display.sprite(
 	{
 		x:canvas.width/4,
@@ -584,6 +585,13 @@ function initialiseCanvas()
 		direction: "x",
 		duration: 4 * 10
 	});
+	
+	newShot = weaponfire.clone({
+		x: shipsprite.x + 100,
+		y: shipsprite.y
+	});
+	newShot.rotate(90);
+	newShot.scale(0.25, 0.25);	
 
 	droneArray = [];
 	dronesprite = canvas.display.sprite(
@@ -920,42 +928,38 @@ function fireGuns()
 		if (totalshots < 1)
 		{
 			totalshots++;
-
-			var newShot = weaponfire.clone({
-				x: shipsprite.x + 100,
-				y: shipsprite.y
-			});
 			canvas.addChild(newShot);
-			newShot.rotate(90);
-			newShot.scale(0.25, 0.25);
+			newShot.frame = 1;
+			newShot.x = shipsprite.x + 100;
+			newShot.y = shipsprite.y;
 			newShot.startAnimation();
-			canvas.redraw();		
-			
 			
 			newShot.animate(
 			{
-				x: canvas.width - 200,
+				x: canvas.width - 220,
 				y: canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360),
 			},
 			{
 				duration:  500,
-				easing: "ease-in-quint",
-				callback: function()
-				{
-					totalshots--;
-				}
+				easing: "ease-in-quad",
+
 			});
 			newShot.animate(
 			{
-				x:canvas.width - 150
+				x:canvas.width - 100,
+				opacity:0.3
 			},
 			{
-				duration: 400,
-				//easing: "ease-out-quad",
+				duration: 800,
+				easing: "ease-in-quad",
 				callback: function()
 				{
 					this.finish();
+					this.stopAnimation();
+					newShot.frame = 1;
 					canvas.removeChild(this);
+					totalshots--;
+					newShot.opacity = 1;
 					//canvas.redraw();
 				}			
 			});
@@ -998,7 +1002,7 @@ function removeUpgrade(id)
 function initialiseUI()
 {
 	//set first two elements to be visible
-	document.getElementById( "goldbutton").style.backgroundColor = "lightgray";
+	document.getElementById( "goldbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	document.getElementById( "goldbutton").style.visibility = "visible";
 	document.getElementById( "gold").style.visibility = "visible";
 
@@ -1033,12 +1037,12 @@ function initialiseUI()
 	}
 	
 	if (Game.displayProjectiles)
-		document.getElementById( "toggleprojectiles").style.backgroundColor = "lightgray";
+		document.getElementById( "toggleprojectiles").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	else
-		document.getElementById( "toggleprojectiles").style.backgroundColor = "gray";	
+		document.getElementById( "toggleprojectiles").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
 	
-	document.getElementById( "deletesave").style.backgroundColor = "lightgray";
-	document.getElementById( "resetdrones").style.backgroundColor = "lightgray";
+	document.getElementById( "deletesave").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+	document.getElementById( "resetdrones").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	
 }
 
@@ -1128,9 +1132,9 @@ function toggleProjectiles()
 	Game.displayProjectiles = !Game.displayProjectiles;
 	
 	if (Game.displayProjectiles)
-		document.getElementById( "toggleprojectiles").style.backgroundColor = "lightgray";
+		document.getElementById( "toggleprojectiles").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	else
-		document.getElementById( "toggleprojectiles").style.backgroundColor = "gray";		
+		document.getElementById( "toggleprojectiles").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';		
 }
 
 function resetDrones(init)
@@ -1184,6 +1188,7 @@ function initialiseMusic()
 	});
 	
 	music.loop = false;
+	console.log(Game.vol);
 	music.volume = Game.vol;
 	
 	//this is immediately replaced with the appropriate BPM version, but we need it here because that function requires starting by removing it!
