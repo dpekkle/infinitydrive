@@ -555,7 +555,7 @@ function initialiseCanvas()
 		height: 47,
 		width: 30,
 		generate: true,
-		loop: false,
+		loop: true,
 		duration: 60*1000/120
 	});
 	
@@ -1238,7 +1238,6 @@ function upVolume()
 {
 	if (music.volume/playlist[playlistiter].volmod <= 0.95)
 		music.volume += 0.05;
-
 	Game.vol = music.volume/playlist[playlistiter].volmod;
 }
 
