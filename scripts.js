@@ -275,7 +275,8 @@ function offlineticks()
 			text: offlinestr,
 			type: "info",
 			confirmButtonText: "Ok!",
-			confirmButtonColor: "#004444"
+			confirmButtonColor: "#004444",
+			closeOnConfirm: false 
 		});
 	}
 }
@@ -778,8 +779,9 @@ function initialiseCanvas()
 	
 	nextSong = triangle.clone({
 		x: canvas.width - 120 + 80,
-		y: 37,
-		rotation: 0
+		y: 35,
+		rotation: 0,
+		radius: 16,
 	});
 	canvas.addChild(nextSong);
 	
@@ -1393,6 +1395,8 @@ var visibledrones = 0;
 var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
+var gameupdated = true;
+
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
 {
@@ -1410,6 +1414,39 @@ if (localStorage.getItem('saveObject') !== null)
 	}
 	if (success)
 	{
+		if (gameupdated)
+		{
+			swal
+			(
+				{
+					title: "Game updated",
+					text: "Updates: New music.\n\nAs this game is in heavy development\nyour save file may be corrupted due to this update. \nIf you experience difficulties please delete your save file.",
+					type: "info",
+					confirmButtonText: "Thanks for letting me know",
+					confirmButtonColor: "#004444",
+					closeOnConfirm: false 
+				},
+				function()
+				{
+					swal 
+					(
+						{
+							title: "Delete save file?",
+							type: "warning",
+							showCancelButton: true,   
+							cancelButtonText: "No",
+							confirmButtonText: "Yes",
+							confirmButtonColor: "#004444",
+							closeOnConfirm: false,		
+						},
+						function()
+						{
+							deleteSave();		
+						}
+					);
+				}
+			);
+		}
 		//need to re-add the drones to canvas, just in case...
 		resetDrones("onload");
 		//load the last date and tell the user we were offline
