@@ -1192,7 +1192,6 @@ function initialiseMusic()
 	});
 	
 	music.loop = false;
-	console.log(Game.vol);
 	music.volume = Game.vol;
 	
 	//this is immediately replaced with the appropriate BPM version, but we need it here because that function requires starting by removing it!
@@ -1388,7 +1387,7 @@ function NewGame()
 	//settings
 	this.displayProjectiles = true;
 	this.dronestyle = 1;
-	this.vol = 0.7;
+	this.vol = 0.4;
 	this.gameversion = "0.1.8";
 }
 
