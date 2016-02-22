@@ -57,7 +57,6 @@ function checkVisibility()
 					document.getElementById("shipbutton").style.visibility = "visible";
 					document.getElementById("foremanspt").style.visibility = "visible";		
 					document.getElementById("shipupgradebutton").style.visibility = "visible";	
-					document.getElementById("resetdrones").style.visibility = "visible";	
 					hiddenleft--;	
 				}	
 				break;
@@ -315,7 +314,6 @@ function uiTick()
 	{
 		localStorage.setItem('time', +new Date);
 		localStorage.setItem('saveObject', JSON.stringify(Game));
-		save_text.text = "Autosaved...";
 	}	
 	
 	if (Game.it < 1000)
@@ -344,10 +342,7 @@ function uiTick()
 		outspeed = Game.goldpt/gameslow/progtickpt;
 		thrust_text.text = formatNumber(outspeed*100) + " Thrust"; 
 	}	
-	if (Game.it == 100)
-	{
-		save_text.text = "";
-	}
+
 	updateAmounts();				
 	
 }
@@ -528,6 +523,8 @@ function buyminer(mode)
 		//start the animations for drones
 		createDrones("clear");
 		createDrones(dronestyle[Game.dronestyle]);	
+		//show the drone styles setting
+		document.getElementById("resetdrones").style.visibility = "visible";	
 	}	
 	
 	updateAmounts();		
@@ -587,6 +584,16 @@ function initialiseCanvas()
 		duration: 4 * 10
 	});
 	
+	asteroid1 = canvas.display.image(
+	{
+		x:3*canvas.width/4,
+		y:canvas.height/2,
+		origin: {x:"center", y:"center"},
+		image: "images/asteroid1.jpg",
+		height:150,
+		width: 150,		
+	});
+	
 	newShot = weaponfire.clone({
 		x: shipsprite.x + 100,
 		y: shipsprite.y
@@ -625,14 +632,6 @@ function initialiseCanvas()
 		origin: { x: "left", y: "bottom" },
 		font: "bold 20px sans-serif",
 		text: "Progress ",
-		fill: "#0aa"
-	});
-	save_text = canvas.display.text({
-		x: 20,
-		y: 24,
-		origin: { x: "left", y: "top" },
-		font: "bold 20px sans-serif",
-		text: "",
 		fill: "#0aa"
 	});
 	music_text = canvas.display.text({
@@ -738,15 +737,8 @@ function initialiseCanvas()
 		speed:0.02,
 	});
 	canvas.addChild(starfield4);
-	
-	canvas.addChild(earth);
-		
-	enemy = shipsprite.clone({
-		x:3*canvas.width/4,
-	});
-	canvas.addChild(enemy);
-	enemy.rotate(-90);
-	enemy.startAnimation();
+	canvas.addChild(earth);	
+	canvas.addChild(asteroid1);
 	
 	canvas.addChild(shipsprite);
 	shipsprite.rotate(90);
@@ -754,7 +746,6 @@ function initialiseCanvas()
 	
 	canvas.addChild(level_text);
 	canvas.addChild(progress_text);
-	canvas.addChild(save_text);
 	canvas.addChild(thrust_text);
 	
 	canvas.addChild(weaponfire);
@@ -840,7 +831,7 @@ function drawShip()
 	shiptime = new Date().getTime();
 	//some variance in x and y position of the ship
 	shipsprite.moveTo(canvas.width/4 + 30*Math.sin(shiptime/2000 % 360), canvas.height/2 + 50*Math.sin(shiptime/9999 % 360));
-	enemy.moveTo(canvas.width - 100, canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360));
+	asteroid1.moveTo(canvas.width - 100, canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360));
 }
 
 function drawScreen()
