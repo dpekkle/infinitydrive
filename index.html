@@ -178,8 +178,11 @@
 
 	<div style="margin-top:275px; height:100px;">
 		<br>
+		<font color= #0aa size= 6px><h>Settings</h></font>
+		<br><br>
 		<input id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
 		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
+		<input id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
 		<input style = "visibility:hidden;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
 
 		<div style="position:relative;top:50%;text-align:left">	
@@ -208,7 +211,7 @@
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		})(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
 
 		ga('create', 'UA-74080319-1', 'auto');
 		ga('send', 'pageview');
@@ -217,6 +220,9 @@
 	<script defer src="lib/ocanvas-2.8.3.js"></script>
 	<script defer src="lib/sweetalert.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="lib/sweetalert.css">
+	<script defer src="lib/title_notifier.js"></script>
+	<script defer src="lib/Notifier.js"></script>
+	<script defer src="notifications.js"></script>
 	<script defer src="scripts.js"></script>
 	
 </body>

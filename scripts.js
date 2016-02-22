@@ -38,9 +38,31 @@ function checkVisibility()
 					document.getElementById( "goldpt").style.visibility = "visible";
 					document.getElementById("minerupgradebutton").style.visibility = "visible";
 					hiddenleft--;
+					if (Game.tutorialprogress++ < 3)
+						customNote(Game.alertstyle, Game.minername, 
+						"You can spend " + Game.goldname + " to buy " + Game.minername + ". \n\n" + Game.minername + " will generate more " + Game.goldname + " automatically. They also generate thrust, moving your ship. ");
+
 				}
 				break;
 			case 2:
+				if (Game.gold >= Game.cheapclickcost)
+				{
+					createUpgrade(
+						"cheapclick", 
+						"button", 
+						"Cheaper click upgrades, costs " + formatNumber(Game.cheapclickcost) + " " + Game.goldname, 
+						"upgrade", 
+						"Click upgrades are 20% cheaper"
+					);
+					hiddenleft--;
+					console.log("show ships");
+					if (Game.tutorialprogress++ < 4)
+						customNote(Game.alertstyle, "Unlocks", 
+						"Special unlocks can be purchased to grant a variety of different changes. Mouse-over an unlock to learn more about it");	
+				}
+				break;
+			
+			case 3:
 				if (Game.miner >= Game.foremancost * 0.5 || Game.foreman > 0)
 				{
 					document.getElementById( "foremans").style.visibility = "visible";
@@ -48,9 +70,13 @@ function checkVisibility()
 					document.getElementById("minerspt").style.visibility = "visible";
 					document.getElementById( "foremanupgradebutton").style.visibility = "visible";
 					hiddenleft--;
+					if (Game.tutorialprogress++ < 5)
+						customNote(Game.alertstyle, Game.foremanname, 
+						"You can spend " + Game.minername + " to buy " + Game.foremanname + ". \n\n" + Game.foremanname + "  will create " + Game.minername + " for you.");
+
 				}	
 				break;
-			case 3:
+			case 4:
 				if (Game.foreman >= Game.shipcost * 0.5 || Game.ship > 0)
 				{
 					document.getElementById( "ships").style.visibility = "visible";
@@ -58,9 +84,13 @@ function checkVisibility()
 					document.getElementById("foremanspt").style.visibility = "visible";		
 					document.getElementById("shipupgradebutton").style.visibility = "visible";	
 					hiddenleft--;	
+					if (Game.tutorialprogress++ < 6)
+						customNote(Game.alertstyle, Game.shipname, 
+						"You can spend " + Game.foremanname + " to buy " + Game.shipname + ". \n\n" + Game.shipname + "  will create " + Game.foremanname + " for you. \nThey can also be upgraded with more unlocks");
+
 				}	
 				break;
-			case 4:
+			case 5:
 				if (Game.droneclick == true)
 					hiddenleft--;
 				else if (Game.gold >= Game.droneclickcost * 0.5 && Game.droneclick == false)
@@ -73,10 +103,13 @@ function checkVisibility()
 					"Your visible drones (the amount you see, not the amount you own) will each click once per tick. The fuel earned from this doesn't increase your movement, just allows you to buy more things"
 					);
 					hiddenleft--;
-					console.log("show ships");
+					if (Game.tutorialprogress++ < 7)
+						customNote(Game.alertstyle, "New upgrade unlocked!", 
+						"Drone clicks");
+
 				}
 				break;
-			case 5:
+			case 6:
 				if (Game.goldbuy !== 0)
 					hiddenleft--;
 				else if (Game.ship >= Game.goldbuycost * 0.5)
@@ -84,16 +117,18 @@ function checkVisibility()
 					createUpgrade(
 					"goldbuy", 
 					"button", 
-					"Buy units with" + Game.goldname + ", costs " + Game.goldbuycost + " " + Game.shipname, 
+					"Buy all units with" + Game.goldname + ", costs " + Game.goldbuycost + " " + Game.shipname, 
 					"upgrade",
 					"Will let you spend" + Game.goldname + " to buy"+ Game.shipname + ", best to leave this on as it increases the cost of using other units too"
 					);
 					hiddenleft--;
-					console.log("show droneclick");
+					if (Game.tutorialprogress++ < 8)
+						customNote(Game.alertstyle, "New upgrade unlocked!", 
+						"Buy all units with " + Game.goldname);
 				}
 				break;
 
-			case 6:
+			case 7:
 				if (Game.clicktype == "miner")
 					hiddenleft--;
 				else if (Game.foreman >= Game.minerclickcost * 0.5)
@@ -105,10 +140,14 @@ function checkVisibility()
 					"upgrade", 
 					"Each click grants 0.1 base" + Game.minername + ", multiplied by your click upgrade");
 					hiddenleft--;
+					if (Game.tutorialprogress++ < 9)
+						customNote(Game.alertstyle, "New upgrade unlocked!", 
+						"Buy all units with " + Game.goldname);
+
 				}
 				break;
 			
-			case 7:
+			case 8:
 				break;
 		}
 	}
@@ -123,10 +162,10 @@ function checkVisibility()
 
 function updateAmounts()
 {
-	document.getElementById( "gold" ).value = formatNumber(Game.gold);	
-	document.getElementById( "miners" ).value = formatNumber(Game.miner);	
-	document.getElementById( "foremans" ).value = formatNumber(Game.foreman);
-	document.getElementById( "ships" ).value = formatNumber(Game.ship);
+	document.getElementById( "gold" ).value = formatNumber(Game.gold) + Game.goldname;	
+	document.getElementById( "miners" ).value = formatNumber(Game.miner) + Game.minername;	
+	document.getElementById( "foremans" ).value = formatNumber(Game.foreman) + Game.foremanname;
+	document.getElementById( "ships" ).value = formatNumber(Game.ship) + Game.shipname;
 	
 	document.getElementById( "goldpt" ).value = formatNumber(tickspeed*Game.goldpt/gameslow) + " /sec";	
 	document.getElementById( "minerspt" ).value = formatNumber(tickspeed*Game.minerpt/gameslow) + " /sec";	
@@ -198,9 +237,44 @@ function grayButtons()
 			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 	}
 	
-	//upgrades	
+	//upgrades
 	if (Game.gold >= Game.goldupcost)
+	{
 		document.getElementById( "goldupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+		if (Game.gold > 0 && Game.tutorialprogress < 2)
+		{
+			if (Game.alertstyle === "swal")
+			swal(
+			{
+				title: "Upgrades",
+				text: "You can quadruple the power of your clicks by clicking the 'Upgrade clicks' button, but this will become more expensive with each purchase.",
+				closeOnConfirm: false,
+			},
+			function()
+			{
+				customNote("note", "Small notification", "They look like this (click to close)");
+				swal(
+				{
+					title: "By the way...",
+					text: "Would you prefer to use smaller notifications or keep these big popups?",
+					showCancelButton: true,
+					cancelButtonText: "Keep these",
+					confirmButtonText: "Use small notifications",   
+					//closeOnConfirm: false,
+					closeOnCancel: false,
+				},
+				function(isConfirm)
+				{
+					if (isConfirm)
+						toggleNotes();
+					customNote(Game.alertstyle, "Don't worry", "If you change your mind you can change this at any time in your settings at the bottom of the screen.");
+				});
+				
+			});
+			
+			Game.tutorialprogress++;
+		}
+	}
 	else
 		document.getElementById( "goldupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 
@@ -239,7 +313,13 @@ function grayButtons()
 		else
 			document.getElementById( "droneclick").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
 	}
-	
+	if (document.getElementById("cheapclick") != null)
+	{
+		if (Game.gold >= Game.cheapclickcost)
+			document.getElementById( "cheapclick").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
+		else
+			document.getElementById( "cheapclick").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
+	}	
 }
 }
 //~~~~ TICK FUNCTIONS ~~~~
@@ -304,6 +384,7 @@ function tick(display, fuzz)
 	Game.goldpt = Game.miner * Game.minermod;
 	Game.minerpt = Game.foreman * Game.foremanmod;	
 	Game.foremanpt = Game.ship * Game.shipmod;	
+		checkVisibility();
 
 }
 
@@ -338,7 +419,6 @@ function uiTick()
 	if (Game.it % 15 === 0)
 	{
 		grayButtons();
-		checkVisibility();
 		outspeed = Game.goldpt/gameslow/progtickpt;
 		thrust_text.text = formatNumber(outspeed*100) + " Thrust"; 
 	}	
@@ -477,6 +557,14 @@ function buyminer(mode)
 
 		Game.minerpt = Game.ship * Game.shipmod;
 	}
+	if (id == "cheapclick")
+	{
+		Game.gold -= Game.cheapclickcost;
+		Game.goldupcost *= 0.8;
+		removeUpgrade("cheapclick");	
+		
+		
+	}
 	
 	if (id == "goldbuy")
 	{
@@ -504,7 +592,6 @@ function buyminer(mode)
 		{
 			Game.goldbuy = 1;
 			document.getElementById( "goldbuy" ).value = "Goldbuying units enabled";
-
 			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";		
 		}
 	}
@@ -567,7 +654,7 @@ function initialiseCanvas()
 			width: 512,
 			generate: true,
 			direction: "x",
-			duration: 2 * 10,
+			duration: 1 * 10,
 			loop: false
 	});		
 
@@ -805,16 +892,16 @@ function drawBackground()
 	var xwidth = earth.width/3 - earth.tile_spacing_x;	
 	
 	progtomove = Game.level + Game.progress/Game.levelcost;	
-	earth.moveTo(500 - ((shipspeed * (earth.speed * (progtomove))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);	
-	starfield.moveTo(-100 - (((shipspeed * (starfield.speed * (progtomove))) % (starfield.width/2))), starfield.y);
-	starfield2.moveTo(-100 - (((shipspeed * (starfield2.speed * (progtomove))) % (starfield2.width/2))), starfield2.y);
-	starfield3.moveTo(-100 - (((shipspeed * (starfield3.speed * (progtomove))) % (starfield3.width/2))), starfield3.y);
-	starfield4.moveTo(-100 - (((shipspeed * (starfield4.speed * (progtomove))) % (starfield4.width/2))), starfield4.y);
-	distantgalaxy.moveTo(-100 - (((shipspeed * (distantgalaxy.speed * (progtomove))) % (distantgalaxy.width/2))), 0);
+	earth.moveTo(500 - ((Game.shipspeed * (earth.speed * (progtomove))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);	
+	starfield.moveTo(-100 - (((Game.shipspeed * (starfield.speed * (progtomove))) % (starfield.width/2))), starfield.y);
+	starfield2.moveTo(-100 - (((Game.shipspeed * (starfield2.speed * (progtomove))) % (starfield2.width/2))), starfield2.y);
+	starfield3.moveTo(-100 - (((Game.shipspeed * (starfield3.speed * (progtomove))) % (starfield3.width/2))), starfield3.y);
+	starfield4.moveTo(-100 - (((Game.shipspeed * (starfield4.speed * (progtomove))) % (starfield4.width/2))), starfield4.y);
+	distantgalaxy.moveTo(-100 - (((Game.shipspeed * (distantgalaxy.speed * (progtomove))) % (distantgalaxy.width/2))), 0);
 
-	//earth.moveTo(500 - ((shipspeed * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
-	//starfield.moveTo(-100 - (((shipspeed * (0.3 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (starfield.width/2))), 0);
-	//distantgalaxy.moveTo(-100 - (((shipspeed * (0.1 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (distantgalaxy.width/2))), 0);
+	//earth.moveTo(500 - ((Game.shipspeed * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
+	//starfield.moveTo(-100 - (((Game.shipspeed * (0.3 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (starfield.width/2))), 0);
+	//distantgalaxy.moveTo(-100 - (((Game.shipspeed * (0.1 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (distantgalaxy.width/2))), 0);
 
 	
 	//earth.scale(backdist, backdist);
@@ -935,7 +1022,7 @@ function fireGuns()
 				y: canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360),
 			},
 			{
-				duration:  500,
+				duration:  250,
 				easing: "ease-in-quad",
 
 			});
@@ -945,7 +1032,7 @@ function fireGuns()
 				opacity:0.3
 			},
 			{
-				duration: 400,
+				duration: 200,
 				easing: "ease-out-quad",
 				callback: function()
 				{
@@ -995,7 +1082,7 @@ function removeUpgrade(id)
 }
 
 function initialiseUI()
-{
+{	
 	//set first two elements to be visible
 	document.getElementById( "goldbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	document.getElementById( "goldbutton").style.visibility = "visible";
@@ -1038,6 +1125,11 @@ function initialiseUI()
 	
 	document.getElementById( "deletesave").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	document.getElementById( "resetdrones").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+	document.getElementById( "togglenotes").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+	
+	if (Game.droneclick)
+		document.getElementById("resetdrones").style.visibility = "visible";	
+
 	
 }
 
@@ -1145,6 +1237,20 @@ function resetDrones(init)
 	console.log("Attempt" + dronestyle[Game.dronestyle]);
 	
 	createDrones(dronestyle[Game.dronestyle]);
+}
+
+function toggleNotes()
+{
+	if (Game.alertstyle == "note")
+	{
+		document.getElementById( "togglenotes").value = "Notifications: Big";
+		Game.alertstyle = "swal";
+	}
+	else if (Game.alertstyle == "swal")
+	{
+		document.getElementById( "togglenotes").value = "Notifications: Small";
+		Game.alertstyle = "note";			
+	}
 }
 
 }
@@ -1321,7 +1427,6 @@ var ranges = [
 var fps = 60;
 var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
-var shipspeed = 100;
 var totalshots = 0;
 
 initialiseCanvas();
@@ -1359,6 +1464,8 @@ function NewGame()
 	this.shipupcost = 5000000;
 	this.shipname = " Drones";
 
+	this.shipspeed = 100;
+
 	//upgrades
 	this.goldbuy = 0;
 	this.goldbuycost = 100;
@@ -1375,11 +1482,15 @@ function NewGame()
 	this.droneclick = false;
 	this.droneclickcost = 10000000000; //10 C fuel
 	
+	this.cheapclickcost = 1000; //1 A fuel
+	
 	//settings
 	this.displayProjectiles = true;
 	this.dronestyle = 1;
 	this.vol = 0.4;
-	this.gameversion = "0.1.8";
+	this.gameversion = "0.1.9";
+	this.alertstyle = "swal";
+	this.tutorialprogress = 0;
 }
 
 var Game = new NewGame();
@@ -1388,8 +1499,8 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.1.8";
-var savefilechanged = false;
+var currentversion = "0.1.9";
+var savefilechanged = true;
 
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
@@ -1461,14 +1572,11 @@ if (localStorage.getItem('saveObject') !== null)
 }
 else
 {
-	swal(
+	if (Game.tutorialprogress++ < 1)
 	{
-		title: "Welcome!",
-		text:"1. Click the ship or \'Click\' button to mine fuel. \n\n2.Spend fuel to purchase units that create thrust for you.\n\n3.See how far you can travel into deep space!",
-		confirmButtonText: "Let's go!",
-		confirmButtonColor: "#004444"
-
-	});
+		customNote(Game.alertstyle, "Welcome!", 
+		"Click your ship or the \'Click\' button to mine fuel.");
+	}
 }
 initialiseUI();
 initialiseMusic();
