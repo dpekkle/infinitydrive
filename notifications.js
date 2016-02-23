@@ -1,16 +1,17 @@
-function customNote(style, message, text)
+function customNote(style, title, text)
 {
 
-	if (style === "note")
+	if (style === "Small")
 	{
 		titlenotifier.add();
-		Notifier.info(text, message);
+		Notifier.info(text, title);
+		return document.getElementById(title + "note");
 	}
-	else if (style == "swal")
+	else if (style == "Big")
 	{
 		swal(
 		{
-			title: message,
+			title: title,
 			text: text,
 			confirmButtonText: "Ok!",
 			confirmButtonColor: "#004444"
