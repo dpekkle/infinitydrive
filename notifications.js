@@ -14,6 +14,7 @@ function customNote(style, message, text)
 			text: text,
 			confirmButtonText: "Ok!",
 			confirmButtonColor: "#004444"
+			//test
 		});
 	}
 }
