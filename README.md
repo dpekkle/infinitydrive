@@ -2,8 +2,10 @@
 
 A space-based idle game built around exploration of the solar system and other star systems in the galaxy.
 
-Written using HTML, Javascript and CSS. 
+A more graphical style of browser based idle game is powered through heavy use of the HTML5 canvas element.
 
-Heavy use of HTML5's canvas, allowing a more graphical style of browser based idle game.
+Written using HTML, Javascript and CSS. Minimal use of general libraries including jQuery etc... favouring minimalistic tailored libraries.
 
-Minimal use of general libraries including jQuery etc... favouring minimalistic tailored libraries.
+**To play the game visit**
+##[Infinity Drive](http://dpekkle.github.io/infinitydrive/) 
+hosted on Github pages.
