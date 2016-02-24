@@ -908,7 +908,7 @@ function initialiseCanvas()
 		width:467,		
 		zIndex:5,
 		
-		speed: 100,
+		speed: 1,
 		unlock: 1,
 		seen: false,
 		name: "Venus",
@@ -920,13 +920,13 @@ function initialiseCanvas()
 	{
 		y:0,
 		origin:{x:"left", y:"top"},
-		image: "images/starfield.png",
-		height: 1600,
-		width: 4000*2,
+		image: "images/starfield2.png",
+		height: 800,
+		width: 2000*2,
 		
 		tile: true,
-		tile_width: 4000,
-		tile_height: 1600,
+		tile_width: 2000,
+		tile_height: 800,
 		tile_spacing_x: 0,
 		tile_spacing_y: 0,	
 		speed:0.0025,
@@ -957,7 +957,7 @@ function initialiseCanvas()
 	
 	starfield2 = starfield.clone(
 	{
-		image:"images/starfield180.png",
+		image:"images/starfield1802.png",
 		y:43,
 		speed:0.005,
 	});
@@ -974,7 +974,7 @@ function initialiseCanvas()
 	
 	starfield4 = starfield.clone(
 	{
-		image:"images/starfield180.png",
+		image:"images/starfield1802.png",
 		y:-79,
 		speed:0.02,
 	});
@@ -1689,7 +1689,7 @@ function NewGame()
 	this.gold = 0;
 	this.gold = 0;
 	this.goldpt = 0;
-	this.goldmod = 100;
+	this.goldmod = 1;
 	this.goldupcost = 10;
 	this.goldname = " Fuel";
 	 
