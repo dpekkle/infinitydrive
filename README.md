@@ -6,6 +6,5 @@ A more graphical style of browser based idle game is powered through heavy use o
 
 Written using HTML, Javascript and CSS. Minimal use of general libraries including jQuery etc... favouring minimalistic tailored libraries.
 
-**To play the game visit**
-##[Infinity Drive](http://dpekkle.github.io/infinitydrive/) 
+###[Play the Game](http://dpekkle.github.io/infinitydrive/) 
 hosted on Github pages.
