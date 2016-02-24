@@ -904,7 +904,7 @@ function initialiseCanvas()
 		seen: false,
 		name: "Venus",
 		lore: "A hostile environment coated in a thick layer of greenhouse gases. Rich in Sulfur resources, however landing is not advised.",
-		value: 2,
+		value: 1,
 	});
 
 	starfield = canvas.display.image(
@@ -1039,6 +1039,7 @@ function panPlanet(type)
 		planet.seen = true;
 		customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
 		Game.science += planet.value;
+		document.getElementById("scienceamount").innerHTML = "Science: " + planet.value;
 		Game.planetArrayit++;
 		
 		return;
@@ -1095,6 +1096,8 @@ function panPlanet(type)
 				Notifier.obliterate(note);
 			customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
 			Game.science += planet.value;
+			document.getElementById("scienceamount").innerHTML = "Science: " + planet.value;
+
 			//give us some nice info about the planet :)
 
 			//stop scanning sprite

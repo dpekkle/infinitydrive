@@ -21,7 +21,7 @@ ul.simple-tabs {
 ul.simple-tabs li {
     background-color: lightgray;
     float:left;
-    width:25%;
+    width:20%;
     height:44px;
     border: thin #000000 solid;
     -moz-box-sizing: border-box;
