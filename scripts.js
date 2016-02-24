@@ -409,7 +409,7 @@ function initialiseUI()
 	document.getElementById( "shipbutton").title = "These helpful robots will automatically bring you " + Game.foremanname;	
 
 	//Initialise canvas text
-	level_text.text = "Level " + Game.level;
+	level_text.text = "Level ";
 
 	//amount of elements not visible
 	visiblemax = 8;
@@ -532,9 +532,9 @@ function uiTick()
 	if (Game.it % 10 === 0)
 	{
 		updateCosts();
-		var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5)
+		var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5);
 		
-		var loglev = Math.floor(taperlevels);		
+		loglev = Math.floor(taperlevels);		
 		level_text.text = "Level " + loglev;
 		
 		var prog = (taperlevels % loglev);	
@@ -901,7 +901,7 @@ function initialiseCanvas()
 		seen: false,
 		name: "Venus",
 		lore: "A hostile environment coated in a thick layer of greenhouse gases. Rich in Sulfur resources, however landing is not advised.",
-		value: 1,
+		value: 2,
 	});
 
 	starfield = canvas.display.image(
@@ -1037,10 +1037,24 @@ function panPlanet()
 	canvas.addChild(planet);
 	planet.zIndex = 5;
 	
-	console.log("Star: " + starfield4.zIndex);
-	console.log("Planet: " + planet.zIndex);
-	console.log("Asteroid: " + asteroid1.zIndex);
+	var note;
 	
+	//move ship in to meet planet in center
+	Game.shipscanning = true;
+	shipsprite.animate(
+	{
+		x: canvas.width/2,
+		y: canvas.height/2
+	},
+	{
+		duration: 50000/planet.speed,
+		callback: function()
+		{
+			//scanning sprite
+		}
+	});
+	
+	//pan planet to center
 	planet.animate(
 	{
 		x: canvas.width/2,
@@ -1050,22 +1064,50 @@ function panPlanet()
 		easing: "ease-out-quad",
 		callback: function()
 		{
-			customNote(Game.alertstyle, "Discovered " + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.");
+			note = customNote(Game.alertstyle, "Discovered " + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.");
+
 		}
 	});
 	
 	planet.animate(
-	{
-		
+	{		
 		//we wait a bit here, can run science animation
 	},
 	{
 		duration: 15000,
 		callback: function()
 		{
-			customNote(Game.alertstyle, "Scan complete", planet.lore);
+			if (Game.alertstyle == "Small")
+				Notifier.obliterate(note);
+			customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
 			Game.science += planet.value;
 			//give us some nice info about the planet :)
+
+			//stop scanning sprite
+			shiptime = new Date().getTime();
+			shipsprite.animate(
+			{
+				x: canvas.width/4 + 30*Math.sin(shiptime/2000 % 360),
+				y: canvas.height/2 + 50*Math.sin(shiptime/9999 % 360),
+			},
+			{
+				duration: 12000,
+				//smooth out the transition a little
+				callback: function()
+				{
+					shiptime = new Date().getTime();
+					shipsprite.animate(
+					{
+						x: canvas.width/4 + 30*Math.sin(shiptime/2000 % 360),
+						y: canvas.height/2 + 50*Math.sin(shiptime/9999 % 360),
+					},
+					{
+						duration:1500
+						callback: function(){Game.shipscanning = false;}
+					});
+				}
+			});
+
 		}
 	});
 	planet.animate(
@@ -1095,14 +1137,7 @@ function drawBackground()
 	
 	progtomove = Game.level + Game.progress/Game.levelcost;	
 	//pan past a planet
-	if (Game.planetArrayit < planetArray.length)
-	{
-		console.log("Lets see if its time to show a planet");
-		if (progtomove > planetArray[Game.planetArrayit].unlock)
-		{
-			panPlanet();
-		}
-	}
+
 	starfield.moveTo(-100 - (((Game.shipspeed * (starfield.speed * (progtomove))) % (starfield.width/2))), starfield.y);
 	starfield2.moveTo(-100 - (((Game.shipspeed * (starfield2.speed * (progtomove))) % (starfield2.width/2))), starfield2.y);
 	starfield3.moveTo(-100 - (((Game.shipspeed * (starfield3.speed * (progtomove))) % (starfield3.width/2))), starfield3.y);
@@ -1120,7 +1155,8 @@ function drawShip()
 {	
 	shiptime = new Date().getTime();
 	//some variance in x and y position of the ship
-	shipsprite.moveTo(canvas.width/4 + 30*Math.sin(shiptime/2000 % 360), canvas.height/2 + 50*Math.sin(shiptime/9999 % 360));
+	if (!Game.shipscanning)
+		shipsprite.moveTo(canvas.width/4 + 30*Math.sin(shiptime/2000 % 360), canvas.height/2 + 50*Math.sin(shiptime/9999 % 360));
 	asteroid1.moveTo(canvas.width - 100, canvas.height/2 + 50*Math.sin((5000 + shiptime)/9999 % 360));
 }
 
@@ -1365,12 +1401,16 @@ function levelup()
 		Game.level++;
 		Game.progress = 0;
 		Game.levelcost *= 1.005;
-		return true;
-	}
-	else 
-	{
-		return false;
-
+		console.log("Level: " + Game.level + " loglev" + loglev);
+		
+		if (Game.planetArrayit < planetArray.length)
+		{
+			console.log(loglev + 1 + " compare " + planetArray[Game.planetArrayit].unlock)
+			if (loglev + 1 > planetArray[Game.planetArrayit].unlock)
+			{
+				panPlanet();
+			}
+		}
 	}
 }
 
@@ -1629,6 +1669,7 @@ function NewGame()
 	//positions
 	this.shipspeed = 100;
 	this.planetArrayit = 0;
+	this.shipscanning = false;
 	
 	//upgrades
 	this.goldbuy = 0;
