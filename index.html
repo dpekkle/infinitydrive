@@ -26,19 +26,19 @@
 </head>
 <html>
 <style>
-	font.column_header
+	font.head
 	{
 		text-align: center;
 		color: #0aa;
-		size: 5px;
+		font-size: 150%;
 	}
 	
 	div.buy
 	{
 		width:20px;
 		height:0px;
-		margin-top:0px;
 		margin-left:50px;
+		margin-top:10px; <!--moves all the div columns-->
 	}
 	div.amounts
 	{
@@ -124,19 +124,19 @@
 	{		
 		margin-left:-40px;
 		margin-top:10px;
-		width: 175px;
+		width: 200px;
 		list-style-type:none;
 	}
 	li.upgradestack
 	{
 		margin:10px 0;
-		width: 175px; 
+		width: 200px; 
 	}
 	
 	button.upgradestack
 	{
 		height:60px;
-		width: 175px; 
+		width: 200px; 
 		white-space: pre-wrap	
 	}
 
@@ -149,7 +149,8 @@
 		<font size=4px>
 		<li class="game active">Game</li>
 		<li class="zone">Zone Map</li>
-		<li class="galaxy">Galaxy Map</li>		
+		<li class="galaxy">Galaxy Map</li>
+		<li class="settings">Settings</li>
 		</font>
 	</ul>
 	<div class="clear-float"></div>
@@ -166,9 +167,30 @@
 	<font color=#FFF> WIP 3</font>
 	</div>
 	
+	<div id="settings" class="tab-page" style="background-color: black;">
+		<div style="margin-top:0px; height:100px;margin-left:50px;">
+			<br>
+			<font color= #0aa style="font-size:150%"><h>Settings</h></font>
+			<br><br>
+			<input style = "height:50px;" id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
+			<input style = "height:50px;" id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
+			<input style = "height:50px; display:none;" id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
+			<input style = "height:50px; display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
+
+			<div style="position:relative;top:0%;text-align:left">	
+				<font color= #0aa font-size= 100%>
+					<br>v.0.2.0<br>
+					New features: Science. Venus.<br>
+					For upcoming features <a href="https://trello.com/b/mNyetPjz/infinity-drive">visit our Trello.</a><br>	
+					View on <a href="https://github.com/dpekkle/infinitydrive">github.</a>
+				</font>
+			</div>	
+		</div>
+	</div>	
+	
 	<div style="text-align: left"> 
 		<div class="buy"/>
-			<font class="column_header"><h>Buy</h></font>
+			<font class="head" >Buy</font>
 
 			<button id = "goldbutton" onclick="fireGuns()" class="buy" >Click</button>
 			<button id = "minerbutton" onclick="buyunit('miner')" class="buy" >Crew</button>
@@ -176,7 +198,7 @@
 			<button id = "shipbutton" onclick="buyunit('ship')" class="buy" >Ships</button>			
 		</div>
 		<div class="amounts"/>
-			<font class="column_header"><h>Total</h></font>
+			<font class="head">Total</font>
 
 			<input id = "gold" type = "text" class="amounts"/> 
 			<input id = "miners" type = "text" class="amounts"/> 
@@ -185,7 +207,7 @@
 
 		</div>
 		<div class="upgrade"/>		
-			<font class="column_header"><h>Upgrade</h></font>
+			<font class="head">Upgrade</font>
 			<button id = "goldupgradebutton" onclick = "upgrade('gold')" class="upgrade" >Fuel</button>			
 			<button id = "minerupgradebutton" onclick = "upgrade('miner')" class="upgrade" >Crew</button>			
 			<button id = "foremanupgradebutton" onclick = "upgrade('foreman')" class="upgrade" >Asteroids</button>			
@@ -193,7 +215,7 @@
 
 		</div>
 		<div class="rate"/>
-			<font class="column_header"><h>Income</h></font>
+			<font class="head">Income</font>
 
 			<input id = "goldpt" type = "text" class="rate"/> 
 			<input id = "minerspt" type = "text" class="rate"/> 
@@ -202,7 +224,7 @@
 		</div>
 		
 		<div class="upgradestack"/>
-			<font class="column_header"><h>Unlocks</h></font>
+			<font class="head">Unlocks</font>
 			<br>
 			<ul id = "list" class = "upgradestack">
 			</ul>
@@ -210,24 +232,7 @@
 		
 	</div>
 	
-
-	<div style="margin-top:300px; height:100px;margin-left:50px;">
-		<br>
-		<font color= #0aa size= 4px><h>Settings</h></font>
-		<br><br>
-		<input id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
-		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
-		<input style = "display:none;" id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
-		<input style = "display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
-
-		<div style="position:relative;top:0%;text-align:left">	
-			<font color= #0aa size= 2px>
-				<br>v.0.2.0<br>
-				New features: Science. Venus.<br>
-				For upcoming features <a href="https://trello.com/b/mNyetPjz/infinity-drive">visit our Trello.</a><br>	
-				View on <a href="https://github.com/dpekkle/infinitydrive">github.</a><br>
-			</font>
-		</div>		</div>
+	<div style="margin-top:100px"></div>
 	
 	<!-- Audio -->
 	<audio id= "music" src="audio/Melancholics Anonymous - S3rge Rybak.mp3" type="audio/mp3">
