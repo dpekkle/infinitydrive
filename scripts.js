@@ -453,6 +453,7 @@ function initialiseUI()
 function offlineticks()
 {
 	var A = (now.getTime() - savetime.getTime());
+
 	if (A > 120000) //2 minutes
 	{		
 		var seconds=Math.floor((A/1000)%60);
@@ -468,7 +469,7 @@ function offlineticks()
 		for (var i = 0; i < A/delay/fuzz/gameslow; i++)
 		{
 			tick('offline', fuzz);
-			levelup();
+			levelup('offline');
 		}
 		
 		var new_gold = Game.gold;
@@ -493,6 +494,9 @@ function tick(display, fuzz)
 	{
 		modifierA = fuzz;	
 		Game.progress += Game.goldpt*modifierA;
+		
+		var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5);		
+		loglev = Math.floor(taperlevels);		
 	}
 	else
 	{
@@ -1027,8 +1031,20 @@ function drawExtras()
 	for (var i = 0; i < droneArray.length; i++)
 		droneArray[i].rotation -= droneArray[i].speed;	
 }
-function panPlanet()
+function panPlanet(type)
 {
+	if (type == 'offline')
+	{
+		console.log("Offline planet passed");
+		var planet = planetArray[Game.planetArrayit];	
+		planet.seen = true;
+		customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
+		Game.science += planet.value;
+		Game.planetArrayit++;
+		
+		return;
+	}
+	
 	console.log("Let's see planet" + Game.planetArrayit);
 	var planet = planetArray[Game.planetArrayit];	
 	
@@ -1065,7 +1081,6 @@ function panPlanet()
 		callback: function()
 		{
 			note = customNote(Game.alertstyle, "Discovered " + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.");
-
 		}
 	});
 	
@@ -1102,8 +1117,11 @@ function panPlanet()
 						y: canvas.height/2 + 50*Math.sin(shiptime/9999 % 360),
 					},
 					{
-						duration:1500
-						callback: function(){Game.shipscanning = false;}
+						duration:1500,
+						callback: function()
+						{
+							Game.shipscanning = false;
+						}
 					});
 				}
 			});
@@ -1394,21 +1412,21 @@ function deleteSave()
 	);
 }
 
-function levelup()
+function levelup(type)
 {
 	if (Game.progress/Game.levelcost >= 1)
 	{
 		Game.level++;
 		Game.progress = 0;
 		Game.levelcost *= 1.005;
-		console.log("Level: " + Game.level + " loglev" + loglev);
+		//console.log("Level: " + Game.level + " loglev" + loglev);
 		
 		if (Game.planetArrayit < planetArray.length)
 		{
 			console.log(loglev + 1 + " compare " + planetArray[Game.planetArrayit].unlock)
 			if (loglev + 1 > planetArray[Game.planetArrayit].unlock)
 			{
-				panPlanet();
+				panPlanet(type);
 			}
 		}
 	}
@@ -1708,6 +1726,8 @@ var savetime;
 var currentversion = "0.2.0";
 var savefilechanged = true;
 
+changeLevel();
+
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
 {
@@ -1783,7 +1803,6 @@ else
 	}
 }
 
-changeLevel();
 initialiseUI();
 initialiseMusic();
 
@@ -1830,7 +1849,7 @@ setInterval( function()
 
 	oldprog = changeprog;
 	
-	levelup();
+	levelup('online');
 	adjustBackgroundProgress();		
 }, prograte);
 
