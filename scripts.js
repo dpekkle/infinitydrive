@@ -773,6 +773,15 @@ function initialiseCanvas()
 	});
 	
 //unit assets	
+	scanner = canvas.display.ellipse(
+	{
+		x:0,
+		y:0,
+		origin:{x:"center", y:"center"},
+		radius:50,
+		stroke:"5px, #0aa",
+	});
+
 	weaponfire = canvas.display.sprite(
 	{
 			x: -200, 
@@ -899,7 +908,7 @@ function initialiseCanvas()
 		width:467,		
 		zIndex:5,
 		
-		speed: 1,
+		speed: 100,
 		unlock: 1,
 		seen: false,
 		name: "Venus",
@@ -939,8 +948,7 @@ function initialiseCanvas()
 		speed: 0.001,
 	});
 
-//second ship
-	
+	//add to canvas
 	canvas.addChild(distantgalaxy);
 	distantgalaxy.zIndex = "back";
 			
@@ -1057,6 +1065,8 @@ function panPlanet(type)
 	
 	//move ship in to meet planet in center
 	Game.shipscanning = true;
+
+	
 	shipsprite.animate(
 	{
 		x: canvas.width/2,
@@ -1066,7 +1076,23 @@ function panPlanet(type)
 		duration: 50000/planet.speed,
 		callback: function()
 		{
-			//scanning sprite
+			shipsprite.addChild(scanner);
+			for (var i = 0; i < 10; i++)
+			{
+				scanner.animate({
+					radius: 80,
+					opacity: 0.0,
+				},
+				{
+					duration: 2000,
+					callback()
+					{
+						scanner.radius = 50;
+						scanner.opacity = 0.6;
+					}
+				});
+				scanner.delay(10);
+			}
 		}
 	});
 	
@@ -1081,6 +1107,8 @@ function panPlanet(type)
 		callback: function()
 		{
 			note = customNote(Game.alertstyle, "Discovered " + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.");
+			//scan animation here
+		
 		}
 	});
 	
@@ -1094,14 +1122,15 @@ function panPlanet(type)
 		{
 			if (Game.alertstyle == "Small")
 				Notifier.obliterate(note);
+			//give us some nice info about the planet :)
 			customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
 			Game.science += planet.value;
 			document.getElementById("scienceamount").innerHTML = "Science: " + planet.value;
 
-			//give us some nice info about the planet :)
-
 			//stop scanning sprite
-			smoothShip(20000); //recursive function to mesh with the sin variation of the ship
+			shipsprite.removeChild(scanner);
+			//recursive function to mesh with the sin variation of the ship
+			smoothShip(20000); 
 			
 
 		}
@@ -1660,7 +1689,7 @@ function NewGame()
 	this.gold = 0;
 	this.gold = 0;
 	this.goldpt = 0;
-	this.goldmod = 1;
+	this.goldmod = 100;
 	this.goldupcost = 10;
 	this.goldname = " Fuel";
 	 
