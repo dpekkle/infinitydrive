@@ -882,12 +882,11 @@ function initialiseCanvas()
 		zIndex:5,
 		
 		speed: 1,
-		unlock: 10,
+		unlock: 15,
 		seen: false,
 		name: "Earth",
 		lore: "The third planet in the solar system, scans indicate an Earth-like environment rich in oxygen and organic chemistry. There is evidence that life once thrived on the surface.",
-		value: 2,
-		
+		value: 2,		
 	});
 	
 	venus = canvas.display.image(
@@ -1099,32 +1098,8 @@ function panPlanet(type)
 			//give us some nice info about the planet :)
 
 			//stop scanning sprite
-			shiptime = new Date().getTime();
-			shipsprite.animate(
-			{
-				x: canvas.width/4 + 30*Math.sin(shiptime/2000 % 360),
-				y: canvas.height/2 + 50*Math.sin(shiptime/9999 % 360),
-			},
-			{
-				duration: 12000,
-				//smooth out the transition a little
-				callback: function()
-				{
-					shiptime = new Date().getTime();
-					shipsprite.animate(
-					{
-						x: canvas.width/4 + 30*Math.sin(shiptime/2000 % 360),
-						y: canvas.height/2 + 50*Math.sin(shiptime/9999 % 360),
-					},
-					{
-						duration:1500,
-						callback: function()
-						{
-							Game.shipscanning = false;
-						}
-					});
-				}
-			});
+			smoothShip(20000); //recursive function to mesh with the sin variation of the ship
+			
 
 		}
 	});
@@ -1142,6 +1117,31 @@ function panPlanet(type)
 		}			
 	});	
 	Game.planetArrayit++;	
+}
+
+function smoothShip(dur)
+{
+	if (dur > 100)
+	{
+		shiptime = new Date().getTime();
+		shipsprite.animate(
+		{
+			x: canvas.width/4 + 30*Math.sin(shiptime/2000 % 360),
+			y: canvas.height/2 + 50*Math.sin(shiptime/9999 % 360),
+		},
+		{
+			duration: 12000,
+			//smooth out the transition a little
+			callback: function()
+			{
+				smoothShip(dur/5);
+			}
+		});
+	}
+	else
+	{
+		Game.shipscanning = false;
+	}
 }
 
 function drawBackground()
