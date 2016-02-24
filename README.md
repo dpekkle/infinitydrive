@@ -9,4 +9,6 @@ Written using HTML, Javascript and CSS. Minimal use of general libraries includi
 ###[Play the Game](http://dpekkle.github.io/infinitydrive/) 
 Hosted on Github pages.
 
+####Authors
 - Danielle Cerisier
+- Graphics by Eris Rudkin
