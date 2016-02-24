@@ -1050,7 +1050,7 @@ function panPlanet()
 		easing: "ease-out-quad",
 		callback: function()
 		{
-			customNote(Game.alertstyle, "Discovered" + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.");
+			customNote(Game.alertstyle, "Discovered " + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.");
 		}
 	});
 	
@@ -1060,7 +1060,7 @@ function panPlanet()
 		//we wait a bit here, can run science animation
 	},
 	{
-		duration: 10000,
+		duration: 15000,
 		callback: function()
 		{
 			customNote(Game.alertstyle, "Scan complete", planet.lore);
