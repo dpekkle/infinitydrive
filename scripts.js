@@ -74,7 +74,7 @@ function checkVisibility()
 					createUpgrade(
 						"beer", 
 						"button", 
-						"Free beer fridays, +5 " + Game.minername + ", costs " + formatNumber(Game.beercost) + " " + Game.goldname, 
+						"Free beer fridays<br> + 5" + Game.minername + "<br> Costs " + formatNumber(Game.beercost) + " " + Game.goldname, 
 						"upgrade", 
 						"Attract 5 extra crew members!"
 					);
@@ -105,7 +105,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++;
 						var x = customNote(Game.alertstyle, Game.shipname, 
-						"You can spend " + Game.foremanname + " to buy " + Game.shipname + ". \n\n" + Game.shipname + "  will create " + Game.foremanname + " for you. \nThey can also be upgraded with more unlocks");
+						"You can spend " + Game.foremanname + " to buy " + Game.shipname + ". \n\n" + Game.shipname + "  will create " + Game.foremanname + " for you. \nThey can also be upgraded with more unlocks.");
 						if (Game.alertstyle == "Small")
 							notearray.push(x);
 					}
@@ -391,7 +391,9 @@ function initialiseTabs()
 
 function initialiseUI()
 {	
+	swal.setDefaults({ confirmButtonColor: "#004444" });
 	initialiseTabs();
+	
 	//set first two elements to be visible
 	document.getElementById( "goldbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 	document.getElementById( "goldbutton").style.display = "inline-block";
@@ -478,7 +480,6 @@ function offlineticks()
 			text: offlinestr,
 			type: "info",
 			confirmButtonText: "Ok!",
-			confirmButtonColor: "#004444",
 			closeOnConfirm: false 
 		});
 	}
@@ -865,22 +866,44 @@ function initialiseCanvas()
 	});
 
 //background elements
+	//planets
 	earth = canvas.display.image(
 	{
-		x:0, 
+		x:2000, 
 		y:canvas.height/2, 
-		origin: {x:"left", y:"center"},
+		origin: {x:"center", y:"center"},
 		image: "images/earthsolo.png",
 		height:467,
-		width:(467 + 50000)*3,		
+		width:467,		
+		zIndex:5,
 		
-		tile: true,
-		tile_width: 464,
-		tile_height: 467,
-		tile_spacing_x: 50000,
-		tile_spacing_y: 0,
 		speed: 1,
+		unlock: 10,
+		seen: false,
+		name: "Earth",
+		lore: "The third planet in the solar system, scans indicate an Earth-like environment rich in oxygen and organic chemistry. There is evidence that life once thrived on the surface.",
+		value: 2,
+		
 	});
+	
+	venus = canvas.display.image(
+	{
+		x:2000, 
+		y:canvas.height/2, 
+		origin: {x:"center", y:"center"},
+		image: "images/venus.png",
+		height:467,
+		width:467,		
+		zIndex:5,
+		
+		speed: 1,
+		unlock: 1,
+		seen: false,
+		name: "Venus",
+		lore: "A hostile environment coated in a thick layer of greenhouse gases. Rich in Sulfur resources, however landing is not advised.",
+		value: 1,
+	});
+
 	starfield = canvas.display.image(
 	{
 		y:0,
@@ -946,20 +969,22 @@ function initialiseCanvas()
 	});
 	canvas.addChild(starfield4);
 	starfield4.scale(0.8, 0.8);
-
-	canvas.addChild(earth);	
+	console.log("Star: " + starfield4.zIndex);
 	canvas.addChild(asteroid1);
+	console.log("Star: " + starfield4.zIndex);
+	console.log("Asteroid: " + asteroid1.zIndex);
 	
 	canvas.addChild(shipsprite);
 	shipsprite.rotate(90);
 	shipsprite.startAnimation();
 	
+	canvas.addChild(weaponfire);
+	canvas.removeChild(weaponfire); //preload the weapon fire sprite
+	
 	canvas.addChild(level_text);
 	canvas.addChild(progress_text);
 	canvas.addChild(thrust_text);
 	
-	canvas.addChild(weaponfire);
-	canvas.removeChild(weaponfire); //preload the weapon fire sprite
 	
 //music pane
 	canvas.addChild(music_text);
@@ -1002,32 +1027,87 @@ function drawExtras()
 	for (var i = 0; i < droneArray.length; i++)
 		droneArray[i].rotation -= droneArray[i].speed;	
 }
+function panPlanet()
+{
+	console.log("Let's see planet" + Game.planetArrayit);
+	var planet = planetArray[Game.planetArrayit];	
+	
+	planet.seen = true;
+	//animate the planet
+	canvas.addChild(planet);
+	planet.zIndex = 5;
+	
+	console.log("Star: " + starfield4.zIndex);
+	console.log("Planet: " + planet.zIndex);
+	console.log("Asteroid: " + asteroid1.zIndex);
+	
+	planet.animate(
+	{
+		x: canvas.width/2,
+	},
+	{
+		duration:  50000/planet.speed,
+		easing: "ease-out-quad",
+		callback: function()
+		{
+			customNote(Game.alertstyle, "Discovered" + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.");
+		}
+	});
+	
+	planet.animate(
+	{
+		
+		//we wait a bit here, can run science animation
+	},
+	{
+		duration: 10000,
+		callback: function()
+		{
+			customNote(Game.alertstyle, "Scan complete", planet.lore);
+			Game.science += planet.value;
+			//give us some nice info about the planet :)
+		}
+	});
+	planet.animate(
+	{
+		x:-1000,
+	},
+	{
+		duration: 50000/planet.speed,
+		easing: "ease-in-quad",
+		callback: function()
+		{
+			this.finish();
+			canvas.removeChild(this);
+		}			
+	});	
+	Game.planetArrayit++;	
+}
 
 function drawBackground()
 {
-	//var backdist = 8/Math.log(Game.level/10 + 100);
 	
-	/* 	We want to move the earth in the range of their tiles, so whatever our result we take the mod of earth's actual width + the space between tiles/
+	/* 	We want to move the background in the range of their tiles, so whatever our result we take the mod of the tile width/
 		Now the variable we will be using for that can't just be based on level, 
-		it needs to be smooth with progress so that explains the progress/levelcost component.
+		it needs to be smooth with progress so that explains the progress/levelcost component in progtomove.
 		We take the log of all this as a means of slowing down the speeds involved.
 	*/
-	var xwidth = earth.width/3 - earth.tile_spacing_x;	
 	
 	progtomove = Game.level + Game.progress/Game.levelcost;	
-	earth.moveTo(500 - ((Game.shipspeed * (earth.speed * (progtomove))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);	
+	//pan past a planet
+	if (Game.planetArrayit < planetArray.length)
+	{
+		console.log("Lets see if its time to show a planet");
+		if (progtomove > planetArray[Game.planetArrayit].unlock)
+		{
+			panPlanet();
+		}
+	}
 	starfield.moveTo(-100 - (((Game.shipspeed * (starfield.speed * (progtomove))) % (starfield.width/2))), starfield.y);
 	starfield2.moveTo(-100 - (((Game.shipspeed * (starfield2.speed * (progtomove))) % (starfield2.width/2))), starfield2.y);
 	starfield3.moveTo(-100 - (((Game.shipspeed * (starfield3.speed * (progtomove))) % (starfield3.width/2))), starfield3.y);
 	starfield4.moveTo(-100 - (((Game.shipspeed * (starfield4.speed * (progtomove))) % (starfield4.width/2))), starfield4.y);
 	distantgalaxy.moveTo(-100 - (((Game.shipspeed * (distantgalaxy.speed * (progtomove))) % (distantgalaxy.width/2))), 0);
-
-	//earth.moveTo(500 - ((Game.shipspeed * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1))) % (xwidth+earth.tile_spacing_x)), canvas.height/2);
-	//starfield.moveTo(-100 - (((Game.shipspeed * (0.3 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (starfield.width/2))), 0);
-	//distantgalaxy.moveTo(-100 - (((Game.shipspeed * (0.1 * (Math.log(Game.level + Game.progress/Game.levelcost)/Math.log(1.1)))) % (distantgalaxy.width/2))), 0);
-
-	
-	//earth.scale(backdist, backdist);
 }
 
 
@@ -1175,6 +1255,13 @@ function fireGuns()
 }
 //~~~~ AUXILLARY FUNCTIONS ~~~~
 {
+function changeLevel()
+{
+	console.log("Adding the planets to array");
+	planetArray.push(venus);
+	planetArray.push(earth);
+}
+	
 function createUpgrade(id, type, value, classname, mouseover)
 {
 	var ul = document.getElementById("list");
@@ -1251,8 +1338,7 @@ function deleteSave()
 			title: "Are you sure?",   
 			text: "You will not be able to recover your save file!",   
 			type: "warning",   
-			showCancelButton: true,   
-			confirmButtonColor: "#004444",   
+			showCancelButton: true,    
 			confirmButtonText: "Yes, delete it!",   
 			closeOnConfirm: false 
 		},	
@@ -1264,9 +1350,7 @@ function deleteSave()
 				{
 					title: "Deleted!", 
 					text: "Your save file has been deleted.", 
-					type: "success",
-					confirmButtonColor: "#004444",   
-					
+					type: "success",	
 				},
 				function(){window.location.reload(true);}
 			); 
@@ -1508,6 +1592,7 @@ initialiseCanvas();
 //initialise canvas
 var dronestyle = {1:"sync", 2:"clock", 3:"anti", 4:"desync"};
 var notearray = [];
+var planetArray = [];
 
 function NewGame()
 {
@@ -1526,21 +1611,25 @@ function NewGame()
 	this.minername = " Crew";
 
 	this.foreman = 0;
-	this.foremancost = 10;
+	this.foremancost = 30;
 	this.foremanpt = 0;
 	this.foremanmod = 1;
 	this.foremanupcost = 25000;
 	this.foremanname = " Asteroids";
 
 	this.ship = 0;
-	this.shipcost = 20;
+	this.shipcost = 40;
 	this.shippt = 0;
 	this.shipmod = 2;
 	this.shipupcost = 5000000;
 	this.shipname = " Drones";
 
+	this.science = 0;
+	
+	//positions
 	this.shipspeed = 100;
-
+	this.planetArrayit = 0;
+	
 	//upgrades
 	this.goldbuy = 0;
 	this.goldbuycost = 100;
@@ -1564,7 +1653,7 @@ function NewGame()
 	this.dronestyle = 1;
 	this.vol = 0.4;
 	this.musicplaying = true;
-	this.gameversion = "0.1.9";
+	this.gameversion = "0.2.0";
 	this.alertstyle = "Big";
 	this.tutorialprogress = 0;
 }
@@ -1575,7 +1664,7 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.1.9";
+var currentversion = "0.2.0";
 var savefilechanged = true;
 
 // if save file exists load it
@@ -1600,11 +1689,10 @@ if (localStorage.getItem('saveObject') !== null)
 			swal
 			(
 				{
-					title: "v " + currentversion + "\n23/02/2016",
-					text: "Updates: \n-Small notifications. \n-Tabs. \n-Tutorial. \nBeer.",
+					title: "v " + currentversion + "\n24/02/2016",
+					text: "Updates: \n Science! \n Venus!",
 					type: "info",
-					confirmButtonText: "Thanks for letting me know",
-					confirmButtonColor: "#004444",
+					confirmButtonText: "Thanks for letting me know",					
 					closeOnConfirm: !savefilechanged,		
 					align:"left"
 				},
@@ -1620,8 +1708,7 @@ if (localStorage.getItem('saveObject') !== null)
 								type: "warning",
 								showCancelButton: true,   
 								cancelButtonText: "No",
-								confirmButtonText: "Yes",
-								confirmButtonColor: "#004444",
+								confirmButtonText: "Yes",								
 								closeOnConfirm: false,		
 							},
 							function()
@@ -1655,6 +1742,7 @@ else
 	}
 }
 
+changeLevel();
 initialiseUI();
 initialiseMusic();
 
