@@ -26,7 +26,13 @@
 </head>
 <html>
 <style>
-
+	font.column_header
+	{
+		text-align: center;
+		color: #0aa;
+		size: 5px;
+	}
+	
 	div.buy
 	{
 		width:20px;
@@ -46,7 +52,6 @@
 		width:20px;
 		height:0px;
 		margin-left:450px;
-
 		margin-top:0px;
 	}
 		
@@ -55,7 +60,6 @@
 		width:20px;
 		height:0px;
 		margin-left:650px;
-
 		margin-top:0px;
 	}	
 	
@@ -72,7 +76,7 @@
 		text-align: right;
 	}
 	
-	input.buy
+	button.buy
 	{
 		display:none;
 		margin-top:10px;
@@ -84,44 +88,56 @@
 	{
 		display:none;
 	    text-align: right;
-		margin-top:10px;
-		height:54px; 
+		margin-top:11px;
+		height:55px; 
 		width:175px;
 		white-space: pre-wrap	
 
 	}
-	input.upgrade
+	button.upgrade
 	{
 		display:none;
 		margin-top:10px;
 		height:60px; 
 		width:175px;
 		white-space: pre-wrap	
-
 	}
 	input.rate
 	{
 		display:none;
 	    text-align: right;
-		margin-top:10px;
-		height:54px; 
+		margin-top:11px;
+		height:55px; 
 		width:175px;
 		white-space: pre-wrap	
 	}
 	
 	div.upgradestack
-	{
-		width:20px;
-		height:0px;
-		margin-left:800px;
+	{		
+		width: 20px;
+		height: 0px;
+		margin-left:850px;
 		margin-top:0px;
-		white-space:normal;
 	}
 	
 	ul.upgradestack
-	{
-		width = 200px;
+	{		
+		margin-left:-40px;
+		margin-top:10px;
+		width: 175px;
 		list-style-type:none;
+	}
+	li.upgradestack
+	{
+		margin:10px 0;
+		width: 175px; 
+	}
+	
+	button.upgradestack
+	{
+		height:60px;
+		width: 175px; 
+		white-space: pre-wrap	
 	}
 
 </style>
@@ -152,26 +168,33 @@
 	
 	<div style="text-align: left"> 
 		<div class="buy"/>
-			<input id = "goldbutton" type ="button" value = "Click        " onclick = "fireGuns()" class="buy" />
-			<input id = "minerbutton" type ="button" value = "Miners        " onclick = "buyunit('miner')" class="buy"/>
-			<input id = "foremanbutton" type ="button" value = "Foremans        " onclick = "buyunit('foreman')" class="buy"/>
-			<input id = "shipbutton" type ="button" value = "Ships        " onclick = "buyunit('ship')" class="buy"/>
-			
+			<font class="column_header"><h>Buy</h></font>
+
+			<button id = "goldbutton" onclick="fireGuns()" class="buy" >Click</button>
+			<button id = "minerbutton" onclick="buyunit('miner')" class="buy" >Crew</button>
+			<button id = "foremanbutton" onclick="buyunit('foreman')" class="buy" >Asteroids</button>
+			<button id = "shipbutton" onclick="buyunit('ship')" class="buy" >Ships</button>			
 		</div>
 		<div class="amounts"/>
+			<font class="column_header"><h>Total</h></font>
+
 			<input id = "gold" type = "text" class="amounts"/> 
 			<input id = "miners" type = "text" class="amounts"/> 
 			<input id = "foremans" type = "text" class="amounts"/> 
 			<input id = "ships" type = "text" class="amounts"/> 
 
 		</div>
-		<div class="upgrade"/>
-			<input id = "goldupgradebutton" type ="button" value = "Gold        " onclick = "upgrade('gold')" class="upgrade"/>    
-			<input id = "minerupgradebutton" type ="button" value = "Miners        " onclick = "upgrade('miner')" class="upgrade"/>    
-			<input id = "foremanupgradebutton" type ="button" value = "Foremen        " onclick = "upgrade('foreman')" class="upgrade"/>
-			<input id = "shipupgradebutton" type ="button" value = "Ships        " onclick = "upgrade('ship')" class="upgrade"/>
+		<div class="upgrade"/>		
+			<font class="column_header"><h>Upgrade</h></font>
+			<button id = "goldupgradebutton" onclick = "upgrade('gold')" class="upgrade" >Fuel</button>			
+			<button id = "minerupgradebutton" onclick = "upgrade('miner')" class="upgrade" >Crew</button>			
+			<button id = "foremanupgradebutton" onclick = "upgrade('foreman')" class="upgrade" >Asteroids</button>			
+			<button id = "shipupgradebutton" onclick = "upgrade('ship')" class="upgrade" >Ships</button>			
+
 		</div>
 		<div class="rate"/>
+			<font class="column_header"><h>Income</h></font>
+
 			<input id = "goldpt" type = "text" class="rate"/> 
 			<input id = "minerspt" type = "text" class="rate"/> 
 			<input id = "foremanspt" type = "text" class="rate"/> 
@@ -179,25 +202,27 @@
 		</div>
 		
 		<div class="upgradestack"/>
-		<ul id = "list" class = "upgradestack">
+			<font class="column_header"><h>Unlocks</h></font>
+			<br>
+			<ul id = "list" class = "upgradestack">
+			</ul>
 		</div>
-		</ul>
 		
 	</div>
 	
 
-	<div style="margin-top:275px; height:100px;">
+	<div style="margin-top:300px; height:100px;margin-left:50px;">
 		<br>
-		<font color= #0aa size= 6px><h>Settings</h></font>
+		<font color= #0aa size= 4px><h>Settings</h></font>
 		<br><br>
 		<input id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
 		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
 		<input style = "display:none;" id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
 		<input style = "display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
 
-		<div style="position:relative;top:0%;text-align:center">	
+		<div style="position:relative;top:0%;text-align:left">	
 			<font color= #0aa size= 2px>
-				v.0.1.9<br>
+				<br>v.0.1.9<br>
 				New features: Small Notifications, Tabs, Tutorial, Free Beer.<br>
 				For upcoming features <a href="https://trello.com/b/mNyetPjz/infinity-drive">visit our Trello.</a><br>	
 				View on <a href="https://github.com/dpekkle/infinitydrive">github.</a><br>
