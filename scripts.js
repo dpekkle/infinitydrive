@@ -128,7 +128,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++;
 						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						"Drone clicks");
+						"Drone Clicks");
 					}
 				}
 				break;
@@ -149,7 +149,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++
 						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						"Buy all units with " + Game.goldname);
+						Game.goldname + " Buying");
 					}
 				}
 				break;
@@ -170,7 +170,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++;
 						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						"Buy all units with " + Game.goldname);
+						Game.minername + " Clicking");
 					}
 				}
 				break;
@@ -197,19 +197,52 @@ function updateAmounts()
 	
 }
 
-function updateCosts()
+function maxBuyDisplay(ctrlmod, resource, cost, rate, name)
 {
-	document.getElementById( "minerbutton").innerHTML = Game.minername + "<br>Costs " + formatNumber(Game.minercost) + Game.goldname;
-
-	if (Game.goldbuy == 1)
+	if (ctrlmod)
 	{
-		document.getElementById( "foremanbutton").innerHTML = Game.foremanname + "<br>Costs " + formatNumber(Game.foremancost) + Game.goldname;
-		document.getElementById( "shipbutton").innerHTML = Game.shipname + "<br>Costs " + formatNumber(Game.shipcost) + Game.goldname;
+		var units = 0;
+		var totalcost = 0;
+		var unitcost = cost;
+		while (resource > totalcost)
+		{
+			totalcost += unitcost;
+			if (resource > totalcost)
+			{
+				units++;
+				unitcost *= rate;
+			}
+		}
+		totalcost -= unitcost;
+		
+		var str = (formatNumber(totalcost) + name + "<br>For " + units);
+		console.log(str);
+		return str;
+		
 	}
 	else
 	{
-		document.getElementById( "foremanbutton").innerHTML = Game.foremanname + "<br>Costs " + formatNumber(Game.foremancost) + Game.minername;
-		document.getElementById( "shipbutton").innerHTML = Game.shipname + "<br>Costs " + formatNumber(Game.shipcost) + Game.foremanname;
+		var str = (formatNumber(cost) + name);
+		console.log(str);
+		return str;
+	}
+}
+
+function updateCosts()
+{
+	//maximum buy option
+		
+	document.getElementById( "minerbutton").innerHTML = Game.minername + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.gold, Game.minercost, Game.minercostrate, Game.goldname);
+
+	if (Game.goldbuy == 1)
+	{
+		document.getElementById( "foremanbutton").innerHTML = Game.foremanname + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.gold, Game.foremancost, Game.foremancostrate, Game.goldname);
+		document.getElementById( "shipbutton").innerHTML = Game.shipname + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.gold, Game.shipcost, Game.shipcostrate, Game.goldname);
+	}
+	else
+	{
+		document.getElementById( "foremanbutton").innerHTML = Game.foremanname + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.miner, Game.foremancost, Game.foremancostrate, Game.minername);
+		document.getElementById( "shipbutton").innerHTML = Game.shipname + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.foreman, Game.shipcost, Game.shipcostrate, Game.foremanname);
 	}
 	
 	//upgrade costs
@@ -429,6 +462,10 @@ function initialiseUI()
 	if (Game.droneclick)
 		document.getElementById("resetdrones").style.display = "inline-block";	
 
+	//listen to keyboard
+    window.onkeydown = listenToKeyDown;
+    window.onkeyup = listenToKeyUp;
+
 }
 
 }
@@ -519,7 +556,9 @@ function uiTick()
 	//run ui functions
 	if (Game.it % 10 === 0)
 	{
-		updateCosts();
+		if (ctrlmod)
+			updateCosts();
+
 		var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5);
 		
 		loglev = Math.floor(taperlevels);		
@@ -543,6 +582,9 @@ function uiTick()
 }
 //~~~~ BUTTON FUNCTIONS ~~~~
 {
+
+	
+	
 function count(who) 
 {
 	var modifier = 1;
@@ -565,27 +607,33 @@ function count(who)
 function buyunit(id)
 {
 	if (id == "miner")
-		buyminer(Game.goldbuy);
+		buyMiner(Game.goldbuy);
+	
 	else if (id == "foreman")
-		buyforeman(Game.goldbuy);
+		buyForeman(Game.goldbuy);
+	
 	else if (id == "ship")
-		buyship(Game.goldbuy);	
+		buyShip(Game.goldbuy);	
+	
+	updateCosts();
+	grayButtons();		
+	
 }
 
-function buyminer(mode)
+function buyMiner(mode)
 {
 	if (Game.gold >= Game.minercost)
 	{
 		Game.gold -= Game.minercost;
 		Game.miner += 1;			
-		Game.minercost *= 1.2;
+		Game.minercost *= Game.minercostrate;
 		Game.minercost = Math.round(Game.minercost);
-		
-		grayButtons();		
+		if (ctrlmod)
+			buyMiner(mode);
 	}
  } 
 
- function buyforeman(mode)
+ function buyForeman(mode)
 {
 	var currency;
 	if (mode == 1)
@@ -601,12 +649,12 @@ function buyminer(mode)
 			Game.miner -= Game.foremancost;
 		
 		Game.foreman += 1;		
-		Game.foremancost *= 1.05;
+		Game.foremancost *= Game.foremancostrate;
 		Game.foremancost = Math.round(Game.foremancost);
+		if (ctrlmod)
+			buyForeman(mode);
 					
-		grayButtons();		
 	}
-
  }
 
  function buyship(mode)
@@ -625,11 +673,12 @@ function buyminer(mode)
 			Game.foreman -= Game.shipcost;
 		
 		Game.ship += 1;				
-		Game.shipcost *= 1.1;
+		Game.shipcost *= Game.shipcostrate;
 		Game.shipcost = Math.round(Game.shipcost);
 		createDrones(dronestyle[Game.dronestyle]);	
 		
-		grayButtons();		
+		if (ctrlmod)
+			buyShip(mode);
 	}
 
  }
@@ -1046,7 +1095,8 @@ function initialiseCanvas()
 	nextSong.bind("click tap", function(){playNextSong();});
 	upVol.bind("click tap", function(){upVolume();});	
 	downVol.bind("click tap", function(){downVolume();});	
-	shipsprite.bind("click tap", function(){fireGuns();});		
+	shipsprite.bind("click tap", function(){fireGuns();});	
+	
 }
 
 
@@ -1363,6 +1413,18 @@ function fireGuns()
 }
 //~~~~ AUXILLARY FUNCTIONS ~~~~
 {
+function listenToKeyDown(e)
+{
+	if (e.ctrlKey)
+		ctrlmod = true;
+}
+function listenToKeyUp(e)
+{
+	ctrlmod = false;
+	updateCosts();
+
+}
+	
 function changeLevel()
 {
 	
@@ -1409,43 +1471,43 @@ function createUpgrade(id, type, value, classname, mouseover)
 
 function removeUpgrade(id)
 {
-		var element = document.getElementById(id);
-		element.style.visibility = "hidden";
-		element.parentNode.removeChild(element);
+	var element = document.getElementById(id);
+	element.style.visibility = "hidden";
+	element.parentNode.removeChild(element);
 }
 
 function formatNumber(n) 
 {
-  for (var i = 0; i < ranges.length; i++) 
-  {
-    if (n >= ranges[i].divider) 
+	for (var i = 0; i < ranges.length; i++) 
 	{
-		var temp = (n / ranges[i].divider);
-		temp = Math.floor(temp*1000)/1000;
-	
-	
-		//handling numbers like 25k
-		if (temp % 1 === 0)
+		if (n >= ranges[i].divider) 
+		{
+			var temp = (n / ranges[i].divider);
+			temp = Math.floor(temp*1000)/1000;
+
+
+			//handling numbers like 25k
+			if (temp % 1 === 0)
+				return temp.toString() + " " + ranges[i].suffix;
+
+			//always display 3 digits after decimal points
+			else if ((temp * 1000)%10 === 0)
+			{
+				if ((temp * 100)%10 === 0)
+					return temp.toString() + "00 " + ranges[i].suffix;
+				else
+					return temp.toString() + "0 " + ranges[i].suffix;
+			}
+			
 			return temp.toString() + " " + ranges[i].suffix;
 
-		//always display 3 digits after decimal points
-		else if ((temp * 1000)%10 === 0)
-		{
-			if ((temp * 100)%10 === 0)
-				return temp.toString() + "00 " + ranges[i].suffix;
-			else
-				return temp.toString() + "0 " + ranges[i].suffix;
 		}
-		
-		return temp.toString() + " " + ranges[i].suffix;
+	}
+	var temp = Math.floor(n*10)/10;  
+	if ((temp * 10) % 10 === 0)
+		return temp.toString() + ".0";
 
-    }
-  }
-  var temp = Math.floor(n*10)/10;  
-  if ((temp * 10) % 10 === 0)
-	  return temp.toString() + ".0";
-  
-  return temp.toString();
+	return temp.toString();
 }
 
 function deleteSave()
@@ -1732,6 +1794,7 @@ function NewGame()
 	 
 	this.miner = 0;
 	this.minercost = 20;
+	this.minercostrate = 1.1;
 	this.minerpt = 0;
 	this.minermod = 1;
 	this.minerupcost = 1500;
@@ -1739,6 +1802,7 @@ function NewGame()
 
 	this.foreman = 0;
 	this.foremancost = 30;
+	this.foremancostrate = 1.1;
 	this.foremanpt = 0;
 	this.foremanmod = 1;
 	this.foremanupcost = 25000;
@@ -1746,6 +1810,7 @@ function NewGame()
 
 	this.ship = 0;
 	this.shipcost = 40;
+	this.shipcostrate = 1.2;
 	this.shippt = 0;
 	this.shipmod = 2;
 	this.shipupcost = 5000000;
@@ -1781,7 +1846,7 @@ function NewGame()
 	this.dronestyle = 1;
 	this.vol = 0.4;
 	this.musicplaying = true;
-	this.gameversion = "0.2.1";
+	this.gameversion = "0.2.2";
 	this.alertstyle = "Big";
 	this.tutorialprogress = 0;
 }
@@ -1792,7 +1857,7 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.2.1";
+var currentversion = "0.2.2";
 var savefilechanged = false;
 
 changeLevel();
@@ -1819,8 +1884,8 @@ if (localStorage.getItem('saveObject') !== null)
 			swal
 			(
 				{
-					title: "v " + currentversion + "\n24/02/2016",
-					text: "Updates: \n More music! \n Placeholder planets after earth",
+					title: "25/02/2016\n" + "v " + currentversion,
+					text: "Updates: \n Multi-buy feature (hold ctrl)",
 					type: "info",
 					confirmButtonText: "Thanks for letting me know",					
 					closeOnConfirm: !savefilechanged,		
