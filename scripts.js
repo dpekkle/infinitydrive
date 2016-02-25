@@ -653,7 +653,7 @@ function buyMiner(mode)
 	}
  }
 
- function buyship(mode)
+ function buyShip(mode)
 {
 	var currency;
 	if (mode == 1)
@@ -1772,6 +1772,7 @@ var fps = 60;
 var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
 var totalshots = 0;
+var ctrlmod = false;
 
 initialiseCanvas();
 
