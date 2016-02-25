@@ -290,7 +290,7 @@ function grayButtons()
 					if (isConfirm)
 						toggleNotes();
 					document.getElementById("togglenotes").style.display = "inline-block";		
-					customNote(Game.alertstyle, "Don't worry", "If you change your mind you can change this at any time in your settings at the bottom of the screen.");
+					customNote(Game.alertstyle, "Don't worry", "If you change your mind you can change this at any time in your settings (top right tab).");
 				});
 				
 			});
@@ -753,25 +753,6 @@ function initialiseCanvas()
 {
 	canvas = oCanvas.create({canvas: "canvas"});
 
-//music shapes
-	triangle = canvas.display.polygon({
-		sides:3,
-		radius: 13,
-		fill: "#0aa"
-	});
-	musicsymbol = canvas.display.sprite(
-	{
-		x: canvas.width - 120 + 45,
-		y: 35,
-		origin: {x:"center", y:"center"},
-		image: "images/musicsymbol.png",
-		height: 47,
-		width: 30,
-		generate: true,
-		loop: true,
-		duration: 60*1000/120
-	});
-	
 //unit assets	
 	scanner = canvas.display.ellipse(
 	{
@@ -885,13 +866,13 @@ function initialiseCanvas()
 		x:2000, 
 		y:canvas.height/2, 
 		origin: {x:"center", y:"center"},
-		image: "images/earthsolo.png",
+		image: "images/planets/earthsolo.png",
 		height:467,
 		width:467,		
 		zIndex:5,
 		
 		speed: 1,
-		unlock: 15,
+		unlock: 13,
 		seen: false,
 		name: "Earth",
 		lore: "The third planet in the solar system, scans indicate an Earth-like environment rich in oxygen and organic chemistry. There is evidence that life once thrived on the surface.",
@@ -903,7 +884,7 @@ function initialiseCanvas()
 		x:2000, 
 		y:canvas.height/2, 
 		origin: {x:"center", y:"center"},
-		image: "images/venus.png",
+		image: "images/planets/venus.png",
 		height:467,
 		width:467,		
 		zIndex:5,
@@ -916,6 +897,33 @@ function initialiseCanvas()
 		value: 1,
 	});
 
+	placeholders = [];
+	for (var i = 3; i < 21; i++)
+	{
+		
+		placeholders.push(
+			canvas.display.image(
+			{
+				x:2000, 
+				y:canvas.height/2, 
+				origin: {x:"center", y:"center"},
+				image: "images/placeholder_planets/planet" + i + ".png",
+				height:467,
+				width:467,		
+				zIndex:5,
+				
+				speed: 1,
+				unlock: 15 + (1.5*(i-3)),
+				seen: false,
+				name: "Planet " + i,
+				lore: "Hey look it's " + name + " a placeholder planet while we design more!",
+				value: i,
+			})			
+		);
+		
+	}
+	
+	
 	starfield = canvas.display.image(
 	{
 		y:0,
@@ -999,6 +1007,25 @@ function initialiseCanvas()
 	
 //music pane
 	canvas.addChild(music_text);
+
+	triangle = canvas.display.polygon({
+		sides:3,
+		radius: 13,
+		fill: "#0aa"
+	});
+	
+	musicsymbol = canvas.display.sprite(
+	{
+		x: canvas.width - 120 + 40,
+		y: 35,
+		origin: {x:"center", y:"center"},
+		image: "images/musicsymbol.png",
+		height: 47,
+		width: 30,
+		generate: true,
+		loop: true,
+		duration: 60*1000/120
+	});	
 	
 	upVol = triangle.clone({
 		x: canvas.width - 120,
@@ -1018,10 +1045,17 @@ function initialiseCanvas()
 		x: canvas.width - 120 + 80,
 		y: 35,
 		rotation: 0,
-		radius: 16,
+		radius: 14,
+	});
+	
+	nextSong2 = triangle.clone({
+		x: 14,
+		y: 0,
+		rotation: 0,
+		radius: 14,
 	});
 	canvas.addChild(nextSong);
-	
+	nextSong.addChild(nextSong2);
 	
 	//bindings
 	music_text.bind("click tap", function(){linkMusic();});
@@ -1060,6 +1094,10 @@ function panPlanet(type)
 	//animate the planet
 	canvas.addChild(planet);
 	planet.zIndex = 5;
+	if (planet.name.indexOf('Planet')) //if its a placeholder planet
+	{
+		planet.rotate(360-80);
+	}
 	
 	var note;
 	
@@ -1343,9 +1381,19 @@ function fireGuns()
 {
 function changeLevel()
 {
-	console.log("Adding the planets to array");
+	
+	console.log("Adding the initial planets to array");
 	planetArray.push(venus);
 	planetArray.push(earth);
+
+	for (var i = 0; i < placeholders.length; i++)
+	{
+		planetArray.push(placeholders[i]);
+	}
+	
+	for (var i = 0; i < planetArray.length; i++)
+		console.log(planetArray[i].name + " at level " + planetArray[i].unlock);
+
 }
 	
 function createUpgrade(id, type, value, classname, mouseover)
@@ -1513,17 +1561,21 @@ function initialiseMusic()
 		this.bpm = bpm;
 		this.author = author;
 		this.title = title;
-		this.volmod = volmod; //unused
+		this.volmod = volmod;
+		this.link;
 	}
 	
-	var playlistsize = 4;
+	var playlistsize = 6;
 	playlistiter = Math.floor(Math.random() * playlistsize - 1);
 
 	playlist = new Array();
 	
-	playlist.push(new Song("audio/Startrek.mp3", "audio/mp3", 30, "ender4life", "Star Trek Bridge Ambience", 1));
-	playlist.push(new Song("audio/	Klaud 9 AGAIN.ogg", "audio/ogg", 154, "LySeRGe", "Klaud 9", 0.9));
-	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous", 0.9));	
+	playlist.push(new Song("audio/ville_seppanen-1_g.mp3", "audio/mp3", 20, "Osmic", "Ville Seppanen", 1, "http://opengameart.org/content/space-ambient"));
+	playlist.push(new Song("audio/Startrek.mp3", "audio/mp3", 30, "ender4life", "Star Trek Bridge Ambience", 1, "https://www.youtube.com/watch?v=dLrfdcz8Ou4&"));
+	playlist.push(new Song("audio/Klaud 9 AGAIN.ogg", "audio/ogg", 154, "LySeRGe", "Klaud 9", 0.6, "https://soundcloud.com/memoske/klaud-9"));
+	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous", 0.6, "https://soundcloud.com/memoske/melancholics-anonymous"));
+	playlist.push(new Song("audio/bells2_1.ogg","audio/ogg", 80, "p0ss", "Cuddle Puzzle", 0.7 ,"http://opengameart.org/content/cuddle-puzzle-music-futuristic-pop"));
+	playlist.push(new Song("audio/Space Sprinkles.mp3", "audio/mp3", 120, "Matthew Pablo", "Space Sprinkles", 0.6 ,"http://www.matthewpablo.com/"));
 	//playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline", 0.6));
 	//playlist.push(new Song("audio/Look at me.ogg", "audio/ogg", 120, "Death of Sound", "Look at me", 0.8));
 	
@@ -1624,8 +1676,6 @@ function adjustBPM()
 
 	canvas.addChild(musicsymbolnew);
 	musicsymbolnew.bind("click tap", function(){musicPress();});
-			
-	console.log(musicsymbol.duration);
 }
 
 function linkMusic()
@@ -1744,7 +1794,7 @@ function NewGame()
 	this.dronestyle = 1;
 	this.vol = 0.4;
 	this.musicplaying = true;
-	this.gameversion = "0.2.0";
+	this.gameversion = "0.2.1";
 	this.alertstyle = "Big";
 	this.tutorialprogress = 0;
 }
@@ -1755,8 +1805,8 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.2.0";
-var savefilechanged = true;
+var currentversion = "0.2.1";
+var savefilechanged = false;
 
 changeLevel();
 
@@ -1783,7 +1833,7 @@ if (localStorage.getItem('saveObject') !== null)
 			(
 				{
 					title: "v " + currentversion + "\n24/02/2016",
-					text: "Updates: \n Science! \n Venus!",
+					text: "Updates: \n More music! \n Placeholder planets after earth",
 					type: "info",
 					confirmButtonText: "Thanks for letting me know",					
 					closeOnConfirm: !savefilechanged,		
