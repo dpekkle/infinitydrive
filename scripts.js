@@ -216,14 +216,12 @@ function maxBuyDisplay(ctrlmod, resource, cost, rate, name)
 		totalcost -= unitcost;
 		
 		var str = (formatNumber(totalcost) + name + "<br>For " + units);
-		console.log(str);
 		return str;
 		
 	}
 	else
 	{
 		var str = (formatNumber(cost) + name);
-		console.log(str);
 		return str;
 	}
 }
@@ -461,8 +459,8 @@ function initialiseUI()
 		document.getElementById("resetdrones").style.display = "inline-block";	
 
 	//listen to keyboard
-    window.onkeydown = listenToKeyDown;
-    window.onkeyup = listenToKeyUp;
+    document.onkeydown = listenToKeyDown;
+    document.onkeyup = listenToKeyUp;
 
 }
 
@@ -554,6 +552,8 @@ function uiTick()
 	//run ui functions
 	if (Game.it % 10 === 0)
 	{
+		updateCosts();
+		
 		if (ctrlmod)
 			updateCosts();
 
@@ -1414,12 +1414,11 @@ function listenToKeyDown(e)
 {
 	if (e.ctrlKey)
 		ctrlmod = true;
+
 }
 function listenToKeyUp(e)
 {
 	ctrlmod = false;
-	updateCosts();
-
 }
 	
 function changeLevel()
