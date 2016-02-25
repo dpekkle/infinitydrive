@@ -2,37 +2,53 @@
 <head>
 	<title>Infinity Drive</title>
 	<!-- ****** faviconit.com favicons ****** -->
-	<link rel="shortcut icon" href="/favicon/favicon.ico">
-	<link rel="icon" sizes="16x16 32x32 64x64" href="/favicon/favicon.ico">
-	<link rel="icon" type="image/png" sizes="196x196" href="/favicon/favicon-192.png">
-	<link rel="icon" type="image/png" sizes="160x160" href="/favicon/favicon-160.png">
-	<link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96.png">
-	<link rel="icon" type="image/png" sizes="64x64" href="/favicon/favicon-64.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16.png">
-	<link rel="apple-touch-icon" href="/favicon/favicon-57.png">
-	<link rel="apple-touch-icon" sizes="114x114" href="/favicon/favicon-114.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="/favicon/favicon-72.png">
-	<link rel="apple-touch-icon" sizes="144x144" href="/favicon/favicon-144.png">
-	<link rel="apple-touch-icon" sizes="60x60" href="/favicon/favicon-60.png">
-	<link rel="apple-touch-icon" sizes="120x120" href="/favicon/favicon-120.png">
-	<link rel="apple-touch-icon" sizes="76x76" href="/favicon/favicon-76.png">
-	<link rel="apple-touch-icon" sizes="152x152" href="/favicon/favicon-152.png">
-	<link rel="apple-touch-icon" sizes="180x180" href="/favicon/favicon-180.png">
+	<link rel="shortcut icon" href="favicon/favicon.ico">
+	<link rel="icon" sizes="16x16 32x32 64x64" href="favicon/favicon.ico">
+	<link rel="icon" type="image/png" sizes="196x196" href="favicon/favicon-192.png">
+	<link rel="icon" type="image/png" sizes="160x160" href="favicon/favicon-160.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96.png">
+	<link rel="icon" type="image/png" sizes="64x64" href="favicon/favicon-64.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16.png">
+	<link rel="apple-touch-icon" href="favicon/favicon-57.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="favicon/favicon-114.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="favicon/favicon-72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="favicon/favicon-144.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="favicon/favicon-60.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="favicon/favicon-120.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="favicon/favicon-76.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="favicon/favicon-152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="favicon/favicon-180.png">
 	<meta name="msapplication-TileColor" content="#FFFFFF">
-	<meta name="msapplication-TileImage" content="/favicon/favicon-144.png">
-	<meta name="msapplication-config" content="/favicon/browserconfig.xml">
+	<meta name="msapplication-TileImage" content="favicon/favicon-144.png">
+	<meta name="msapplication-config" content="/browserconfig.xml">
 	<!-- ****** faviconit.com favicons ****** -->
 </head>
 <html>
 <style>
 
+	body {
+		padding-bottom: 250px; 
+	}
+
+
+	select, input, button {
+		border-width: 0px;
+	}
+	font.head
+	{
+		text-align: center;
+		color: #DDD;
+		font-size: 150%;
+	}
+	
 	div.buy
 	{
 		width:20px;
 		height:0px;
-		margin-top:0px;
 		margin-left:50px;
+		margin-top:10px; <!--moves all the div columns-->
+		margin-bottom:100px;
 	}
 	div.amounts
 	{
@@ -46,7 +62,6 @@
 		width:20px;
 		height:0px;
 		margin-left:450px;
-
 		margin-top:0px;
 	}
 		
@@ -55,7 +70,6 @@
 		width:20px;
 		height:0px;
 		margin-left:650px;
-
 		margin-top:0px;
 	}	
 	
@@ -72,96 +86,174 @@
 		text-align: right;
 	}
 	
-	input.buy
+	button.buy
 	{
-		visibility:hidden;
+		display:none;
 		margin-top:10px;
-		height:60px; 
+		height:7vh; 
 		width:175px;
-		white-space: pre-wrap			
+		#DDD-space: pre-wrap			
 	}
 	input.amounts
 	{
-		visibility:hidden;
+		display:none;
 	    text-align: right;
 		margin-top:10px;
-		height:54px; 
+		height:6.7vh; 
 		width:175px;
-		white-space: pre-wrap	
+		#DDD-space: pre-wrap	
 
 	}
-	input.upgrade
+	button.upgrade
 	{
-		visibility:hidden;
+		display:none;
 		margin-top:10px;
-		height:60px; 
+		height:7vh; 
 		width:175px;
-		white-space: pre-wrap	
-
+		#DDD-space: pre-wrap	
 	}
 	input.rate
 	{
-		visibility:hidden;
+		display:none;
 	    text-align: right;
 		margin-top:10px;
-		height:54px; 
+		height:6.7vh; 
 		width:175px;
-		white-space: pre-wrap	
+		#DDD-space: pre-wrap	
 	}
 	
 	div.upgradestack
-	{
-		width:20px;
-		height:0px;
-		margin-left:800px;
+	{		
+		width: 20px;
+		height: 0px;
+		margin-left:850px;
 		margin-top:0px;
-		white-space:normal;
 	}
 	
 	ul.upgradestack
-	{
-		width = 200px;
+	{		
+		margin-left:-40px;
+		margin-top:10px;
+		width: 200px;
 		list-style-type:none;
 	}
+	li.upgradestack
+	{
+		margin:10px 0;
+		width: 200px; 
+	}
 	
+	button.upgradestack
+	{
+		height:60px;
+		width: 200px; 
+		#DDD-space: pre-wrap	
+	}
+
 </style>
 <body>
-
-	<div style="height:100%;">
-		<div style="position:relative;top:50%;text-align:center">	
-			<font color= #0aa > v.0.1.8</font><br>
-			<font color= #0aa> New alerts. Inertia. <br> Thrust display. New music. </font><br>
-		</div>
-	</div>
-
-	<!-- Game window -->
+	<!-- Game window tabs -->
 	<body bgcolor="#222222">
-	<div class = "window"/>
+	
+	<ul class="simple-tabs" id="window-tabs">
+		<font size=4px>
+		<li class="game active">Game</li>
+		<li class="sciencepage">Science</li>
+		<li class="zone">Zone Map</li>
+		<li class="galaxy">Galaxy Map</li>
+		<li class="settings">Settings</li>
+		</font>
+	</ul>
+	<div class="clear-float"></div>
+
+	<div id="game" class="tab-page active-page">
 		<canvas id="canvas" width="1000" height="500" style="background-color: #000"></canvas>
 	</div>
 	
-	<div style="text-align: left"> 
-		<div class="buy"/>
-			<input id = "goldbutton" type ="button" value = "Click        " onclick = "fireGuns()" class="buy" />
-			<input id = "minerbutton" type ="button" value = "Miners        " onclick = "buyunit('miner')" class="buy"/>
-			<input id = "foremanbutton" type ="button" value = "Foremans        " onclick = "buyunit('foreman')" class="buy"/>
-			<input id = "shipbutton" type ="button" value = "Ships        " onclick = "buyunit('ship')" class="buy"/>
+	<div id="sciencepage" class="tab-page" style="background-color: black;">
+		<div style="margin-top:0px; height:100px;margin-left:50px;">
+			<br>
+			<font id = "scienceamount" color= #0aa style="font-size:150%">Science: 0</font>
+			<br><br>
+			<font color= #0aa style="font-size:100%">Doesn't do anything yet...</font>
 			
 		</div>
+	</div>
+
+	<div id="zone" class="tab-page">
+	<font color=#FFF> WIP 2</font>
+	</div>
+
+	<div id="galaxy" class="tab-page">
+	<font color=#FFF> WIP 3</font>
+	</div>
+	
+	<div id="settings" class="tab-page" style="background-color: black;">
+		<div style="margin-top:0px; height:100px;margin-left:50px;">
+			<br>
+			<font color= #DDD style="font-size:150%"><h>Settings</h></font>
+			<br><br>
+			<input style = "height:50px;" id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
+			<input style = "height:50px;" id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
+			<input style = "height:50px;" id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
+			<input style = "height:50px; display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
+
+			<div style="position:relative;top:0%;text-align:left">	
+				<font color= #DDD font-size= 100%>
+					<br>To buy the maximum amount of units you can afford hold CONTROL.<br>
+					For upcoming features <a href="https://trello.com/b/mNyetPjz/infinity-drive">visit our Trello.</a><br>	
+					View on <a href="https://github.com/dpekkle/infinitydrive">github.</a><br><br>
+			
+					<font color= #DDD style="font-size:150%"><h>Updates</h></font>
+					<!--Updates-->
+					<div id="Changelog" style="overflow-y: scroll; height:250px;">
+
+					<br>25/02/16 - Version: 0.2.3<br><br>
+					- Notifications fade, except science scans.<br>- Science scans have a nice planet icon.<br>- Nicer tab colours.<br>- Smooth movement after scans.<br>
+
+					<br>25/02/16 - Version: 0.2.2<br><br>
+					New features: Multi-buy key modifier (ctrl).
+					<br><br>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur euismod risus in nunc semper scelerisque. Aliquam feugiat luctus augue, sit amet suscipit massa malesuada non. Quisque posuere sem a tortor tincidunt aliquet. In porta metus nec ante semper congue. Donec et velit at nisi gravida vehicula ac quis nulla. Sed faucibus tellus in sodales fermentum. Integer vel sapien metus. Sed sodales quam lorem, dapibus dictum justo mollis quis. Suspendisse et dui ultricies, ornare ipsum non, consectetur felis. Cras eu ligula pellentesque, ornare odio sed, posuere urna. Ut mi arcu, tristique nec dapibus ac, imperdiet in elit. Suspendisse quis leo venenatis, ultricies nulla sed, interdum tortor. Suspendisse finibus mi sed nunc mattis dapibus sed semper leo.
+<br><br>
+Morbi nec ultricies lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris velit lectus, laoreet sed dolor sit amet, ornare tincidunt justo. Sed sit amet nisi a ligula mattis ultricies id non enim. Cras leo augue, fermentum et consequat ut, ultrices non nulla. Donec suscipit lorem id nibh rhoncus, eu imperdiet ante facilisis. Aenean egestas mauris molestie egestas maximus. Cras consectetur leo purus, vitae porttitor augue rutrum ut. Aliquam hendrerit ipsum mauris, at ornare orci rhoncus vel. Pellentesque lacus ligula, rutrum sed placerat non, rutrum sed nibh. Donec non faucibus mi. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+
+
+					</div>
+				</font>
+			</div>	
+		</div>
+	</div>	
+	
+	<div style="text-align: left"> 
+		<div class="buy"/>
+			<font class="head" >Buy</font>
+
+			<button id = "goldbutton" onclick="fireGuns()" class="buy" >Click</button>
+			<button id = "minerbutton" onclick="buyunit('miner')" class="buy" >Crew</button>
+			<button id = "foremanbutton" onclick="buyunit('foreman')" class="buy" >Asteroids</button>
+			<button id = "shipbutton" onclick="buyunit('ship')" class="buy" >Ships</button>			
+		</div>
 		<div class="amounts"/>
+			<font class="head">Total</font>
+
 			<input id = "gold" type = "text" class="amounts"/> 
 			<input id = "miners" type = "text" class="amounts"/> 
 			<input id = "foremans" type = "text" class="amounts"/> 
 			<input id = "ships" type = "text" class="amounts"/> 
 
 		</div>
-		<div class="upgrade"/>
-			<input id = "goldupgradebutton" type ="button" value = "Gold        " onclick = "upgrade('gold')" class="upgrade"/>    
-			<input id = "minerupgradebutton" type ="button" value = "Miners        " onclick = "upgrade('miner')" class="upgrade"/>    
-			<input id = "foremanupgradebutton" type ="button" value = "Foremen        " onclick = "upgrade('foreman')" class="upgrade"/>
-			<input id = "shipupgradebutton" type ="button" value = "Ships        " onclick = "upgrade('ship')" class="upgrade"/>
+		<div class="upgrade"/>		
+			<font class="head">Upgrade</font>
+			<button id = "goldupgradebutton" onclick = "upgrade('gold')" class="upgrade" >Fuel</button>			
+			<button id = "minerupgradebutton" onclick = "upgrade('miner')" class="upgrade" >Crew</button>			
+			<button id = "foremanupgradebutton" onclick = "upgrade('foreman')" class="upgrade" >Asteroids</button>			
+			<button id = "shipupgradebutton" onclick = "upgrade('ship')" class="upgrade" >Ships</button>			
+
 		</div>
 		<div class="rate"/>
+			<font class="head">Income</font>
+
 			<input id = "goldpt" type = "text" class="rate"/> 
 			<input id = "minerspt" type = "text" class="rate"/> 
 			<input id = "foremanspt" type = "text" class="rate"/> 
@@ -169,54 +261,39 @@
 		</div>
 		
 		<div class="upgradestack"/>
-		<ul id = "list" class = "upgradestack">
+			<font class="head">Unlocks</font>
+			<br>
+			<ul id = "list" class = "upgradestack">
+			</ul>
 		</div>
-		</ul>
 		
 	</div>
-	
-
-	<div style="margin-top:275px; height:100px;">
-		<br>
-		<input id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
-		<input id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
-		<input style = "visibility:hidden;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
-
-		<div style="position:relative;top:50%;text-align:left">	
-			<font color= #0aa size= 2px>
-				- Planned features -
-				<br>
-				- Space: More planets and moons
-				<br>
-				- Multi-buy feature.
-				<br>
-				- Combat.
-				<br>
-				- More and longer progression: Engines. Shields. Weapons.
-				<br>
-				
-			</font>
-		</div>		
-	</div>
+	<br><br>
+	<div style="height:100px"></div>
 	
 	<!-- Audio -->
-	<audio id= "music" src="audio/Melancholics Anonymous - S3rge Rybak.mp3" type="audio/mp3">
-	</audio>
+	<audio id= "music"></audio>
 	
 	<!-- Google Analytics -->
+
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		})(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
 
 		ga('create', 'UA-74080319-1', 'auto');
 		ga('send', 'pageview');
 	</script>
-
+	
+	<script src="lib/simple-tabs-pure-js.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="lib/simpletabs.css">
 	<script defer src="lib/ocanvas-2.8.3.js"></script>
 	<script defer src="lib/sweetalert.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="lib/sweetalert.css">
+	<script defer src="lib/title_notifier.js"></script>
+	<script defer src="lib/Notifier.js"></script>
+	<script defer src="notifications.js"></script>
 	<script defer src="scripts.js"></script>
 	
 </body>
