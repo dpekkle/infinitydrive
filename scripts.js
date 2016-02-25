@@ -1422,12 +1422,18 @@ function fireGuns()
 function listenToKeyDown(e)
 {
 	if (e.ctrlKey)
-		ctrlmod = true;
-
+	{
+		if (!ctrlmod)
+		{
+			ctrlmod = true;
+			updateCosts();
+		}
+	}
 }
 function listenToKeyUp(e)
 {
 	ctrlmod = false;
+	updateCosts();
 }
 	
 function changeLevel()
