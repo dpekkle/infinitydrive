@@ -270,29 +270,11 @@ function grayButtons()
 			{
 				title: "Upgrades",
 				text: "You can quadruple the power of your clicks by clicking the 'Upgrade clicks' button, but this will become more expensive with each purchase.",
-				closeOnConfirm: false,
 			},
 			function()
 			{
-				customNote("Small", "Small notification", "They look like this (click to close)");
-				swal(
-				{
-					title: "By the way...",
-					text: "Would you prefer to use smaller notifications or keep these big popups?",
-					showCancelButton: true,
-					cancelButtonText: "Keep these",
-					confirmButtonText: "Use small notifications",   
-					//closeOnConfirm: false,
-					closeOnCancel: false,
-				},
-				function(isConfirm)
-				{
-					if (isConfirm)
-						toggleNotes();
-					document.getElementById("togglenotes").style.display = "inline-block";		
-					customNote(Game.alertstyle, "Don't worry", "If you change your mind you can change this at any time in your settings (top right tab).");
-				});
-				
+				toggleNotes();
+				customNote("Small", "By the way...", "You might prefer these smaller notifications. You can change them back in the settings tab (top right of window). Click to close.");
 			});
 			
 			Game.tutorialprogress++;
@@ -915,7 +897,7 @@ function initialiseCanvas()
 				zIndex:5,
 				
 				speed: 1,
-				unlock: 200 + 50 * ((i*i*i)),
+				unlock: 200 + 10 * ((i*i*i*i) - 10),
 				seen: false,
 				name: "Planet " + i,
 				lore: "Hey look it's " + name + " a placeholder planet while we design more!",
@@ -1108,7 +1090,6 @@ function panPlanet(type)
 	Game.shipscanning = true;
 	Game.science += planet.value;
 	Game.planetArrayit++;	
-
 	
 	shipsprite.animate(
 	{
@@ -1481,7 +1462,6 @@ function deleteSave()
 		},	
 		function()
 		{  
-			localStorage.removeItem('saveObject');
 			swal
 			(
 				{
@@ -1489,7 +1469,11 @@ function deleteSave()
 					text: "Your save file has been deleted.", 
 					type: "success",	
 				},
-				function(){window.location.reload(true);}
+				function()
+				{
+					localStorage.removeItem('saveObject');
+					window.location.reload(true);
+				}
 			); 
 		}
 	);
