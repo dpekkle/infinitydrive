@@ -387,6 +387,8 @@ function initialiseTabs()
 {
 	demoTabs = new SimpleTabs(document.getElementById('window-tabs'));
 	console.log("tabs done");
+	//update science tab
+	document.getElementById("scienceamount").innerHTML = "Science: " + Game.science;
 }
 
 function initialiseUI()
@@ -872,7 +874,7 @@ function initialiseCanvas()
 		zIndex:5,
 		
 		speed: 1,
-		unlock: 13,
+		unlock: 195, 			//to convert loglev to level use x = 2 ^(13*log2(1.5))
 		seen: false,
 		name: "Earth",
 		lore: "The third planet in the solar system, scans indicate an Earth-like environment rich in oxygen and organic chemistry. There is evidence that life once thrived on the surface.",
@@ -890,7 +892,7 @@ function initialiseCanvas()
 		zIndex:5,
 		
 		speed: 1,
-		unlock: 1,
+		unlock: 1.5,
 		seen: false,
 		name: "Venus",
 		lore: "A hostile environment coated in a thick layer of greenhouse gases. Rich in Sulfur resources, however landing is not advised.",
@@ -913,7 +915,7 @@ function initialiseCanvas()
 				zIndex:5,
 				
 				speed: 1,
-				unlock: 15 + (1.5*(i-3)),
+				unlock: 200 + 50 * ((i*i*i) - 9),
 				seen: false,
 				name: "Planet " + i,
 				lore: "Hey look it's " + name + " a placeholder planet while we design more!",
@@ -1081,7 +1083,7 @@ function panPlanet(type)
 		planet.seen = true;
 		customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
 		Game.science += planet.value;
-		document.getElementById("scienceamount").innerHTML = "Science: " + planet.value;
+		document.getElementById("scienceamount").innerHTML = "Science: " + Game.science;
 		Game.planetArrayit++;
 		
 		return;
@@ -1094,7 +1096,8 @@ function panPlanet(type)
 	//animate the planet
 	canvas.addChild(planet);
 	planet.zIndex = 5;
-	if (planet.name.indexOf('Planet')) //if its a placeholder planet
+	
+	if (Game.planetArrayit > 1) //if its a placeholder planet
 	{
 		planet.rotate(360-80);
 	}
@@ -1163,7 +1166,8 @@ function panPlanet(type)
 			//give us some nice info about the planet :)
 			customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
 			Game.science += planet.value;
-			document.getElementById("scienceamount").innerHTML = "Science: " + planet.value;
+			document.getElementById("scienceamount").innerHTML = "Science: " + Game.science;
+			Game.planetArrayit++;	
 
 			//stop scanning sprite
 			shipsprite.removeChild(scanner);
@@ -1186,7 +1190,6 @@ function panPlanet(type)
 			canvas.removeChild(this);
 		}			
 	});	
-	Game.planetArrayit++;	
 }
 
 function smoothShip(dur)
@@ -1503,8 +1506,8 @@ function levelup(type)
 		
 		if (Game.planetArrayit < planetArray.length)
 		{
-			console.log(loglev + 1 + " compare " + planetArray[Game.planetArrayit].unlock)
-			if (loglev + 1 > planetArray[Game.planetArrayit].unlock)
+			console.log(Game.level + " compare " + planetArray[Game.planetArrayit].unlock)
+			if (Game.level >= planetArray[Game.planetArrayit].unlock)
 			{
 				panPlanet(type);
 			}
@@ -1757,7 +1760,7 @@ function NewGame()
 	this.foremanupcost = 25000;
 	this.foremanname = " Asteroids";
 
-	this.ship = 0;
+	this.ship = 1;
 	this.shipcost = 40;
 	this.shippt = 0;
 	this.shipmod = 2;
