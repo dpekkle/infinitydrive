@@ -915,7 +915,7 @@ function initialiseCanvas()
 				zIndex:5,
 				
 				speed: 1,
-				unlock: 200 + 50 * ((i*i*i) - 9),
+				unlock: 200 + 50 * ((i*i*i)),
 				seen: false,
 				name: "Planet " + i,
 				lore: "Hey look it's " + name + " a placeholder planet while we design more!",
@@ -1106,6 +1106,8 @@ function panPlanet(type)
 	
 	//move ship in to meet planet in center
 	Game.shipscanning = true;
+	Game.science += planet.value;
+	Game.planetArrayit++;	
 
 	
 	shipsprite.animate(
@@ -1165,9 +1167,7 @@ function panPlanet(type)
 				Notifier.obliterate(note);
 			//give us some nice info about the planet :)
 			customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
-			Game.science += planet.value;
 			document.getElementById("scienceamount").innerHTML = "Science: " + Game.science;
-			Game.planetArrayit++;	
 
 			//stop scanning sprite
 			shipsprite.removeChild(scanner);
@@ -1501,13 +1501,13 @@ function levelup(type)
 	{
 		Game.level++;
 		Game.progress = 0;
-		Game.levelcost *= 1.005;
+		Game.levelcost *= 1.002;
 		//console.log("Level: " + Game.level + " loglev" + loglev);
 		
 		if (Game.planetArrayit < planetArray.length)
 		{
 			console.log(Game.level + " compare " + planetArray[Game.planetArrayit].unlock)
-			if (Game.level >= planetArray[Game.planetArrayit].unlock)
+			if (Game.level >= planetArray[Game.planetArrayit].unlock && !Game.shipscanning)
 			{
 				panPlanet(type);
 			}
@@ -1760,7 +1760,7 @@ function NewGame()
 	this.foremanupcost = 25000;
 	this.foremanname = " Asteroids";
 
-	this.ship = 1;
+	this.ship = 0;
 	this.shipcost = 40;
 	this.shippt = 0;
 	this.shipmod = 2;
@@ -1875,6 +1875,7 @@ if (localStorage.getItem('saveObject') !== null)
 		
 		//offline progression
 		offlineticks();
+		Game.shipscanning = false; //in case you load a save while you were scanning a planet
 		
 		console.log("Done with offline");		
 	}
