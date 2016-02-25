@@ -229,9 +229,7 @@ function maxBuyDisplay(ctrlmod, resource, cost, rate, name)
 }
 
 function updateCosts()
-{
-	//maximum buy option
-		
+{		
 	document.getElementById( "minerbutton").innerHTML = Game.minername + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.gold, Game.minercost, Game.minercostrate, Game.goldname);
 
 	if (Game.goldbuy == 1)
@@ -256,7 +254,7 @@ function updateCosts()
 	document.getElementById( "foremanupgradebutton").innerHTML = "Upgrade" + Game.foremanname + "<br>" + formatNumber(Game.foremanmod) + "<br>Costs " + formatNumber(Game.foremanupcost) + Game.goldname;
 	document.getElementById( "shipupgradebutton").innerHTML = "Upgrade" + Game.shipname + "<br>" + formatNumber(Game.shipmod) + "<br>Costs " + formatNumber(Game.shipupcost) + Game.goldname;
 
-	
+	grayButtons();
 }
 
 function grayButtons()
@@ -615,9 +613,7 @@ function buyunit(id)
 	else if (id == "ship")
 		buyShip(Game.goldbuy);	
 	
-	updateCosts();
-	grayButtons();		
-	
+	updateCosts();	
 }
 
 function buyMiner(mode)
