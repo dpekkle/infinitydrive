@@ -776,6 +776,7 @@ function buyMiner(mode)
 		document.getElementById("resetdrones").style.display = "inline-block";	
 	}	
 	
+	updateCosts();
 	updateAmounts();		
 }
 }
