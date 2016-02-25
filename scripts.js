@@ -22,6 +22,7 @@ Should scale with based on networth.
 {	
 function checkVisibility()
 {
+	var change = hiddenleft;
 	if (hiddenleft > 0)
 	{
 		switch(visiblemax - hiddenleft)
@@ -43,7 +44,7 @@ function checkVisibility()
 						Game.tutorialprogress++;
 						var x = (customNote(Game.alertstyle, Game.minername, 
 						"You can spend " + Game.goldname + " to buy " + Game.minername + ". \n\n" + Game.minername + " will generate more " 
-						+ Game.goldname + " automatically. They also generate thrust, moving your ship. "));
+						+ Game.goldname + " automatically. They also generate thrust, moving your ship. ", 0));
 						if (Game.alertstyle == "Small")
 							notearray.push(x);
 					}
@@ -61,7 +62,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++;
 						var x = customNote(Game.alertstyle, Game.foremanname, 
-						"You can spend " + Game.minername + " to buy " + Game.foremanname + ". \n\n" + Game.foremanname + "  will create " + Game.minername + " for you.");
+						"You can spend " + Game.minername + " to buy " + Game.foremanname + ". \n\n" + Game.foremanname + "  will create " + Game.minername + " for you.", 0);
 						if (Game.alertstyle == "Small")
 							notearray.push(x);
 
@@ -84,7 +85,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++;
 						var x = (customNote(Game.alertstyle, "Unlocks", 
-						"Special unlocks can be purchased to grant a variety of different changes. Mouse-over an unlock to learn more about it."));	
+						"Special unlocks can be purchased to grant a variety of different changes. Mouse-over an unlock to learn more about it.", 0));	
 						if (Game.alertstyle == "Small")
 							notearray.push(x);
 					}
@@ -105,7 +106,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++;
 						var x = customNote(Game.alertstyle, Game.shipname, 
-						"You can spend " + Game.foremanname + " to buy " + Game.shipname + ". \n\n" + Game.shipname + "  will create " + Game.foremanname + " for you. \nThey can also be upgraded with more unlocks.");
+						"You can spend " + Game.foremanname + " to buy " + Game.shipname + ". \n\n" + Game.shipname + "  will create " + Game.foremanname + " for you. \nThey can also be upgraded with more unlocks.", 0);
 						if (Game.alertstyle == "Small")
 							notearray.push(x);
 					}
@@ -128,7 +129,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++;
 						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						"Drone Clicks");
+						"Drone Clicks", 0);
 					}
 				}
 				break;
@@ -149,7 +150,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++
 						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						Game.goldname + " Buying");
+						Game.goldname + " Buying", 0);
 					}
 				}
 				break;
@@ -170,7 +171,7 @@ function checkVisibility()
 					{
 						Game.tutorialprogress++;
 						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						Game.minername + " Clicking");
+						Game.minername + " Clicking", 0);
 					}
 				}
 				break;
@@ -179,6 +180,8 @@ function checkVisibility()
 				break;
 		}
 	}
+	if (change !== hiddenleft)
+		updateCosts();
 }
 
 function updateAmounts()
@@ -245,7 +248,7 @@ function updateCosts()
 	if (Game.clicktype == "gold")
 		document.getElementById( "goldbutton").innerHTML = "Click  " + "+ " + formatNumber(Game.goldmod) + " " + Game.goldname;
 	else if (Game.clicktype == "miner")
-		document.getElementById( "goldbutton").innerHTML = "Click  " + "+ " + formatNumber(Game.goldmod) + Game.goldname + "<br> and " + formatNumber(Game.goldmod*0.1) + " " + Game.minername;
+		document.getElementById( "goldbutton").innerHTML = "Click  " + "+ " + formatNumber(Game.goldmod) + Game.goldname + "<br> and " + formatNumber(Game.goldmod*0.01) + " " + Game.minername;
 		
 	document.getElementById( "goldupgradebutton").innerHTML = "Upgrade Clicks<br>" +  " Costs " + formatNumber(Game.goldupcost) + Game.goldname;
 	document.getElementById( "minerupgradebutton").innerHTML = "Upgrade" + Game.minername + "<br>" + formatNumber(Game.minermod) + "<br>Costs " + formatNumber(Game.minerupcost) + Game.goldname;
@@ -299,13 +302,10 @@ function grayButtons()
 			{
 				title: "Upgrades",
 				text: "You can quadruple the power of your clicks by clicking the 'Upgrade clicks' button, but this will become more expensive with each purchase.",
-			},
-			function()
-			{
-				toggleNotes();
-				customNote("Small", "By the way...", "You might prefer these smaller notifications. You can change them back in the settings tab (top right of window). Click to close.");
 			});
 			
+			toggleNotes();
+			customNote("Small", "By the way...", "You might prefer these smaller notifications. You can change them back in the settings tab (top right of window). Click to close.", 0);
 			Game.tutorialprogress++;
 		}
 	}
@@ -551,12 +551,7 @@ function uiTick()
 	
 	//run ui functions
 	if (Game.it % 10 === 0)
-	{
-		updateCosts();
-		
-		if (ctrlmod)
-			updateCosts();
-
+	{		
 		var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5);
 		
 		loglev = Math.floor(taperlevels);		
@@ -598,7 +593,7 @@ function count(who)
 		//Game.progress += 1*Game.goldmod*modifier;
 		Game.gold += 1*Game.goldmod;
 		
-		Game.miner += 0.1*Game.goldmod;
+		Game.miner += 0.01*Game.goldmod;
 	}
 } 
 
@@ -943,7 +938,7 @@ function initialiseCanvas()
 				zIndex:5,
 				
 				speed: 1,
-				unlock: 200 + 10 * ((i*i*i*i) - 10),
+				unlock: 500 + 120 * ((i*i) - 4),
 				seen: false,
 				name: "Planet " + i,
 				lore: "Hey look it's " + name + " a placeholder planet while we design more!",
@@ -1001,6 +996,7 @@ function initialiseCanvas()
 	});
 	canvas.addChild(starfield2);
 	starfield2.scale(0.6, 0.6);
+	starfield2.rotate(-15);
 	
 	starfield3 = starfield.clone(
 	{
@@ -1017,6 +1013,7 @@ function initialiseCanvas()
 		speed:0.02,
 	});
 	canvas.addChild(starfield4);
+	starfield4.rotate(15);
 	starfield4.scale(0.8, 0.8);
 	console.log("Star: " + starfield4.zIndex);
 	canvas.addChild(asteroid1);
@@ -1110,13 +1107,14 @@ function panPlanet(type)
 		console.log("Offline planet passed");
 		var planet = planetArray[Game.planetArrayit];	
 		planet.seen = true;
-		customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
+		customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore, "http://dpekkle.github.io/infinitydrive/" + planet.image);
 		Game.science += planet.value;
 		document.getElementById("scienceamount").innerHTML = "Science: " + Game.science;
 		Game.planetArrayit++;
 		
 		return;
 	}
+	
 	
 	console.log("Let's see planet" + Game.planetArrayit);
 	var planet = planetArray[Game.planetArrayit];	
@@ -1128,10 +1126,11 @@ function panPlanet(type)
 	
 	if (Game.planetArrayit > 1) //if its a placeholder planet
 	{
-		planet.rotate(360-80);
+		planet.rotate(360-65);
 	}
 	
-	var note;
+	var note = customNote(Game.alertstyle, "Unknown Body Detected", "Scanners indicate a celestial body in close proximity, moving in to investigate.", 0);
+	
 	
 	//move ship in to meet planet in center
 	Game.shipscanning = true;
@@ -1177,9 +1176,9 @@ function panPlanet(type)
 		easing: "ease-out-quad",
 		callback: function()
 		{
-			note = customNote(Game.alertstyle, "Discovered " + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.");
-			//scan animation here
-		
+			if (Game.alertstyle == "Small")
+				Notifier.obliterate(note);
+			note = customNote(Game.alertstyle, "Discovered " + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.", 0);		
 		}
 	});
 	
@@ -1194,7 +1193,7 @@ function panPlanet(type)
 			if (Game.alertstyle == "Small")
 				Notifier.obliterate(note);
 			//give us some nice info about the planet :)
-			customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore);
+			customNote(Game.alertstyle, "Scan complete", planet.name + ": " + planet.lore, planet.image);
 			document.getElementById("scienceamount").innerHTML = "Science: " + Game.science;
 
 			//stop scanning sprite
@@ -1222,7 +1221,14 @@ function panPlanet(type)
 
 function smoothShip(dur)
 {
-	if (dur > 100)
+	//destination
+	var newx = canvas.width/4 + 30*Math.sin(shiptime/2000 % 360);
+	var newy = canvas.height/2 + 50*Math.sin(shiptime/9999 % 360);
+	
+	var distance = Math.sqrt(Math.pow((shipsprite.x - newx), 2) + Math.pow((shipsprite.y - newy), 2));
+	console.log("Dist: " + distance);
+	
+	if (dur > 100 && distance > 25)
 	{
 		shiptime = new Date().getTime();
 		shipsprite.animate(
@@ -1231,17 +1237,20 @@ function smoothShip(dur)
 			y: canvas.height/2 + 50*Math.sin(shiptime/9999 % 360),
 		},
 		{
-			duration: 12000,
+			duration: dur,
 			//smooth out the transition a little
 			callback: function()
 			{
-				smoothShip(dur/5);
+				console.log("Smooth again");
+				smoothShip(dur/1.5);
+				
 			}
 		});
 	}
 	else
 	{
 		Game.shipscanning = false;
+		console.log("Done smoothing");
 	}
 }
 
@@ -1543,7 +1552,7 @@ function levelup(type)
 	{
 		Game.level++;
 		Game.progress = 0;
-		Game.levelcost *= 1.002;
+		Game.levelcost *= 1.003;
 		//console.log("Level: " + Game.level + " loglev" + loglev);
 		
 		if (Game.planetArrayit < planetArray.length)
@@ -1816,7 +1825,7 @@ function NewGame()
 	this.science = 0;
 	
 	//positions
-	this.shipspeed = 100;
+	this.shipspeed = 20;
 	this.planetArrayit = 0;
 	this.shipscanning = false;
 	
@@ -1843,7 +1852,7 @@ function NewGame()
 	this.dronestyle = 1;
 	this.vol = 0.4;
 	this.musicplaying = true;
-	this.gameversion = "0.2.2";
+	this.gameversion = "0.2.3";
 	this.alertstyle = "Big";
 	this.tutorialprogress = 0;
 }
@@ -1854,7 +1863,7 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.2.2";
+var currentversion = "0.2.3";
 var savefilechanged = false;
 
 changeLevel();
@@ -1882,7 +1891,7 @@ if (localStorage.getItem('saveObject') !== null)
 			(
 				{
 					title: "25/02/2016\n" + "v " + currentversion,
-					text: "Updates: \n Multi-buy feature (hold ctrl)",
+					text: "Updates: \nNotifications fade, except science scans.\nScience scans have a nice planet icon.\nNicer tab colours\nSmooth movement after scans.",
 					type: "info",
 					confirmButtonText: "Thanks for letting me know",					
 					closeOnConfirm: !savefilechanged,		
@@ -1931,7 +1940,8 @@ else
 	if (Game.tutorialprogress < 1)
 	{
 		customNote(Game.alertstyle, "Welcome!", 
-		"Click your ship or the \'Click\' button to mine fuel.");
+		"Click your ship or the \'Click\' button to mine fuel.", 0);
+		Game.tutorialprogress++;
 	}
 }
 
@@ -1973,10 +1983,18 @@ setInterval( function()
     prognow = new Date();
     var elapsedTime = (prognow.getTime() - progbefore.getTime());
     if(elapsedTime > prograte)
-		for (var i = 0; i < elapsedTime/prograte; i++)
-			Game.progress += changeprog;
+	{
+		if (!Game.shipscanning)
+		{
+			for (var i = 0; i < elapsedTime/prograte; i++)
+				Game.progress += changeprog;
+		}
+	}
 	else
-		Game.progress += changeprog;
+	{
+		if (!Game.shipscanning)
+			Game.progress += changeprog;
+	}
     progbefore = new Date();   
 
 	oldprog = changeprog;

@@ -19,7 +19,7 @@ ul.simple-tabs {
 }
 
 ul.simple-tabs li {
-    background-color: lightgray;
+    background-color: #0aa;
     float:left;
     width:20%;
     height:44px;
@@ -37,7 +37,7 @@ ul.simple-tabs li:hover {
 }
 
 ul.simple-tabs li.active {
-    background-color: #0aa;
+    background-color: lightgray;
     
 }
 

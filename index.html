@@ -38,7 +38,7 @@
 	font.head
 	{
 		text-align: center;
-		color: #0aa;
+		color: #DDD;
 		font-size: 150%;
 	}
 	
@@ -92,7 +92,7 @@
 		margin-top:10px;
 		height:7vh; 
 		width:175px;
-		white-space: pre-wrap			
+		#DDD-space: pre-wrap			
 	}
 	input.amounts
 	{
@@ -101,7 +101,7 @@
 		margin-top:10px;
 		height:6.7vh; 
 		width:175px;
-		white-space: pre-wrap	
+		#DDD-space: pre-wrap	
 
 	}
 	button.upgrade
@@ -110,7 +110,7 @@
 		margin-top:10px;
 		height:7vh; 
 		width:175px;
-		white-space: pre-wrap	
+		#DDD-space: pre-wrap	
 	}
 	input.rate
 	{
@@ -119,7 +119,7 @@
 		margin-top:10px;
 		height:6.7vh; 
 		width:175px;
-		white-space: pre-wrap	
+		#DDD-space: pre-wrap	
 	}
 	
 	div.upgradestack
@@ -147,7 +147,7 @@
 	{
 		height:60px;
 		width: 200px; 
-		white-space: pre-wrap	
+		#DDD-space: pre-wrap	
 	}
 
 </style>
@@ -191,7 +191,7 @@
 	<div id="settings" class="tab-page" style="background-color: black;">
 		<div style="margin-top:0px; height:100px;margin-left:50px;">
 			<br>
-			<font color= #0aa style="font-size:150%"><h>Settings</h></font>
+			<font color= #DDD style="font-size:150%"><h>Settings</h></font>
 			<br><br>
 			<input style = "height:50px;" id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
 			<input style = "height:50px;" id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
@@ -199,14 +199,27 @@
 			<input style = "height:50px; display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
 
 			<div style="position:relative;top:0%;text-align:left">	
-				<font color= #0aa font-size= 100%>
+				<font color= #DDD font-size= 100%>
 					<br>To buy the maximum amount of units you can afford hold CONTROL.<br>
 					For upcoming features <a href="https://trello.com/b/mNyetPjz/infinity-drive">visit our Trello.</a><br>	
-					View on <a href="https://github.com/dpekkle/infinitydrive">github.</a><br>
-
+					View on <a href="https://github.com/dpekkle/infinitydrive">github.</a><br><br>
+			
+					<font color= #DDD style="font-size:150%"><h>Updates</h></font>
 					<!--Updates-->
+					<div id="Changelog" style="overflow-y: scroll; height:250px;">
+
+					<br>25/02/16 - Version: 0.2.3<br><br>
+					- Notifications fade, except science scans.<br>- Science scans have a nice planet icon.<br>- Nicer tab colours.<br>- Smooth movement after scans.<br>
+
 					<br>25/02/16 - Version: 0.2.2<br><br>
-					New features: Multi-buy key modifier (ctrl).<br><br>
+					New features: Multi-buy key modifier (ctrl).
+					<br><br>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur euismod risus in nunc semper scelerisque. Aliquam feugiat luctus augue, sit amet suscipit massa malesuada non. Quisque posuere sem a tortor tincidunt aliquet. In porta metus nec ante semper congue. Donec et velit at nisi gravida vehicula ac quis nulla. Sed faucibus tellus in sodales fermentum. Integer vel sapien metus. Sed sodales quam lorem, dapibus dictum justo mollis quis. Suspendisse et dui ultricies, ornare ipsum non, consectetur felis. Cras eu ligula pellentesque, ornare odio sed, posuere urna. Ut mi arcu, tristique nec dapibus ac, imperdiet in elit. Suspendisse quis leo venenatis, ultricies nulla sed, interdum tortor. Suspendisse finibus mi sed nunc mattis dapibus sed semper leo.
+<br><br>
+Morbi nec ultricies lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris velit lectus, laoreet sed dolor sit amet, ornare tincidunt justo. Sed sit amet nisi a ligula mattis ultricies id non enim. Cras leo augue, fermentum et consequat ut, ultrices non nulla. Donec suscipit lorem id nibh rhoncus, eu imperdiet ante facilisis. Aenean egestas mauris molestie egestas maximus. Cras consectetur leo purus, vitae porttitor augue rutrum ut. Aliquam hendrerit ipsum mauris, at ornare orci rhoncus vel. Pellentesque lacus ligula, rutrum sed placerat non, rutrum sed nibh. Donec non faucibus mi. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+
+
+					</div>
 				</font>
 			</div>	
 		</div>
