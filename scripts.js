@@ -304,7 +304,7 @@ function grayButtons()
 		else
 			setInactiveButton(document.getElementById( "foremanbutton"), 0);
 		
-		if (Game.gold >= Game.shipcost && document.getElementById( "shipbutton").style.backgroundColor != activecolour)	
+		if (Game.gold >= Game.shipcost)	
 			setActiveButton(document.getElementById( "shipbutton"), 0);
 		else
 			setInactiveButton(document.getElementById( "shipbutton"), 0);
