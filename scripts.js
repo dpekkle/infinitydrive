@@ -44,7 +44,7 @@ function checkVisibility()
 						Game.tutorialprogress++;
 						var x = (customNote(Game.alertstyle, Game.minername, 
 						"You can spend " + Game.goldname + " to buy " + Game.minername + ". \n\n" + Game.minername + " will generate more " 
-						+ Game.goldname + " automatically. They also generate thrust, moving your ship. ", 0));
+						+ Game.goldname + " automatically.\n They also the ONLY unit that will generate thrust, moving your ship. ", 0));
 						if (Game.alertstyle == "Small")
 							notearray.push(x);
 					}
@@ -65,7 +65,9 @@ function checkVisibility()
 						"You can spend " + Game.minername + " to buy " + Game.foremanname + ". \n\n" + Game.foremanname + "  will create " + Game.minername + " for you.", 0);
 						if (Game.alertstyle == "Small")
 							notearray.push(x);
-
+						
+						customNote(Game.alertstyle, "Multi-buy", 
+						"Hold control to buy the maximum amount of units you can afford", 0);
 					}
 				}	
 				break;		
@@ -764,7 +766,8 @@ function buyMiner(mode)
 		createDrones("clear");
 		createDrones(dronestyle[Game.dronestyle]);	
 		//show the drone styles setting
-		document.getElementById("resetdrones").style.display = "inline-block";	
+		document.getElementById("resetdrones").style.display = "inline-block";
+		customNote(Game.alertstyle, "Drone styles", "You can change the way your drones appear on the screen, currently they are set to: " + Game.dronestyle, 0);
 	}	
 	
 	updateCosts();
@@ -1421,7 +1424,7 @@ function fireGuns()
 {
 function listenToKeyDown(e)
 {
-	if (e.ctrlKey)
+	if (e.keyCode == 17)
 	{
 		if (!ctrlmod)
 		{
