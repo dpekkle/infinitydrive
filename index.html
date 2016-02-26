@@ -26,134 +26,85 @@
 </head>
 <html>
 <style>
-
+	input{
+		font-family: monospace;	
+	}
+	button{
+		font-family: monospace;	
+	}
+	font{
+		font-family: monospace;
+	}
+	
 	body {
 		padding-bottom: 250px; 
 	}
-
-
 	select, input, button {
 		border-width: 0px;
 	}
-	font.head
-	{
+	font.head{
 		text-align: center;
 		color: #DDD;
-		font-size: 150%;
-	}
-	
-	div.buy
-	{
-		width:20px;
-		height:0px;
-		margin-left:50px;
-		margin-top:10px; <!--moves all the div columns-->
-		margin-bottom:100px;
-	}
-	div.amounts
-	{
-		width:20px;
-		height:0px;
-		margin-left:250px;
-		margin-top:0px;
-	}
-	div.upgrade
-	{
-		width:20px;
-		height:0px;
-		margin-left:450px;
-		margin-top:0px;
-	}
-		
-	div.rate
-	{
-		width:20px;
-		height:0px;
-		margin-left:650px;
-		margin-top:0px;
+		font-size: 120%;
 	}	
 	
-	div.window
-	{
+	div.amounts{
+		width:20px;
+		height:0px;
+		margin-left:1025px;
+		margin-top:1vh;
+	}
+
+	div.window{
 		margin-left: 50px;
 	}
-	
-	div.plan
-	{
+	div.plan{
 		margin-right: 50px;
 		position: relative;
 		top: 50%;
 		text-align: right;
+	}	
+	button.buy{
+		display:none;
+		vertical-align:top;
+		height:6vh; 
+		width:25%;
+		margin-top:10px;
+		border: thin #000000 solid;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		white-space: pre-wrap;
 	}
-	
-	button.buy
-	{
+	textarea.amounts{
+		resize: none;
+		display:none;
+		cols="1";
+		rows="2";
+	    text-align: left;
+		margin-top:10px;
+		height:5.3vh; 
+		width:150px;
+		white-space: pre-wrap;
+		font-size: 120%;
+	}
+	button.upgrade{
 		display:none;
 		margin-top:10px;
-		height:7vh; 
-		width:175px;
-		#DDD-space: pre-wrap			
-	}
-	input.amounts
-	{
-		display:none;
-	    text-align: right;
-		margin-top:10px;
-		height:6.7vh; 
-		width:175px;
-		#DDD-space: pre-wrap	
-
-	}
-	button.upgrade
-	{
-		display:none;
-		margin-top:10px;
-		height:7vh; 
-		width:175px;
-		#DDD-space: pre-wrap	
-	}
-	input.rate
-	{
-		display:none;
-	    text-align: right;
-		margin-top:10px;
-		height:6.7vh; 
-		width:175px;
-		#DDD-space: pre-wrap	
-	}
-	
-	div.upgradestack
-	{		
-		width: 20px;
-		height: 0px;
-		margin-left:850px;
-		margin-top:0px;
-	}
-	
-	ul.upgradestack
-	{		
-		margin-left:-40px;
-		margin-top:10px;
-		width: 200px;
-		list-style-type:none;
-	}
-	li.upgradestack
-	{
-		margin:10px 0;
-		width: 200px; 
-	}
-	
-	button.upgradestack
-	{
-		height:60px;
-		width: 200px; 
-		#DDD-space: pre-wrap	
+		height:6vh; 
+		width:225px;
+		white-space: pre-wrap;
 	}
 
 </style>
 <body>
 	<!-- Game window tabs -->
 	<body bgcolor="#222222">
+	<div class="amounts"/>
+		<textarea id = "gold" class="amounts" style="margin-top:4vh;"/></textarea> 
+		<textarea id = "miners" class="amounts"/></textarea> 
+		<textarea id = "foremans" class="amounts"/></textarea> 
+		<textarea id = "ships" class="amounts"/></textarea> 
+	</div>	
 	
 	<ul class="simple-tabs" id="window-tabs">
 		<font size=4px>
@@ -165,9 +116,8 @@
 		</font>
 	</ul>
 	<div class="clear-float"></div>
-
 	<div id="game" class="tab-page active-page">
-		<canvas id="canvas" width="1000" height="500" style="background-color: #000"></canvas>
+		<canvas id="canvas" width="1000" height="450" style="background-color: #000"></canvas>
 	</div>
 	
 	<div id="sciencepage" class="tab-page" style="background-color: black;">
@@ -197,77 +147,60 @@
 			<input style = "height:50px;" id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
 			<input style = "height:50px;" id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
 			<input style = "height:50px; display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
+			<div id="Changelog" style="overflow-y: scroll; margin-top:20px; height:300px;">
 
-			<div style="position:relative;top:0%;text-align:left">	
-				<font color= #DDD font-size= 100%>
-					<br>To buy the maximum amount of units you can afford hold CONTROL.<br>
-					For upcoming features <a href="https://trello.com/b/mNyetPjz/infinity-drive">visit our Trello.</a><br>	
-					View on <a href="https://github.com/dpekkle/infinitydrive">github.</a><br><br>
-			
-					<font color= #DDD style="font-size:150%"><h>Updates</h></font>
-					<!--Updates-->
-					<div id="Changelog" style="overflow-y: scroll; height:250px;">
+				<div style="position:relative;top:0%;text-align:left">	
+					<font color= #DDD font-size= 100%>
+						To buy the maximum amount of units you can afford hold CONTROL.<br>
+						For upcoming features <a href="https://trello.com/b/mNyetPjz/infinity-drive">visit our Trello.</a><br>	
+						View on <a href="https://github.com/dpekkle/infinitydrive">github.</a><br><br>
+				
+						<font color= #DDD style="font-size:150%"><h>Updates</h></font>
+						<!--Updates-->
+						<br>26/02/16 - Version 0.2.4<br><br>
+						- UI Overhaul based on friday thread suggestions<br><br>
+						<br>25/02/16 - Version: 0.2.3<br><br>
+						- Notifications fade, except science scans.<br>- Science scans have a nice planet icon.<br>- Nicer tab colours.<br>- Smooth movement after scans.<br><br>
 
-					<br>25/02/16 - Version: 0.2.3<br><br>
-					- Notifications fade, except science scans.<br>- Science scans have a nice planet icon.<br>- Nicer tab colours.<br>- Smooth movement after scans.<br>
-
-					<br>25/02/16 - Version: 0.2.2<br><br>
-					- Multi-buy key modifier (ctrl). Only implemented for units at the moment, not upgrades.
-					<br><br>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur euismod risus in nunc semper scelerisque. Aliquam feugiat luctus augue, sit amet suscipit massa malesuada non. Quisque posuere sem a tortor tincidunt aliquet. In porta metus nec ante semper congue. Donec et velit at nisi gravida vehicula ac quis nulla. Sed faucibus tellus in sodales fermentum. Integer vel sapien metus. Sed sodales quam lorem, dapibus dictum justo mollis quis. Suspendisse et dui ultricies, ornare ipsum non, consectetur felis. Cras eu ligula pellentesque, ornare odio sed, posuere urna. Ut mi arcu, tristique nec dapibus ac, imperdiet in elit. Suspendisse quis leo venenatis, ultricies nulla sed, interdum tortor. Suspendisse finibus mi sed nunc mattis dapibus sed semper leo.
-<br><br>
-Morbi nec ultricies lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris velit lectus, laoreet sed dolor sit amet, ornare tincidunt justo. Sed sit amet nisi a ligula mattis ultricies id non enim. Cras leo augue, fermentum et consequat ut, ultrices non nulla. Donec suscipit lorem id nibh rhoncus, eu imperdiet ante facilisis. Aenean egestas mauris molestie egestas maximus. Cras consectetur leo purus, vitae porttitor augue rutrum ut. Aliquam hendrerit ipsum mauris, at ornare orci rhoncus vel. Pellentesque lacus ligula, rutrum sed placerat non, rutrum sed nibh. Donec non faucibus mi. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-
-
-					</div>
-				</font>
+						<br>25/02/16 - Version: 0.2.2<br><br>
+						- Multi-buy key modifier (ctrl). Only implemented for units at the moment, not upgrades.
+						<br><br>
+					</font>
+				</div>
 			</div>	
 		</div>
 	</div>	
 	
-	<div style="text-align: left"> 
-		<div class="buy"/>
-			<font class="head" >Buy</font>
+	<ul class="simple-tabs" id="window-tabs2">
+		<font size=4px>
+		<li id = "buytab" class="buypage active" style="width:33.33%">Buy</li>
+		<li id = "uptab" class="upgradepage" style="width:33.33%">Upgrade</li>
+		<li id = "untab" class="unlockpage" style="width:33.33%">Unlocks</li>
+		</font>
+	</ul>
 
-			<button id = "goldbutton" onclick="fireGuns()" class="buy" >Click</button>
-			<button id = "minerbutton" onclick="buyunit('miner')" class="buy" >Crew</button>
-			<button id = "foremanbutton" onclick="buyunit('foreman')" class="buy" >Asteroids</button>
-			<button id = "shipbutton" onclick="buyunit('ship')" class="buy" >Ships</button>			
+	<div id="buypage" class = "tab-page active-page" style="border: none;">
+		<div id = "list1" width=1000px>
+			<button id = "goldbutton" onclick="fireGuns()" class="buy" >Click
+			<button id = "minerbutton" onclick="buyunit('miner')" class="buy" >Crew
+			<button id = "foremanbutton" onclick="buyunit('foreman')" class="buy" >Asteroids
+			<button id = "shipbutton" onclick="buyunit('ship')" class="buy" >Ships	
 		</div>
-		<div class="amounts"/>
-			<font class="head">Total</font>
-
-			<input id = "gold" type = "text" class="amounts"/> 
-			<input id = "miners" type = "text" class="amounts"/> 
-			<input id = "foremans" type = "text" class="amounts"/> 
-			<input id = "ships" type = "text" class="amounts"/> 
-
-		</div>
-		<div class="upgrade"/>		
-			<font class="head">Upgrade</font>
-			<button id = "goldupgradebutton" onclick = "upgrade('gold')" class="upgrade" >Fuel</button>			
-			<button id = "minerupgradebutton" onclick = "upgrade('miner')" class="upgrade" >Crew</button>			
-			<button id = "foremanupgradebutton" onclick = "upgrade('foreman')" class="upgrade" >Asteroids</button>			
-			<button id = "shipupgradebutton" onclick = "upgrade('ship')" class="upgrade" >Ships</button>			
-
-		</div>
-		<div class="rate"/>
-			<font class="head">Income</font>
-
-			<input id = "goldpt" type = "text" class="rate"/> 
-			<input id = "minerspt" type = "text" class="rate"/> 
-			<input id = "foremanspt" type = "text" class="rate"/> 
-			<input id = "shipspt" type = "text" class="rate"/> 
-		</div>
-		
-		<div class="upgradestack"/>
-			<font class="head">Unlocks</font>
-			<br>
-			<ul id = "list" class = "upgradestack">
-			</ul>
-		</div>
-		
 	</div>
+	<div id="upgradepage" class = "tab-page" style="border: none;">
+		<div id = "list2" width=1000px>
+			<button id = "goldupgradebutton" onclick = "upgrade('gold')" class="buy" >Fuel			
+			<button id = "minerupgradebutton" onclick = "upgrade('miner')" class="buy" >Crew			
+			<button id = "foremanupgradebutton" onclick = "upgrade('foreman')" class="buy" >Asteroids			
+			<button id = "shipupgradebutton" onclick = "upgrade('ship')" class="buy" >Ships		
+		</div>	
+	</div>
+	
+	<div id="unlockpage" class = "tab-page" style="border: none;">
+		<div id = "list3" width=1000px>
+		</div>		
+	</div>
+
 	<br><br>
 	<div style="height:100px"></div>
 	
@@ -286,7 +219,7 @@ Morbi nec ultricies lectus. Interdum et malesuada fames ac ante ipsum primis in 
 		ga('send', 'pageview');
 	</script>
 	
-	<script src="lib/simple-tabs-pure-js.min.js"></script>
+	<script src="lib/simple-tabs-pure-js.js"></script>
 	<link rel="stylesheet" type="text/css" href="lib/simpletabs.css">
 	<script defer src="lib/ocanvas-2.8.3.js"></script>
 	<script defer src="lib/sweetalert.min.js"></script>

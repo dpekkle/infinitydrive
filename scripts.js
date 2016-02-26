@@ -36,7 +36,6 @@ function checkVisibility()
 				{
 					document.getElementById("miners").style.display = "inline-block";
 					document.getElementById("minerbutton").style.display = "inline-block";
-					document.getElementById( "goldpt").style.display = "inline-block";
 					document.getElementById("minerupgradebutton").style.display = "inline-block";
 					hiddenleft--;
 					if (Game.tutorialprogress < 3)
@@ -44,7 +43,7 @@ function checkVisibility()
 						Game.tutorialprogress++;
 						var x = (customNote(Game.alertstyle, Game.minername, 
 						"You can spend " + Game.goldname + " to buy " + Game.minername + ". \n\n" + Game.minername + " will generate more " 
-						+ Game.goldname + " automatically.\n They also the ONLY unit that will generate thrust, moving your ship. ", 0));
+						+ Game.goldname + " automatically.\n They also are the ONLY unit that will generate thrust for you, which moves your ship. ", 0));
 						if (Game.alertstyle == "Small")
 							notearray.push(x);
 					}
@@ -55,7 +54,6 @@ function checkVisibility()
 				{
 					document.getElementById( "foremans").style.display = "inline-block";
 					document.getElementById("foremanbutton").style.display = "inline-block";
-					document.getElementById("minerspt").style.display = "inline-block";
 					document.getElementById( "foremanupgradebutton").style.display = "inline-block";
 					hiddenleft--;
 					if (Game.tutorialprogress < 4)
@@ -101,7 +99,6 @@ function checkVisibility()
 				{
 					document.getElementById( "ships").style.display = "inline-block";
 					document.getElementById("shipbutton").style.display = "inline-block";
-					document.getElementById("foremanspt").style.display = "inline-block";		
 					document.getElementById("shipupgradebutton").style.display = "inline-block";	
 					hiddenleft--;	
 					if (Game.tutorialprogress < 6)
@@ -188,16 +185,13 @@ function checkVisibility()
 
 function updateAmounts()
 {
-	document.getElementById( "gold" ).value = formatNumber(Game.gold) + Game.goldname + " ";	
-	document.getElementById( "miners" ).value = formatNumber(Game.miner) + Game.minername + " ";	
-	document.getElementById( "foremans" ).value = formatNumber(Game.foreman) + Game.foremanname + " ";
-	document.getElementById( "ships" ).value = formatNumber(Game.ship) + Game.shipname + " ";
+	document.getElementById( "gold" ).innerHTML = formatNumber(Game.gold) + Game.goldname + " \n(+" + formatNumber(tickspeed*Game.goldpt/gameslow) + "/s)";	
+	document.getElementById( "miners" ).innerHTML = formatNumber(Game.miner) + Game.minername + "\n(+" + formatNumber(tickspeed*Game.minerpt/gameslow) + "/s)";	
+	document.getElementById( "foremans" ).innerHTML = formatNumber(Game.foreman) + Game.foremanname + "\n(+" + formatNumber(tickspeed*Game.foremanpt/gameslow) + "/s)";
+	document.getElementById( "ships" ).innerHTML = formatNumber(Game.ship) + Game.shipname + "\n(+" + formatNumber(tickspeed*Game.shippt/gameslow) + "/s)";
 	
-	document.getElementById( "goldpt" ).value = formatNumber(tickspeed*Game.goldpt/gameslow) + Game.goldname + " / s ";	
-	document.getElementById( "minerspt" ).value = formatNumber(tickspeed*Game.minerpt/gameslow) + Game.minername + " / s ";		
-	document.getElementById( "foremanspt" ).value = formatNumber(tickspeed*Game.foremanpt/gameslow) + Game.foremanname + " / s ";	
 	// ATM no way to earn ships automatically
-	//document.getElementById( "shipspt" ).value = formatNumber(tickspeed*Game.shippt/gameslow) + Game.shipname + " / s";	
+	//document.getElementById( "shipspt" ).value = ;	
 	
 	
 }
@@ -220,30 +214,30 @@ function maxBuyDisplay(ctrlmod, resource, cost, rate, name)
 		}
 		totalcost -= unitcost;
 		
-		var str = (formatNumber(totalcost) + name + "<br>For " + units);
+		var str = " (" + units + ")<br>Costs " + formatNumber(totalcost) + name;
 		return str;
 		
 	}
 	else
 	{
-		var str = (formatNumber(cost) + name);
+		var str = ("<br>Costs " + formatNumber(cost) + name);
 		return str;
 	}
 }
 
 function updateCosts()
 {		
-	document.getElementById( "minerbutton").innerHTML = Game.minername + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.gold, Game.minercost, Game.minercostrate, Game.goldname);
+	document.getElementById( "minerbutton").innerHTML = Game.minername + maxBuyDisplay(ctrlmod, Game.gold, Game.minercost, Game.minercostrate, Game.goldname);
 
 	if (Game.goldbuy == 1)
 	{
-		document.getElementById( "foremanbutton").innerHTML = Game.foremanname + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.gold, Game.foremancost, Game.foremancostrate, Game.goldname);
-		document.getElementById( "shipbutton").innerHTML = Game.shipname + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.gold, Game.shipcost, Game.shipcostrate, Game.goldname);
+		document.getElementById( "foremanbutton").innerHTML = Game.foremanname +  maxBuyDisplay(ctrlmod, Game.gold, Game.foremancost, Game.foremancostrate, Game.goldname);
+		document.getElementById( "shipbutton").innerHTML = Game.shipname + maxBuyDisplay(ctrlmod, Game.gold, Game.shipcost, Game.shipcostrate, Game.goldname);
 	}
 	else
 	{
-		document.getElementById( "foremanbutton").innerHTML = Game.foremanname + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.miner, Game.foremancost, Game.foremancostrate, Game.minername);
-		document.getElementById( "shipbutton").innerHTML = Game.shipname + "<br>Costs " + maxBuyDisplay(ctrlmod, Game.foreman, Game.shipcost, Game.shipcostrate, Game.foremanname);
+		document.getElementById( "foremanbutton").innerHTML = Game.foremanname + maxBuyDisplay(ctrlmod, Game.miner, Game.foremancost, Game.foremancostrate, Game.minername);
+		document.getElementById( "shipbutton").innerHTML = Game.shipname + maxBuyDisplay(ctrlmod, Game.foreman, Game.shipcost, Game.shipcostrate, Game.foremanname);
 	}
 	
 	//upgrade costs
@@ -252,51 +246,86 @@ function updateCosts()
 	else if (Game.clicktype == "miner")
 		document.getElementById( "goldbutton").innerHTML = "Click  " + "+ " + formatNumber(Game.goldmod) + Game.goldname + "<br> and " + formatNumber(Game.goldmod*0.01) + " " + Game.minername;
 		
-	document.getElementById( "goldupgradebutton").innerHTML = "Upgrade Clicks<br>" +  " Costs " + formatNumber(Game.goldupcost) + Game.goldname;
-	document.getElementById( "minerupgradebutton").innerHTML = "Upgrade" + Game.minername + "<br>" + formatNumber(Game.minermod) + "<br>Costs " + formatNumber(Game.minerupcost) + Game.goldname;
-	document.getElementById( "foremanupgradebutton").innerHTML = "Upgrade" + Game.foremanname + "<br>" + formatNumber(Game.foremanmod) + "<br>Costs " + formatNumber(Game.foremanupcost) + Game.goldname;
-	document.getElementById( "shipupgradebutton").innerHTML = "Upgrade" + Game.shipname + "<br>" + formatNumber(Game.shipmod) + "<br>Costs " + formatNumber(Game.shipupcost) + Game.goldname;
+	document.getElementById( "goldupgradebutton").innerHTML = "Boost Clicks<br>" +  formatNumber(Game.goldmod) + "<br>Costs " + formatNumber(Game.goldupcost) + Game.goldname;
+	document.getElementById( "minerupgradebutton").innerHTML = "Boost" + Game.minername + "<br>" + formatNumber(Game.minermod) + "<br>Costs " + formatNumber(Game.minerupcost) + Game.goldname;
+	document.getElementById( "foremanupgradebutton").innerHTML = "Boost" + Game.foremanname + "<br>" + formatNumber(Game.foremanmod) + "<br>Costs " + formatNumber(Game.foremanupcost) + Game.goldname;
+	document.getElementById( "shipupgradebutton").innerHTML = "Boost" + Game.shipname + "<br>" + formatNumber(Game.shipmod) + "<br>Costs " + formatNumber(Game.shipupcost) + Game.goldname;
 
 	grayButtons();
 }
 
+function updateBottomTabTitle()
+{
+	var tabtitle = document.getElementById("buytab");
+	tabtitle.innerHTML = "Buy (" + tabNotification[0] + ")";
+	var tabtitle = document.getElementById("uptab");
+	tabtitle.innerHTML = "Upgrade (" + tabNotification[1] + ")";
+	var tabtitle = document.getElementById("untab");
+	tabtitle.innerHTML = "Unlocks (" + tabNotification[2] + ")";	
+}
+
+function setActiveButton(elem, note)
+{
+	if (elem.style.backgroundColor != activecolour)
+	{
+		console.log("Increment")
+		tabNotification[note]++;
+		updateBottomTabTitle();	
+	}
+	elem.style.backgroundColor = activecolour ; 
+	
+}
+
+function setInactiveButton(elem, note)
+{
+
+	if (elem.style.backgroundColor == activecolour)
+	{
+		tabNotification[note]--;
+		updateBottomTabTitle();	
+	}
+	elem.style.backgroundColor = inactivecolour; 
+
+}
+
 function grayButtons()
 {
+	testcolour = "rgb(0, 170, 170)"
 	//units	
 	if (Game.gold >= Game.minercost)
-		document.getElementById( "minerbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+		setActiveButton(document.getElementById( "minerbutton"), 0);
 	else
-		document.getElementById( "minerbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
+		setInactiveButton(document.getElementById( "minerbutton"), 0);
 	
 	if (Game.goldbuy == 1)
 	{		
 		if (Game.gold >= Game.foremancost)
-			document.getElementById( "foremanbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+			setActiveButton(document.getElementById( "foremanbutton"), 0);
 		else
-			document.getElementById( "foremanbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
+			setInactiveButton(document.getElementById( "foremanbutton"), 0);
 		
-		if (Game.gold >= Game.shipcost)
-			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+		if (Game.gold >= Game.shipcost && document.getElementById( "shipbutton").style.backgroundColor != activecolour)	
+			setActiveButton(document.getElementById( "shipbutton"), 0);
 		else
-			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
+			setInactiveButton(document.getElementById( "shipbutton"), 0);
 	}
 	else
 	{
 		if (Game.miner >= Game.foremancost)
-			document.getElementById( "foremanbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+			setActiveButton(document.getElementById( "foremanbutton"), 0);
 		else
-			document.getElementById( "foremanbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
+			setInactiveButton(document.getElementById( "foremanbutton"), 0);
 		
 		if (Game.foreman >= Game.shipcost)
-			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+			setActiveButton(document.getElementById( "shipbutton"), 0);
 		else
-			document.getElementById( "shipbutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
+			setInactiveButton(document.getElementById( "shipbutton"), 0);
 	}
 	
 	//upgrades
 	if (Game.gold >= Game.goldupcost)
 	{
-		document.getElementById( "goldupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+		setActiveButton(document.getElementById( "goldupgradebutton"), 1);
 		if (Game.gold > 0 && Game.tutorialprogress < 2)
 		{
 			if (Game.alertstyle === "Big")
@@ -312,49 +341,51 @@ function grayButtons()
 		}
 	}
 	else
-		document.getElementById( "goldupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
+		setInactiveButton(document.getElementById( "goldupgradebutton"), 1);
 
 	if (Game.gold >= Game.minerupcost)
-		document.getElementById( "minerupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+		setActiveButton(document.getElementById( "minerupgradebutton"), 1);
 	else
-		document.getElementById( "minerupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
+		setInactiveButton(document.getElementById( "minerupgradebutton"), 1);
 
 	if (Game.gold >= Game.foremanupcost)
-		document.getElementById( "foremanupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+		setActiveButton(document.getElementById( "foremanupgradebutton"), 1);
 	else
-		document.getElementById( "foremanupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
-	if (Game.gold >= Game.shipupcost)
-		document.getElementById( "shipupgradebutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
-	else
-		document.getElementById( "shipupgradebutton").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
+		setInactiveButton(document.getElementById( "foremanupgradebutton"), 1);
 	
+	if (Game.gold >= Game.shipupcost)
+		setActiveButton(document.getElementById( "shipupgradebutton"), 1);
+	else
+		setInactiveButton(document.getElementById( "shipupgradebutton"), 1);
+
+//unlocks	
 	if (document.getElementById("goldbuy") != null && Game.goldbuy === 0)
 	{	
 		if(Game.ship >= Game.goldbuycost)
-			document.getElementById( "goldbuy").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
+			setActiveButton(document.getElementById( "goldbuy"), 2);
 		else
-			document.getElementById( "goldbuy").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
+			setInactiveButton(document.getElementById( "goldbuy"), 2);
 	}
 	if (document.getElementById("minerclick") != null)
 	{
 		if (Game.foreman >= Game.minerclickcost)
-			document.getElementById( "minerclick").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
+			setActiveButton(document.getElementById( "minerclick"), 2);
 		else
-			document.getElementById( "minerclick").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
+			setInactiveButton(document.getElementById( "minerclick"), 2);
 	}
 	if (document.getElementById("droneclick") != null)
 	{
 		if (Game.gold >= Game.droneclickcost)
-			document.getElementById( "droneclick").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
+			setActiveButton(document.getElementById( "droneclick"), 2);
 		else
-			document.getElementById( "droneclick").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
+			setInactiveButton(document.getElementById( "droneclick"), 2);
 	}
 	if (document.getElementById("beer") != null)
 	{
 		if (Game.gold >= Game.beercost)
-			document.getElementById( "beer").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';		
+			setActiveButton(document.getElementById( "beer"), 2);
 		else
-			document.getElementById( "beer").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
+			setInactiveButton(document.getElementById( "beer"), 2);
 	}	
 }
 
@@ -398,7 +429,9 @@ function closeNotes()
 
 function initialiseTabs()
 {
-	demoTabs = new SimpleTabs(document.getElementById('window-tabs'));
+	topTabs = new SimpleTabs(document.getElementById('window-tabs'));
+	botTabs = new SimpleTabs(document.getElementById('window-tabs2'));
+	
 	console.log("tabs done");
 	//update science tab
 	document.getElementById("scienceamount").innerHTML = "Science: " + Game.science;
@@ -410,7 +443,7 @@ function initialiseUI()
 	initialiseTabs();
 	
 	//set first two elements to be visible
-	document.getElementById( "goldbutton").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+	document.getElementById( "goldbutton").style.backgroundColor = activecolour;
 	document.getElementById( "goldbutton").style.display = "inline-block";
 	document.getElementById( "gold").style.display = "inline-block";
 
@@ -424,7 +457,7 @@ function initialiseUI()
 	document.getElementById( "shipbutton").title = "These helpful robots will automatically bring you " + Game.foremanname;	
 
 	//Initialise canvas text
-	level_text.text = "Level ";
+	level_text.text = "Next Planet: ";
 
 	//amount of elements not visible
 	visiblemax = 8;
@@ -445,13 +478,13 @@ function initialiseUI()
 	}
 	
 	if (Game.displayProjectiles)
-		document.getElementById( "toggleprojectiles").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+		document.getElementById( "toggleprojectiles").style.backgroundColor = activecolour;
 	else
-		document.getElementById( "toggleprojectiles").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';	
+		document.getElementById( "toggleprojectiles").style.backgroundColor = inactivecolour;	
 	
-	document.getElementById( "deletesave").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
-	document.getElementById( "resetdrones").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
-	document.getElementById( "togglenotes").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+	document.getElementById( "deletesave").style.backgroundColor = activecolour;
+	document.getElementById( "resetdrones").style.backgroundColor = activecolour;
+	document.getElementById( "togglenotes").style.backgroundColor = activecolour;
 	document.getElementById( "togglenotes").value = "Notifications: " + Game.alertstyle;
 	
 	if (Game.tutorialprogress > 0)
@@ -554,13 +587,24 @@ function uiTick()
 	//run ui functions
 	if (Game.it % 10 === 0)
 	{		
-		var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5);
+		//var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5);
 		
-		loglev = Math.floor(taperlevels);		
-		level_text.text = "Level " + loglev;
+		//loglev = Math.floor(taperlevels);		
 		
-		var prog = (taperlevels % loglev);	
-		progress_text.text = "Progress " + formatNumber(prog*100) + "%";
+		
+		level_text.text = "Next: " + planetArray[Game.planetArrayit].name;
+		
+		var lastplanet;
+		if (Game.planetArrayit === 0)
+			lastplanet = 0;
+		else
+			lastplanet = planetArray[Game.planetArrayit-1].unlock;
+				
+		var prog = ( (Game.level + (Game.progress/Game.levelcost))- lastplanet)/((planetArray[Game.planetArrayit].unlock) - lastplanet);	
+		
+		progress_text.text = "Distance: " + formatNumber(Game.level + (Game.progress/Game.levelcost)- lastplanet) 
+										  + "/" + formatNumber(planetArray[Game.planetArrayit].unlock - lastplanet) 
+										  + "\n" + formatNumber(prog*100) + "%";
 	}
 	if (Game.it % 15 === 0)
 	{
@@ -582,21 +626,28 @@ function uiTick()
 	
 function count(who) 
 {
-	var modifier = 1;
-	if (who == "drone")
-		modifier = 0;
-	if (Game.clicktype == "gold")
+	clicklimit = new Date().getTime();
+	
+	if (clicklimit - oldclicklimit > 50)
 	{
-		//Game.progress += 1*Game.goldmod*modifier;
-		Game.gold += 1*Game.goldmod;
+		var modifier = 1;
+		if (who == "drone")
+			modifier = 0;
+		if (Game.clicktype == "gold")
+		{
+			//Game.progress += 1*Game.goldmod*modifier;
+			Game.gold += 1*Game.goldmod;
+		}
+		else if (Game.clicktype == "miner")
+		{
+			//Game.progress += 1*Game.goldmod*modifier;
+			Game.gold += 1*Game.goldmod;
+			
+			Game.miner += 0.01*Game.goldmod;
+		}
+		oldclicklimit = clicklimit;
 	}
-	else if (Game.clicktype == "miner")
-	{
-		//Game.progress += 1*Game.goldmod*modifier;
-		Game.gold += 1*Game.goldmod;
-		
-		Game.miner += 0.01*Game.goldmod;
-	}
+	
 } 
 
 function buyunit(id)
@@ -719,6 +770,8 @@ function buyMiner(mode)
 		Game.miner += 5;
 		removeUpgrade("beer");	
 		Game.beercost = 0;
+		tabNotification[2]--;
+		updateBottomTabTitle();
 	}
 	
 	if (id == "goldbuy")
@@ -733,7 +786,10 @@ function buyMiner(mode)
 			document.getElementById( "goldbuy").style.backgroundColor = "#7FFF00";
 			
 			//remove the drones lost
-			createDrones(dronestyle[Game.dronestyle]);	
+			createDrones(dronestyle[Game.dronestyle]);
+			tabNotification[2]--;
+			updateBottomTabTitle();
+			
 		}
 		else if (Game.goldbuy == 1)
 		{
@@ -756,6 +812,9 @@ function buyMiner(mode)
 		Game.foreman -= Game.minerclickcost;
 		Game.clicktype = "miner";
 		removeUpgrade("minerclick");	
+		tabNotification[2]--;
+		updateBottomTabTitle();
+
 	}	
 	if (id == "droneclick" && Game.gold >= Game.droneclickcost)
 	{
@@ -768,6 +827,9 @@ function buyMiner(mode)
 		//show the drone styles setting
 		document.getElementById("resetdrones").style.display = "inline-block";
 		customNote(Game.alertstyle, "Drone styles", "You can change the way your drones appear on the screen, currently they are set to: " + Game.dronestyle, 0);
+		tabNotification[2]--;
+		updateBottomTabTitle();
+
 	}	
 	
 	updateCosts();
@@ -854,9 +916,9 @@ function initialiseCanvas()
 	
 	level_text = canvas.display.text({
 		x: 20,
-		y: canvas.height - 48,
+		y: canvas.height - 64,
 		origin: { x: "left", y: "bottom" },
-		font: "bold 24px sans-serif",
+		font: "bold 20px monospace",
 		text: "Level",
 		fill: "#0aa"
 	});	
@@ -864,7 +926,7 @@ function initialiseCanvas()
 		x: 20,
 		y: canvas.height - 24,
 		origin: { x: "left", y: "bottom" },
-		font: "bold 20px sans-serif",
+		font: "bold 20px monospace",
 		text: "Progress ",
 		fill: "#0aa"
 	});
@@ -872,7 +934,7 @@ function initialiseCanvas()
 		x:canvas.width - 120 + 110,
 		y: 70,
 		origin: {x:"right", y:"top"},
-		font: "bold 16px sans-serif",
+		font: "bold 16px monospace",
 		text: "Play music",
 		fill: "#0aa",
 		align: "right"
@@ -881,7 +943,7 @@ function initialiseCanvas()
 		x:canvas.width - 120 + 110,
 		y: canvas.height - 24,
 		origin: {x:"right", y:"bottom"},
-		font: "bold 20px sans-serif",
+		font: "bold 20px monospace",
 		text: "",
 		fill: "#0aa",
 		align: "right"
@@ -1422,6 +1484,17 @@ function fireGuns()
 }
 //~~~~ AUXILLARY FUNCTIONS ~~~~
 {
+function testActive(elem)
+{
+	var col;
+	if (elem.currentStyle)
+        col = elem.currentStyle['backgroundColor'];
+    else
+		col = document.defaultView.getComputedStyle(elem,null)['backgroundColor'];
+		
+	return (col == inactivecolour);
+}
+	
 function listenToKeyDown(e)
 {
 	if (e.keyCode == 17)
@@ -1458,29 +1531,24 @@ function changeLevel()
 	
 function createUpgrade(id, type, value, classname, mouseover)
 {
-	var ul = document.getElementById("list");
-	var li = document.createElement("li");
+	var tabtitle = document.getElementById("untab");
 	
-	li.className = "upgradestack";
-	
-	//li.style = "width: 175px; white-space:pre-line; margin-bottom: 10px;";
-	
+	var div = document.getElementById("list3");
 	var element = document.createElement("button");
-	element.title = mouseover;
-	//element.type = type;
 	
+	element.title = mouseover;	
+	element.style = "display: inline-block;";
 	element.id = id;
-	
+	element.className = "buy";
 	element.innerHTML = value;
 	
 	element.onclick = function()
 	{
 		upgrade(id);
 	};
-	element.className = "upgradestack";
-	
-	li.appendChild(element);
-	ul.appendChild(li);
+		
+	div.appendChild(element);
+	customNote(Game.alertstyle, "New Unlock", "", 0)
 }
 
 function removeUpgrade(id)
@@ -1566,7 +1634,6 @@ function levelup(type)
 		
 		if (Game.planetArrayit < planetArray.length)
 		{
-			console.log(Game.level + " compare " + planetArray[Game.planetArrayit].unlock)
 			if (Game.level >= planetArray[Game.planetArrayit].unlock && !Game.shipscanning)
 			{
 				panPlanet(type);
@@ -1580,9 +1647,9 @@ function toggleProjectiles()
 	Game.displayProjectiles = !Game.displayProjectiles;
 	
 	if (Game.displayProjectiles)
-		document.getElementById( "toggleprojectiles").style.backgroundColor = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+		document.getElementById( "toggleprojectiles").style.backgroundColor = activecolour;
 	else
-		document.getElementById( "toggleprojectiles").style.backgroundColor = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';		
+		document.getElementById( "toggleprojectiles").style.backgroundColor = inactivecolour;		
 }
 
 function resetDrones(init)
@@ -1790,6 +1857,7 @@ var tickspeed = 2;
 var gameslow = tickspeed * 1.6;
 var totalshots = 0;
 var ctrlmod = false;
+var oldclicklimit = new Date().getTime();
 
 initialiseCanvas();
 
@@ -1797,6 +1865,12 @@ initialiseCanvas();
 var dronestyle = {1:"sync", 2:"clock", 3:"anti", 4:"desync"};
 var notearray = [];
 var planetArray = [];
+var tabNotification = [0, 0, 0];
+var activecolour = "rgb(0, 170, 170)";
+var inactivecolour = "rgb(0,119,119)";
+
+//var activecolour = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
+//var inactivecolour = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
 
 function NewGame()
 {
@@ -1821,7 +1895,7 @@ function NewGame()
 	this.foremanpt = 0;
 	this.foremanmod = 1;
 	this.foremanupcost = 25000;
-	this.foremanname = " Asteroids";
+	this.foremanname = " Roids";
 
 	this.ship = 0;
 	this.shipcost = 40;
@@ -1842,7 +1916,7 @@ function NewGame()
 	this.goldbuy = 0;
 	this.goldbuycost = 100;
 
-	this.level = 1;
+	this.level = 0;
 	this.levelcost = canvas.width;
 	this.progress = 0;
 	this.it = 0;
@@ -1899,8 +1973,8 @@ if (localStorage.getItem('saveObject') !== null)
 			swal
 			(
 				{
-					title: "25/02/2016\n" + "v " + currentversion,
-					text: "Updates: \nNotifications fade, except science scans.\nScience scans have a nice planet icon.\nNicer tab colours\nSmooth movement after scans.",
+					title: "26/02/2016\n" + "v " + currentversion,
+					text: "Updates: \nUI Overhaul.",
 					type: "info",
 					confirmButtonText: "Thanks for letting me know",					
 					closeOnConfirm: !savefilechanged,		
