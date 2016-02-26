@@ -312,15 +312,8 @@ function grayButtons()
 		setActiveButton(document.getElementById( "goldupgradebutton"), 1);
 		if (Game.gold > 0 && Game.tutorialprogress < 2)
 		{
-			if (Game.alertstyle === "Big")
-			swal(
-			{
-				title: "Upgrades",
-				text: "You can quadruple the power of your clicks by clicking the 'Upgrade clicks' button, but this will become more expensive with each purchase.",
-			});
-			
 			toggleNotes();
-			customNote("Small", "By the way...", "You might prefer these smaller notifications. You can change them back in the settings tab (top right of window). Click to close.", 0);
+			customNote(Game.alertstyle, "Upgrades", "You can quadruple the power of your clicks by clicking the 'Upgrade clicks' button, but this will become more expensive with each purchase.", 0);
 			Game.tutorialprogress++;
 		}
 	}
@@ -1880,7 +1873,7 @@ function NewGame()
 	this.gold = 0;
 	this.gold = 0;
 	this.goldpt = 0;
-	this.goldmod = 100;
+	this.goldmod = 1;
 	this.goldupcost = 10;
 	this.goldname = " Fuel";
 	 
