@@ -34,8 +34,7 @@ function checkVisibility()
 			case 1:
 				if (Game.gold >= Game.minercost || Game.miner > 0)
 				{
-					document.getElementById("miners").style.display = "inline-block";
-					document.getElementById("minerbutton").style.display = "inline-block";
+					document.getElementById( "minercomb").style.display = "inline-block";
 					document.getElementById("minerupgradebutton").style.display = "inline-block";
 					hiddenleft--;
 					if (Game.tutorialprogress < 3)
@@ -52,8 +51,7 @@ function checkVisibility()
 			case 2:
 				if (Game.miner >= Game.foremancost * 0.5 || Game.foreman > 0)
 				{
-					document.getElementById( "foremans").style.display = "inline-block";
-					document.getElementById("foremanbutton").style.display = "inline-block";
+					document.getElementById( "foremancomb").style.display = "inline-block";
 					document.getElementById( "foremanupgradebutton").style.display = "inline-block";
 					hiddenleft--;
 					if (Game.tutorialprogress < 4)
@@ -97,7 +95,7 @@ function checkVisibility()
 			case 4:
 				if (Game.foreman >= Game.shipcost * 0.5 || Game.ship > 0)
 				{
-					document.getElementById( "ships").style.display = "inline-block";
+					document.getElementById( "shipcomb").style.display = "inline-block";
 					document.getElementById("shipbutton").style.display = "inline-block";
 					document.getElementById("shipupgradebutton").style.display = "inline-block";	
 					hiddenleft--;	
@@ -124,12 +122,6 @@ function checkVisibility()
 					"Your visible drones (the amount you see, not the amount you own) will each click once per tick. The fuel earned from this doesn't increase your movement, just allows you to buy more things"
 					);
 					hiddenleft--;
-					if (Game.tutorialprogress < 7)
-					{
-						Game.tutorialprogress++;
-						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						"Drone Clicks", 0);
-					}
 				}
 				break;
 			case 6:
@@ -145,12 +137,6 @@ function checkVisibility()
 					"Will let you spend" + Game.goldname + " to buy"+ Game.shipname + ", best to leave this on as it increases the cost of using other units too"
 					);
 					hiddenleft--;
-					if (Game.tutorialprogress < 8)
-					{
-						Game.tutorialprogress++
-						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						Game.goldname + " Buying", 0);
-					}
 				}
 				break;
 
@@ -166,12 +152,6 @@ function checkVisibility()
 					"upgrade", 
 					"Each click grants 0.1 base" + Game.minername + ", multiplied by your click upgrade");
 					hiddenleft--;
-					if (Game.tutorialprogress < 9)
-					{
-						Game.tutorialprogress++;
-						customNote(Game.alertstyle, "New upgrade unlocked!", 
-						Game.minername + " Clicking", 0);
-					}
 				}
 				break;
 			
@@ -185,11 +165,15 @@ function checkVisibility()
 
 function updateAmounts()
 {
-	document.getElementById( "gold" ).innerHTML = formatNumber(Game.gold) + Game.goldname + " \n(+" + formatNumber(tickspeed*Game.goldpt/gameslow) + "/s)";	
-	document.getElementById( "miners" ).innerHTML = formatNumber(Game.miner) + Game.minername + "\n(+" + formatNumber(tickspeed*Game.minerpt/gameslow) + "/s)";	
-	document.getElementById( "foremans" ).innerHTML = formatNumber(Game.foreman) + Game.foremanname + "\n(+" + formatNumber(tickspeed*Game.foremanpt/gameslow) + "/s)";
-	document.getElementById( "ships" ).innerHTML = formatNumber(Game.ship) + Game.shipname + "\n(+" + formatNumber(tickspeed*Game.shippt/gameslow) + "/s)";
-	
+	document.getElementById( "gold" ).value = formatNumber(Game.gold) + Game.goldname;	
+	document.getElementById( "miners" ).value = formatNumber(Game.miner) + Game.minername;
+	document.getElementById( "foremans" ).value = formatNumber(Game.foreman) + Game.foremanname;
+	document.getElementById( "ships" ).value = formatNumber(Game.ship) + Game.shipname;
+	document.getElementById( "goldrate" ).value = formatNumber(tickspeed*Game.goldpt/gameslow) + " / s";	
+	document.getElementById( "minersrate" ).value = formatNumber(tickspeed*Game.minerpt/gameslow) + " / s";	
+	document.getElementById( "foremansrate" ).value = formatNumber(tickspeed*Game.foremanpt/gameslow) + " / s";
+	document.getElementById( "shipsrate" ).value = formatNumber(tickspeed*Game.shippt/gameslow) + " / s";
+		
 	// ATM no way to earn ships automatically
 	//document.getElementById( "shipspt" ).value = ;	
 	
@@ -445,7 +429,7 @@ function initialiseUI()
 	//set first two elements to be visible
 	document.getElementById( "goldbutton").style.backgroundColor = activecolour;
 	document.getElementById( "goldbutton").style.display = "inline-block";
-	document.getElementById( "gold").style.display = "inline-block";
+	document.getElementById( "goldcomb").style.display = "inline-block";
 
 	//give values to the buttons based off of javascript variables
 	//document.getElementById( "goldbutton").innerHTML = "Click " + "+ " + Game.goldmod + Game.goldname;
@@ -585,26 +569,24 @@ function uiTick()
 	}
 	
 	//run ui functions
-	if (Game.it % 10 === 0)
-	{		
-		//var taperlevels = 1 + Math.log2(Game.level + Game.progress/Game.levelcost)/Math.log2(1.5);
-		
-		//loglev = Math.floor(taperlevels);		
-		
-		
-		level_text.text = "Next: " + planetArray[Game.planetArrayit].name;
-		
-		var lastplanet;
-		if (Game.planetArrayit === 0)
-			lastplanet = 0;
-		else
-			lastplanet = planetArray[Game.planetArrayit-1].unlock;
-				
-		var prog = ( (Game.level + (Game.progress/Game.levelcost))- lastplanet)/((planetArray[Game.planetArrayit].unlock) - lastplanet);	
-		
-		progress_text.text = "Distance: " + formatNumber(Game.level + (Game.progress/Game.levelcost)- lastplanet) 
-										  + "/" + formatNumber(planetArray[Game.planetArrayit].unlock - lastplanet) 
-										  + "\n" + formatNumber(prog*100) + "%";
+	if (Game.it % 50 === 0)
+	{				
+		if (!Game.shipscanning)
+		{
+			level_text.text = "Next: " + planetArray[Game.planetArrayit].name;
+			
+			var lastplanet;
+			if (Game.planetArrayit === 0)
+				lastplanet = 0;
+			else
+				lastplanet = planetArray[Game.planetArrayit-1].unlock;
+					
+			var prog = ( (Game.level + (Game.progress/Game.levelcost))- lastplanet)/((planetArray[Game.planetArrayit].unlock) - lastplanet);	
+			
+			progress_text.text = "Distance: " + formatNumber(Game.level + (Game.progress/Game.levelcost)- lastplanet) 
+											  + "/" + formatNumber(planetArray[Game.planetArrayit].unlock - lastplanet) 
+											  + "\n" + formatNumber(prog*100) + "%";	
+		}
 	}
 	if (Game.it % 15 === 0)
 	{
@@ -612,7 +594,8 @@ function uiTick()
 		if (Game.alertstyle == "Small")
 			closeNotes();
 		outspeed = Game.goldpt/gameslow/progtickpt;
-		thrust_text.text = formatNumber(outspeed*100) + " Thrust"; 
+		if (!Game.shipscanning)
+			thrust_text.text = formatNumber(outspeed*100) + " Thrust"; 
 	}	
 
 	updateAmounts();				
@@ -826,7 +809,7 @@ function buyMiner(mode)
 		createDrones(dronestyle[Game.dronestyle]);	
 		//show the drone styles setting
 		document.getElementById("resetdrones").style.display = "inline-block";
-		customNote(Game.alertstyle, "Drone styles", "You can change the way your drones appear on the screen, currently they are set to: " + Game.dronestyle, 0);
+		customNote(Game.alertstyle, "Drone styles", "You can change the way your drones appear on the screen, currently they are set to: " + dronestyle[Game.dronestyle], 0);
 		tabNotification[2]--;
 		updateBottomTabTitle();
 
@@ -842,7 +825,6 @@ function buyMiner(mode)
 function initialiseCanvas()
 {
 	canvas = oCanvas.create({canvas: "canvas"});
-
 //unit assets	
 	scanner = canvas.display.ellipse(
 	{
@@ -980,7 +962,7 @@ function initialiseCanvas()
 		zIndex:5,
 		
 		speed: 1,
-		unlock: 1.5,
+		unlock: 2,
 		seen: false,
 		name: "Venus",
 		lore: "A hostile environment coated in a thick layer of greenhouse gases. Rich in Sulfur resources, however landing is not advised.",
@@ -1108,8 +1090,8 @@ function initialiseCanvas()
 	
 	musicsymbol = canvas.display.sprite(
 	{
-		x: canvas.width - 120 + 40,
-		y: 35,
+		x: -70, //attached to music_text to make things simpler with window resizes 
+		y: -30,
 		origin: {x:"center", y:"center"},
 		image: "images/musicsymbol.png",
 		height: 47,
@@ -1155,9 +1137,24 @@ function initialiseCanvas()
 	upVol.bind("click tap", function(){upVolume();});	
 	downVol.bind("click tap", function(){downVolume();});	
 	shipsprite.bind("click tap", function(){fireGuns();});	
+
+	//resizing
+	window.addEventListener('resize', resizeCanvas, false);
+	resizeCanvas();
 	
 }
 
+function resizeCanvas() 
+{
+	canvas.width = window.innerWidth*0.98 - 32;
+	thrust_text.moveTo(canvas.width - 10, canvas.height - 24);
+	upVol.moveTo(canvas.width - 120, 28);
+	downVol.moveTo(canvas.width - 120,46);
+	nextSong.moveTo(canvas.width - 40,35);
+	music_text.moveTo(canvas.width - 10,70);
+
+
+}
 
 function drawExtras()
 {	
@@ -1183,7 +1180,7 @@ function panPlanet(type)
 	
 	console.log("Let's see planet" + Game.planetArrayit);
 	var planet = planetArray[Game.planetArrayit];	
-	
+
 	planet.seen = true;
 	//animate the planet
 	canvas.addChild(planet);
@@ -1200,7 +1197,11 @@ function panPlanet(type)
 	//move ship in to meet planet in center
 	Game.shipscanning = true;
 	Game.science += planet.value;
-	Game.planetArrayit++;	
+	Game.planetArrayit++;
+	
+	thrust_text.text = "0 Thrust";	
+	level_text.text = planet.name;
+	progress_text.text = "Approaching";
 	
 	shipsprite.animate(
 	{
@@ -1244,6 +1245,8 @@ function panPlanet(type)
 			if (Game.alertstyle == "Small")
 				Notifier.obliterate(note);
 			note = customNote(Game.alertstyle, "Discovered " + planet.name, "You just reached " + planet.name + ".\n Your ship will now automatically perform scans to learn more about the planet and acquire Science.", 0);		
+			progress_text.text = "Scanning...";
+
 		}
 	});
 	
@@ -1265,7 +1268,8 @@ function panPlanet(type)
 			shipsprite.removeChild(scanner);
 			//recursive function to mesh with the sin variation of the ship
 			smoothShip(20000); 
-			
+			progress_text.text = "Embarking";
+			thrust_text.text = "MAX THRUST!";	
 
 		}
 	});
@@ -1327,7 +1331,6 @@ function drawBackground()
 		it needs to be smooth with progress so that explains the progress/levelcost component in progtomove.
 		We take the log of all this as a means of slowing down the speeds involved.
 	*/
-	
 	progtomove = Game.level + Game.progress/Game.levelcost;	
 	//pan past a planet
 
@@ -1539,7 +1542,7 @@ function createUpgrade(id, type, value, classname, mouseover)
 	element.title = mouseover;	
 	element.style = "display: inline-block;";
 	element.id = id;
-	element.className = "buy";
+	element.className = "upgrade";
 	element.innerHTML = value;
 	
 	element.onclick = function()
@@ -1629,7 +1632,7 @@ function levelup(type)
 	{
 		Game.level++;
 		Game.progress = 0;
-		Game.levelcost *= 1.003;
+		Game.levelcost *= 1.001;
 		//console.log("Level: " + Game.level + " loglev" + loglev);
 		
 		if (Game.planetArrayit < planetArray.length)
@@ -1797,14 +1800,14 @@ function musicPress()
 
 function adjustBPM()
 {	
-	canvas.removeChild(musicsymbolnew);
+	music_text.removeChild(musicsymbolnew);
 
 	musicsymbolnew = musicsymbol.clone({
 		duration: 60*1000/playlist[playlistiter].bpm,
 		frame: 2,
 	});
 
-	canvas.addChild(musicsymbolnew);
+	music_text.addChild(musicsymbolnew);
 	musicsymbolnew.bind("click tap", function(){musicPress();});
 }
 
@@ -1877,7 +1880,7 @@ function NewGame()
 	this.gold = 0;
 	this.gold = 0;
 	this.goldpt = 0;
-	this.goldmod = 1;
+	this.goldmod = 100;
 	this.goldupcost = 10;
 	this.goldname = " Fuel";
 	 
@@ -1890,34 +1893,34 @@ function NewGame()
 	this.minername = " Crew";
 
 	this.foreman = 0;
-	this.foremancost = 30;
-	this.foremancostrate = 1.1;
+	this.foremancost = 40;
+	this.foremancostrate = 1.15;
 	this.foremanpt = 0;
 	this.foremanmod = 1;
 	this.foremanupcost = 25000;
 	this.foremanname = " Roids";
 
 	this.ship = 0;
-	this.shipcost = 40;
+	this.shipcost = 80;
 	this.shipcostrate = 1.2;
 	this.shippt = 0;
-	this.shipmod = 2;
-	this.shipupcost = 5000000;
+	this.shipmod = 1;
+	this.shipupcost = 500000000;
 	this.shipname = " Drones";
 
 	this.science = 0;
 	
 	//positions
-	this.shipspeed = 20;
+	this.shipspeed = 10;
 	this.planetArrayit = 0;
 	this.shipscanning = false;
 	
 	//upgrades
 	this.goldbuy = 0;
-	this.goldbuycost = 100;
+	this.goldbuycost = 50;
 
 	this.level = 0;
-	this.levelcost = canvas.width;
+	this.levelcost = 1000;
 	this.progress = 0;
 	this.it = 0;
 	this.longtick = 5;
@@ -1935,7 +1938,7 @@ function NewGame()
 	this.dronestyle = 1;
 	this.vol = 0.4;
 	this.musicplaying = true;
-	this.gameversion = "0.2.3";
+	this.gameversion = "0.2.5";
 	this.alertstyle = "Big";
 	this.tutorialprogress = 0;
 }
@@ -1946,7 +1949,7 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.2.3";
+var currentversion = "0.2.5";
 var savefilechanged = false;
 
 changeLevel();
@@ -1973,8 +1976,8 @@ if (localStorage.getItem('saveObject') !== null)
 			swal
 			(
 				{
-					title: "26/02/2016\n" + "v " + currentversion,
-					text: "Updates: \nUI Overhaul.",
+					title: "27/02/2016\n" + "v " + currentversion,
+					text: "Updates: \nWindow Resize. \n Resource UI change",
 					type: "info",
 					confirmButtonText: "Thanks for letting me know",					
 					closeOnConfirm: !savefilechanged,		
@@ -2067,11 +2070,8 @@ setInterval( function()
     var elapsedTime = (prognow.getTime() - progbefore.getTime());
     if(elapsedTime > prograte)
 	{
-		if (!Game.shipscanning)
-		{
 			for (var i = 0; i < elapsedTime/prograte; i++)
 				Game.progress += changeprog;
-		}
 	}
 	else
 	{
