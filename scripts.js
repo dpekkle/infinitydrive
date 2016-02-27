@@ -2090,7 +2090,7 @@ if (localStorage.getItem('saveObject') !== null)
 			(
 				{
 					title: "28/02/2016\n" + "v " + currentversion,
-					text: "Updates:\n- Zone map\n- Progression longer\n- UI tweaks\n- Endgame crash fix"
+					text: "Updates:\n- Zone map\n- Progression longer\n- UI tweaks\n- Endgame crash fix",
 					type: "info",
 					confirmButtonText: "Thanks for letting me know",					
 					closeOnConfirm: !savefilechanged,		
