@@ -126,7 +126,6 @@
 		box-sizing: border-box;
 
 	}
-
 </style>
 <body>
 	<!-- Game window tabs -->
@@ -166,45 +165,59 @@
 	</div>
 	
 	<div id="settings" class="tab-page" style="background-color: black;">
-		<div style="margin-top:0px; height:100px;margin-left:50px;">
-			<br>
+		<div style= " margin-left:2vh; margin-top:2vh">
 			<font color= #DDD style="font-size:150%"><h>Settings</h></font>
 			<br><br>
 			<input style = "height:50px;" id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
 			<input style = "height:50px;" id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
 			<input style = "height:50px;" id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
 			<input style = "height:50px; display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
-			<div id="Changelog" style="overflow-y: scroll; margin-top:20px; height:300px;">
-
-				<div style="position:relative;top:0%;text-align:left">	
-					<font color= #DDD font-size= 100%>
-						To buy the maximum amount of units you can afford hold CONTROL.<br>
-						For upcoming features <a href="https://trello.com/b/mNyetPjz/infinity-drive">visit our Trello.</a><br>	
-						View on <a href="https://github.com/dpekkle/infinitydrive">github.</a><br><br>
-				
-						<font color= #DDD style="font-size:150%"><h>Updates</h></font>
+			
+			<div style="position:relative;top:0%;text-align:left">	
+				<font color= #DDD style="font-size:100%"> 
+					<br>
+					To buy the maximum amount of units you can afford hold control.<br><br>
+					<font color= #DDD style="font-size:150%"><h>Upcoming</h></font><br><br>
+					Many more unlocks and units.<br>
+					Zone changes.<br>
+					Galaxy Map.<br>
+					Tower Defense elements.<br>
+					More graphics such as:<br>
+					&nbsp &nbspPlanets, better maps, mining lasers, hyperdrive<br>
+					<br>
+					View on <a href="https://github.com/dpekkle/infinitydrive">Github.</a><br>
+				</font>
+			</div>
+			<div style="margin-left:60vh; margin-top:-335px;">
+				<font color= "#DDD" style="font-size:150%;"><h>Updates</h></font><br><br>
+				<div id="Changelog" style="overflow-y: scroll; height:350px; width:100vh">
+					<font color= "#DDD" style="font-size:80%">
 						<!--Updates-->
-						<br>28/02/16 - Version 0.2.6<br><br>
-						- Zone map
-						- Progression longer
-						- UI tweaks
-						- Endgame crash fix
-						
+						<br>28/02/16 - Version 0.2.6<br>
+						- Zone map<br>
+						- Progression longer<br>
+						- UI tweaks<br>
+						- Endgame crash fix<br>
+						<br>
 						<br>27/02/16 - Version 0.2.5<br><br>
 						- Resource UI overhaul.
-						- Rescale elements on window resize<br><br>
-
-						<br>26/02/16 - Version 0.2.4<br><br>
-						- UI Overhaul based on friday thread suggestions<br><br>
-						<br>25/02/16 - Version: 0.2.3<br><br>
-						- Notifications fade, except science scans.<br>- Science scans have a nice planet icon.<br>- Nicer tab colours.<br>- Smooth movement after scans.<br><br>
-
-						<br>25/02/16 - Version: 0.2.2<br><br>
+						- Rescale elements on window resize<br>
+						<br>
+						26/02/16 - Version 0.2.4<br>
+						- UI Overhaul based on friday thread suggestions<br>
+						<br>
+						25/02/16 - Version: 0.2.3<br>
+						- Notifications fade, except science scans.<br>
+						- Science scans have a nice planet icon.<br>
+						- Nicer tab colours.<br>
+						- Smooth movement after scans.<br>
+						<br>
+						25/02/16 - Version: 0.2.2<br>
 						- Multi-buy key modifier (ctrl). Only implemented for units at the moment, not upgrades.
-						<br><br>
+						<br>
 					</font>
-				</div>
-			</div>	
+				</div>	
+			</div>
 		</div>
 	</div>	
 	

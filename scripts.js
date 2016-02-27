@@ -1798,10 +1798,10 @@ function initialiseMusic()
 	
 	playlist.push(new Song("audio/ville_seppanen-1_g.mp3", "audio/mp3", 20, "Osmic", "Ville Seppanen", 1, "http://opengameart.org/content/space-ambient"));
 	playlist.push(new Song("audio/Startrek.mp3", "audio/mp3", 30, "ender4life", "Star Trek Bridge Ambience", 1, "https://www.youtube.com/watch?v=dLrfdcz8Ou4&"));
-	playlist.push(new Song("audio/Klaud 9 AGAIN.ogg", "audio/ogg", 154, "LySeRGe", "Klaud 9", 0.6, "https://soundcloud.com/memoske/klaud-9"));
-	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous", 0.6, "https://soundcloud.com/memoske/melancholics-anonymous"));
-	playlist.push(new Song("audio/bells2_1.ogg","audio/ogg", 80, "p0ss", "Cuddle Puzzle", 0.7 ,"http://opengameart.org/content/cuddle-puzzle-music-futuristic-pop"));
-	playlist.push(new Song("audio/Space Sprinkles.mp3", "audio/mp3", 120, "Matthew Pablo", "Space Sprinkles", 0.6 ,"http://www.matthewpablo.com/"));
+	playlist.push(new Song("audio/Klaud 9 AGAIN.ogg", "audio/ogg", 154, "LySeRGe", "Klaud 9", 0.4, "https://soundcloud.com/memoske/klaud-9"));
+	playlist.push(new Song("audio/Melancholics Anonymous - S3rge Rybak.mp3", "audio/mp3", 169, "LySeRGe", "Melancholics Anonymous", 0.5, "https://soundcloud.com/memoske/melancholics-anonymous"));
+	playlist.push(new Song("audio/bells2_1.ogg","audio/ogg", 80, "p0ss", "Cuddle Puzzle", 0.6 ,"http://opengameart.org/content/cuddle-puzzle-music-futuristic-pop"));
+	playlist.push(new Song("audio/Space Sprinkles.mp3", "audio/mp3", 120, "Matthew Pablo", "Space Sprinkles", 0.5 ,"http://www.matthewpablo.com/"));
 	//playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline", 0.6));
 	//playlist.push(new Song("audio/Look at me.ogg", "audio/ogg", 120, "Death of Sound", "Look at me", 0.8));
 	
