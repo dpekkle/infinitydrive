@@ -1210,17 +1210,12 @@ function initialiseCanvas()
 	nextSong.bind("click tap", function(){playNextSong();});
 	upVol.bind("click tap", function(){upVolume();});	
 	downVol.bind("click tap", function(){downVolume();});
-	
 	canvas.bind("click tap", function(){fireGuns();});
-	window.addEventListener('click', function() {fireGuns(); }, false);
-
 	
 	changeLevel(); //fill planetArray with all the planets we made
-
 	initialiseZoneMap();
 	
 	//resizing
-	window.addEventListener('resize', resizeCanvas, false);
 	resizeCanvas();
 	
 }
