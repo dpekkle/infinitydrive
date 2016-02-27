@@ -67,23 +67,24 @@
 		box-sizing: border-box;
 		white-space: pre-wrap;
 	}
+	button.buy:hover{
+		border: thin #FFFFFF solid;
+	}
 	
 	button.buy{
 		display:inline-block;
-		height:50%; 
+		height:60%; 
 		width: 100%;
 		border: thin #000000 solid;
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
 
 	}
-	textarea.amounts{		
+	input.rate{		
 		resize: none;
 		display:inline-block;
-		cols="1";
-		rows="2";
 	    text-align: center;
-		height:50%; 
+		height:40%; 
 		width:50%;
 		white-space: pre-wrap;
 		font-size: 80%;
@@ -91,16 +92,16 @@
 		border: thin #000000 solid;
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
-		background-color: #DDD;
+		background-color: #AAA;
 		font-family: Arial;	
 		padding: 0px;
 		
-	}
+	}	
 	input.amounts{		
 		resize: none;
 		display:inline-block;
 	    text-align: center;
-		height:50%; 
+		height:40%; 
 		width:50%;
 		white-space: pre-wrap;
 		font-size: 80%;
@@ -116,7 +117,7 @@
 	div.combinebutt{
 		display:none;
 		vertical-align:top;
-		height:13vh; 
+		height:10vh; 
 		width:25%;
 		margin-top:10px;
 		white-space: pre-wrap;
@@ -134,16 +135,17 @@
 	
 	<ul class="simple-tabs" id="window-tabs">
 		<font size=4px>
-		<li class="game active">Game</li>
-		<li class="sciencepage">Science</li>
-		<li class="zone">Zone Map</li>
-		<li class="galaxy">Galaxy Map</li>
-		<li class="settings">Settings</li>
+		<li id = "gametab" class="game active">Game</li>
+		<li id = "sciencetab" class="sciencepage">Science</li>
+		<li id = "zonetab" class="zone">Zone Map</li>
+		<li id = "galaxytab" class="galaxy">Galaxy Map</li>
+		<li id = "settingstab" class="settings">Settings</li>
 		</font>
 	</ul>
 	<div class="clear-float"></div>
 	<div id="game" class="tab-page active-page">
-		<canvas id="canvas" width="1000" height="450" style="background-color: #000"></canvas>
+		<canvas id="gamecanvas" width="1000" height="450" style="background-color: #000"></canvas>
+
 	</div>
 	
 	<div id="sciencepage" class="tab-page" style="background-color: black;">
@@ -151,13 +153,12 @@
 			<br>
 			<font id = "scienceamount" color= #0aa style="font-size:150%">Science: 0</font>
 			<br><br>
-			<font color= #0aa style="font-size:100%">Doesn't do anything yet...</font>
-			
+			<font color= #0aa style="font-size:100%">Doesn't do anything yet...</font>		
 		</div>
 	</div>
 
 	<div id="zone" class="tab-page">
-	<font color=#FFF> WIP 2</font>
+		<canvas id="zonecanvas" width="1000" height="450" style="background-color: #000"></canvas>
 	</div>
 
 	<div id="galaxy" class="tab-page">
@@ -183,8 +184,15 @@
 				
 						<font color= #DDD style="font-size:150%"><h>Updates</h></font>
 						<!--Updates-->
+						<br>28/02/16 - Version 0.2.6<br><br>
+						- Zone map
+						- Progression longer
+						- UI tweaks
+						- Endgame crash fix
+						
 						<br>27/02/16 - Version 0.2.5<br><br>
-						- Resource UI overhaul, rescale elements on window resize<br><br>
+						- Resource UI overhaul.
+						- Rescale elements on window resize<br><br>
 
 						<br>26/02/16 - Version 0.2.4<br><br>
 						- UI Overhaul based on friday thread suggestions<br><br>
@@ -213,22 +221,22 @@
 			><div id = "goldcomb" class = "combinebutt"
 				><button id = "goldbutton" onclick="fireGuns()" class="buy" >Click</button
 				><input type = "text" id = "gold" class="amounts"></input 
-				><input type = "text" id = "goldrate" class="amounts"></input
+				><input type = "text" id = "goldrate" class="rate"></input
 			></div
 			><div id = "minercomb" class = "combinebutt"
 				><button id = "minerbutton" onclick="buyunit('miner')" class="buy" >Crew</button
 				><input type = "text" id = "miners" class="amounts"></input 
-				><input type = "text" id = "minersrate" class="amounts"></input
+				><input type = "text" id = "minersrate" class="rate"></input
 			></div
 			><div id = "foremancomb" class = "combinebutt"
 				><button id = "foremanbutton" onclick="buyunit('foreman')" class="buy" >Asteroids</button
 				><input type = "text" id = "foremans" class="amounts"></input 
-				><input type = "text" id = "foremansrate" class="amounts"></input
+				><input type = "text" id = "foremansrate" class="rate"></input
 			></div
 			><div id = "shipcomb" class = "combinebutt"
 				><button id = "shipbutton" onclick="buyunit('ship')" class="buy" >Ships</button
 				><input type = "text" id = "ships" class="amounts"></input 
-				><input type = "text" id = "shipsrate" class="amounts"></input
+				><input type = "text" id = "shipsrate" class="rate"></input
 			></div
 		></div
 	></div>
@@ -272,6 +280,7 @@
 	<script defer src="lib/title_notifier.js"></script>
 	<script defer src="lib/Notifier.js"></script>
 	<script defer src="notifications.js"></script>
+	
 	<script defer src="scripts.js"></script>
 
 	

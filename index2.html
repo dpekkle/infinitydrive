@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<head>
+</head>
+<html>
+<style>
+</style>
+<body>
+	<canvas id="alpha" width="1000" height="300" style="background-color: #000"></canvas>
+	<canvas id="beta" width="1000" height="300" style="background-color: #000"></canvas>
+	<script src="lib/ocanvas-2.8.3.js"></script>
+
+	<script>
+		var canvas_elem1 = document.getElementById("alpha");
+		A = oCanvas.create({canvas: canvas_elem1, background: "#a00"});
+		
+		var canvas_elem2 = document.getElementById("beta");
+		B = oCanvas.create({canvas: canvas_elem2, background:"#0aa"});
+				
+		testobj = B.display.ellipse(
+		{
+			x:500,
+			y:150,
+			origin:{x:"center", y:"center"},
+			radius:50,
+			stroke:"5px, #FFF",
+		});
+		B.addChild(testobj);
+
+		testobj.animate(
+		{
+			x: 1000,
+		},
+		{
+			duration:  50000,
+		});
+		
+		
+		setInterval( function() 
+		{
+			A.redraw();	
+			B.redraw();	
+		}, 50);
+		
+	</script>
+</body>

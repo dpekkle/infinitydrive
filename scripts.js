@@ -165,10 +165,10 @@ function checkVisibility()
 
 function updateAmounts()
 {
-	document.getElementById( "gold" ).value = formatNumber(Game.gold) + Game.goldname;	
-	document.getElementById( "miners" ).value = formatNumber(Game.miner) + Game.minername;
-	document.getElementById( "foremans" ).value = formatNumber(Game.foreman) + Game.foremanname;
-	document.getElementById( "ships" ).value = formatNumber(Game.ship) + Game.shipname;
+	document.getElementById( "gold" ).value = formatNumber(Game.gold);	
+	document.getElementById( "miners" ).value = formatNumber(Game.miner);
+	document.getElementById( "foremans" ).value = formatNumber(Game.foreman);
+	document.getElementById( "ships" ).value = formatNumber(Game.ship);
 	document.getElementById( "goldrate" ).value = formatNumber(tickspeed*Game.goldpt/gameslow) + " / s";	
 	document.getElementById( "minersrate" ).value = formatNumber(tickspeed*Game.minerpt/gameslow) + " / s";	
 	document.getElementById( "foremansrate" ).value = formatNumber(tickspeed*Game.foremanpt/gameslow) + " / s";
@@ -226,9 +226,9 @@ function updateCosts()
 	
 	//upgrade costs
 	if (Game.clicktype == "gold")
-		document.getElementById( "goldbutton").innerHTML = "Click  " + "+ " + formatNumber(Game.goldmod) + " " + Game.goldname;
+		document.getElementById( "goldbutton").innerHTML = Game.goldname + "<br>Click " + "+ " + formatNumber(Game.goldmod);
 	else if (Game.clicktype == "miner")
-		document.getElementById( "goldbutton").innerHTML = "Click  " + "+ " + formatNumber(Game.goldmod) + Game.goldname + "<br> and " + formatNumber(Game.goldmod*0.01) + " " + Game.minername;
+		document.getElementById( "goldbutton").innerHTML = Game.goldname + "<br>Click " + "+ " + formatNumber(Game.goldmod) + " (Bonus " + formatNumber(Game.goldmod*0.01) + " " + Game.minername + ")";
 		
 	document.getElementById( "goldupgradebutton").innerHTML = "Boost Clicks<br>" +  formatNumber(Game.goldmod) + "<br>Costs " + formatNumber(Game.goldupcost) + Game.goldname;
 	document.getElementById( "minerupgradebutton").innerHTML = "Boost" + Game.minername + "<br>" + formatNumber(Game.minermod) + "<br>Costs " + formatNumber(Game.minerupcost) + Game.goldname;
@@ -252,7 +252,6 @@ function setActiveButton(elem, note)
 {
 	if (elem.style.backgroundColor != activecolour)
 	{
-		console.log("Increment")
 		tabNotification[note]++;
 		updateBottomTabTitle();	
 	}
@@ -408,8 +407,7 @@ function initialiseTabs()
 {
 	topTabs = new SimpleTabs(document.getElementById('window-tabs'));
 	botTabs = new SimpleTabs(document.getElementById('window-tabs2'));
-	
-	console.log("tabs done");
+		
 	//update science tab
 	document.getElementById("scienceamount").innerHTML = "Science: " + Game.science;
 }
@@ -533,7 +531,7 @@ function tick(display, fuzz)
 		modifierB = gameslow;	
 		if (Game.droneclick)
 			for (var i = 0; i < visibledrones; i++)
-				count("drone");
+				count();
 	}
 	
 	Game.gold += Game.goldpt*modifierA/modifierB;
@@ -566,19 +564,28 @@ function uiTick()
 	{				
 		if (!Game.shipscanning)
 		{
-			level_text.text = "Next: " + planetArray[Game.planetArrayit].name;
-			
-			var lastplanet;
-			if (Game.planetArrayit === 0)
-				lastplanet = 0;
+			if (Game.planetArrayit < planetArray.length)
+			{
+				level_text.text = "Next: " + planetArray[Game.planetArrayit].name;
+				
+				var lastplanet;
+				if (Game.planetArrayit === 0)
+					lastplanet = 0;
+				else
+					lastplanet = planetArray[Game.planetArrayit-1].unlock;
+						
+				var prog = ( (Game.level + (Game.progress/Game.levelcost))- lastplanet)/((planetArray[Game.planetArrayit].unlock) - lastplanet);	
+				
+				progress_text.text = "Distance: " + formatNumber(Game.level + (Game.progress/Game.levelcost)- lastplanet) 
+												  + "/" + formatNumber(planetArray[Game.planetArrayit].unlock - lastplanet) 
+												  + "\n" + formatNumber(prog*100) + "%";	
+		
+			}
 			else
-				lastplanet = planetArray[Game.planetArrayit-1].unlock;
-					
-			var prog = ( (Game.level + (Game.progress/Game.levelcost))- lastplanet)/((planetArray[Game.planetArrayit].unlock) - lastplanet);	
-			
-			progress_text.text = "Distance: " + formatNumber(Game.level + (Game.progress/Game.levelcost)- lastplanet) 
-											  + "/" + formatNumber(planetArray[Game.planetArrayit].unlock - lastplanet) 
-											  + "\n" + formatNumber(prog*100) + "%";	
+			{
+				level_text.text = "No planets left";
+				progress_text.text	= "End of zone";			
+			}
 		}
 	}
 	if (Game.it % 15 === 0)
@@ -597,28 +604,20 @@ function uiTick()
 }
 //~~~~ BUTTON FUNCTIONS ~~~~
 {
-
 	
-	
-function count(who) 
+function count() 
 {
 	clicklimit = new Date().getTime();
 	
 	if (clicklimit - oldclicklimit > 50)
 	{
-		var modifier = 1;
-		if (who == "drone")
-			modifier = 0;
 		if (Game.clicktype == "gold")
 		{
-			//Game.progress += 1*Game.goldmod*modifier;
 			Game.gold += 1*Game.goldmod;
 		}
 		else if (Game.clicktype == "miner")
 		{
-			//Game.progress += 1*Game.goldmod*modifier;
 			Game.gold += 1*Game.goldmod;
-			
 			Game.miner += 0.01*Game.goldmod;
 		}
 		oldclicklimit = clicklimit;
@@ -814,11 +813,93 @@ function buyMiner(mode)
 }
 //~~~~ CANVAS FUNCTIONS ~~~~
 {
+
+function initialiseZoneMap()
+{
+	var canvas_elem = document.getElementById("zonecanvas");
+	zonecanvas = oCanvas.create({canvas: canvas_elem, background: "#555"});
+	
+	zonecanvas.width = window.innerWidth*0.98 - 32;
+	
+	star = zonecanvas.display.ellipse(
+	{
+		x:-975,
+		y:zonecanvas.height/2,
+		origin: {x:"center", y:"center"},
+		radius:1000,
+		stroke:"1px, #000",
+		fill:"#FF0"
+	});
+	
+	zoneshipsprite = zonecanvas.display.sprite(
+	{
+		x:10,
+		y:zonecanvas.height/2,
+		origin: {x:"center", y:"center"},
+		image: "images/shipsheet.png",
+		height:150,
+		width: 150,
+		generate: true,
+		direction: "x",
+		duration: 4 * 10
+	});
+	var planeticon = zonecanvas.display.ellipse(
+	{
+		x:100,
+		y:zonecanvas.height/2,
+		origin: {x:"center", y:"center"},
+		radius:10,
+		stroke:"1px, #000",
+		fill:"#DDD"
+	});
+	
+	zonegalaxy = zonecanvas.display.image(
+	{
+		x:0,
+		y:0,
+		origin:{x:"left", y:700},
+		image: "images/distantgalaxy.jpg",
+		height: 1800,
+		width: 3600*2,
+		
+		tile: true,
+		tile_width: 3600,
+		tile_height: 1800,
+		tile_spacing_x: 0,
+		tile_spacing_y: 0,
+		speed: 0.001,
+	});
+	zonecanvas.addChild(zonegalaxy);
+	zonecanvas.addChild(star);
+
+	
+	//draw the planets
+	var totalwidth = planetArray[planetArray.length-1].unlock;
+	
+	for (var i = 0; i < planetArray.length; i++)
+	{
+		var position = ((zonecanvas.width - 100) * (planetArray[i].unlock/totalwidth)) + 50;
+		
+		var newplanet = planeticon.clone({
+			x: position,
+			y: 2*((i % 2)-0.5) + zonecanvas.height/2 
+		});
+		zonecanvas.addChild(newplanet);
+	}
+	zonecanvas.addChild(zoneshipsprite);
+	zoneshipsprite.rotate(90);	
+	zoneshipsprite.scale(0.25, 0.25);	
+
+	zoneshipsprite.startAnimation();
+
+}
 	
 function initialiseCanvas()
 {
-	canvas = oCanvas.create({canvas: "canvas"});
-//unit assets	
+	var canvas_elem = document.getElementById("gamecanvas");
+	canvas = oCanvas.create({canvas: canvas_elem});
+	
+	//unit assets	
 	scanner = canvas.display.ellipse(
 	{
 		x:0,
@@ -1128,9 +1209,16 @@ function initialiseCanvas()
 	music_text.bind("click tap", function(){linkMusic();});
 	nextSong.bind("click tap", function(){playNextSong();});
 	upVol.bind("click tap", function(){upVolume();});	
-	downVol.bind("click tap", function(){downVolume();});	
-	shipsprite.bind("click tap", function(){fireGuns();});	
+	downVol.bind("click tap", function(){downVolume();});
+	
+	canvas.bind("click tap", function(){fireGuns();});
+	window.addEventListener('click', function() {fireGuns(); }, false);
 
+	
+	changeLevel(); //fill planetArray with all the planets we made
+
+	initialiseZoneMap();
+	
 	//resizing
 	window.addEventListener('resize', resizeCanvas, false);
 	resizeCanvas();
@@ -1145,8 +1233,10 @@ function resizeCanvas()
 	downVol.moveTo(canvas.width - 120,46);
 	nextSong.moveTo(canvas.width - 40,35);
 	music_text.moveTo(canvas.width - 10,70);
-
-
+	
+	zonecanvas.destroy();
+	initialiseZoneMap();
+	//;
 }
 
 function drawExtras()
@@ -1340,6 +1430,11 @@ function adjustBackgroundProgress()
 	//unused with current background parallax method	
 }
 
+function drawZone()
+{
+	zoneshipsprite.moveTo(((zonecanvas.width - 100) * (Game.level/planetArray[planetArray.length-1].unlock)) + 50, zonecanvas.height/2);
+}
+
 function drawShip()
 {	
 	shiptime = new Date().getTime();
@@ -1351,10 +1446,19 @@ function drawShip()
 
 function drawScreen()
 {	
-	drawExtras();
-	drawShip();
-	drawBackground();
-	canvas.redraw();
+	if (topTabs.getActiveTab() == "gametab")
+	{
+		drawExtras();
+		drawShip();
+		drawBackground();
+		canvas.redraw();
+	}
+	else if (topTabs.getActiveTab() == "zonetab")
+	{
+		drawZone();
+		zonecanvas.redraw();
+	}
+
 }
 
 function createDrones(style)
@@ -1431,6 +1535,7 @@ function createDrones(style)
 
 function fireGuns()
 {
+	console.log("Fire the guns");
 	count();
 	if (Game.displayProjectiles)
 	{
@@ -1814,6 +1919,22 @@ function linkMusic()
 //~~~~ Game Code ~~~~~
 {
 var ranges = [
+  { divider: 1e147 , suffix: 'AV' },
+  { divider: 1e144 , suffix: 'AU' },
+  { divider: 1e141 , suffix: 'AT' },
+  { divider: 1e138 , suffix: 'AS' },
+  { divider: 1e135 , suffix: 'AR' },
+  { divider: 1e132 , suffix: 'AQ' },
+  { divider: 1e129 , suffix: 'AP' },
+  { divider: 1e126 , suffix: 'AO' },
+  { divider: 1e123 , suffix: 'AN' },
+  { divider: 1e120 , suffix: 'AM' },
+  { divider: 1e117 , suffix: 'AL' },
+  { divider: 1e114 , suffix: 'AK' },
+  { divider: 1e111 , suffix: 'AJ' },
+  { divider: 1e108 , suffix: 'AI' },
+  { divider: 1e105 , suffix: 'AH' },
+  { divider: 1e102 , suffix: 'AG' },
   { divider: 1e99 , suffix: 'AG' },
   { divider: 1e96 , suffix: 'AF' },
   { divider: 1e93 , suffix: 'AE' },
@@ -1855,7 +1976,6 @@ var totalshots = 0;
 var ctrlmod = false;
 var oldclicklimit = new Date().getTime();
 
-initialiseCanvas();
 
 //initialise canvas
 var dronestyle = {1:"sync", 2:"clock", 3:"anti", 4:"desync"};
@@ -1864,6 +1984,8 @@ var planetArray = [];
 var tabNotification = [0, 0, 0];
 var activecolour = "rgb(0, 170, 170)";
 var inactivecolour = "rgb(0,119,119)";
+
+initialiseCanvas();
 
 //var activecolour = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
 //var inactivecolour = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
@@ -1875,7 +1997,7 @@ function NewGame()
 	this.goldpt = 0;
 	this.goldmod = 1;
 	this.goldupcost = 10;
-	this.goldname = " Fuel";
+	this.goldname = " Minerals";
 	 
 	this.miner = 0;
 	this.minercost = 20;
@@ -1891,20 +2013,20 @@ function NewGame()
 	this.foremanpt = 0;
 	this.foremanmod = 1;
 	this.foremanupcost = 25000;
-	this.foremanname = " Roids";
+	this.foremanname = " Asteroids";
 
 	this.ship = 0;
 	this.shipcost = 80;
 	this.shipcostrate = 1.2;
 	this.shippt = 0;
 	this.shipmod = 1;
-	this.shipupcost = 500000000;
+	this.shipupcost = 5000000000000;
 	this.shipname = " Drones";
 
 	this.science = 0;
 	
 	//positions
-	this.shipspeed = 10;
+	this.shipspeed = 40;
 	this.planetArrayit = 0;
 	this.shipscanning = false;
 	
@@ -1922,7 +2044,7 @@ function NewGame()
 	this.minerclickcost = 400000000; //400 B asteroids
 	
 	this.droneclick = false;
-	this.droneclickcost = 10000000000; //10 C fuel
+	this.droneclickcost = 1000000000000; //10 C fuel
 	
 	this.beercost = 1500; //1.5 A fuel
 	
@@ -1931,7 +2053,7 @@ function NewGame()
 	this.dronestyle = 1;
 	this.vol = 0.4;
 	this.musicplaying = true;
-	this.gameversion = "0.2.5";
+	this.gameversion = "0.2.6";
 	this.alertstyle = "Big";
 	this.tutorialprogress = 0;
 }
@@ -1942,10 +2064,8 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.2.5";
+var currentversion = "0.2.6";
 var savefilechanged = false;
-
-changeLevel();
 
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
@@ -1969,8 +2089,8 @@ if (localStorage.getItem('saveObject') !== null)
 			swal
 			(
 				{
-					title: "27/02/2016\n" + "v " + currentversion,
-					text: "Updates: \nWindow Resize. \n Resource UI change",
+					title: "28/02/2016\n" + "v " + currentversion,
+					text: "Updates:\n- Zone map\n- Progression longer\n- UI tweaks\n- Endgame crash fix"
 					type: "info",
 					confirmButtonText: "Thanks for letting me know",					
 					closeOnConfirm: !savefilechanged,		
