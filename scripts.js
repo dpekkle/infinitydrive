@@ -991,7 +991,7 @@ function initialiseCanvas()
 		y: 70,
 		origin: {x:"right", y:"top"},
 		font: "bold 16px monospace",
-		text: "Play music",
+		text: "No music",
 		fill: "#0aa",
 		align: "right"
 	});
@@ -1164,8 +1164,8 @@ function initialiseCanvas()
 	
 	musicsymbol = canvas.display.sprite(
 	{
-		x: -70, //attached to music_text to make things simpler with window resizes 
-		y: -30,
+		x: canvas.width - 80, //attached to music_text to make things simpler with window resizes 
+		y: 38,
 		origin: {x:"center", y:"center"},
 		image: "images/musicsymbol.png",
 		height: 47,
@@ -1216,7 +1216,7 @@ function initialiseCanvas()
 	initialiseZoneMap();
 	
 	//resizing
-	resizeCanvas();
+	window.onresize = resizeCanvas;
 	
 }
 
@@ -1228,6 +1228,7 @@ function resizeCanvas()
 	downVol.moveTo(canvas.width - 120,46);
 	nextSong.moveTo(canvas.width - 40,35);
 	music_text.moveTo(canvas.width - 10,70);
+	musicsymbolnew.moveTo(canvas.width - 80,38);
 	
 	zonecanvas.destroy();
 	initialiseZoneMap();
@@ -1780,7 +1781,7 @@ function toggleNotes()
 {
 function initialiseMusic()
 {
-	function Song(track, codec, bpm, author, title, volmod)
+	function Song(track, codec, bpm, author, title, volmod, link)
 	{
 		this.track = track;
 		this.codec = codec;
@@ -1788,7 +1789,7 @@ function initialiseMusic()
 		this.author = author;
 		this.title = title;
 		this.volmod = volmod;
-		this.link;
+		this.link = link;
 	}
 	
 	var playlistsize = 6;
@@ -1805,7 +1806,6 @@ function initialiseMusic()
 	//playlist.push(new Song("audio/Aniline.mp3", "audio/mp3", 110, "Death of Sound", "Aniline", 0.6));
 	//playlist.push(new Song("audio/Look at me.ogg", "audio/ogg", 120, "Death of Sound", "Look at me", 0.8));
 	
-		
 	music = document.getElementById("music");
 	
 	music.addEventListener("ended", function()
@@ -1846,6 +1846,13 @@ function playNextSong(init)
 	adjustRealVol("begin", songobj.volmod);
 	
 	music_text.text = songobj.title + "\n" + songobj.author;
+	
+	music_text.bind("click tap", function(){openSongLink();});
+}
+
+function openSongLink()
+{
+	var win = window.open(playlist[playlistiter].link, '_blank');	
 }
 
 function adjustRealVol(state, mod)
@@ -1893,14 +1900,16 @@ function musicPress()
 
 function adjustBPM()
 {	
-	music_text.removeChild(musicsymbolnew);
+	canvas.removeChild(musicsymbolnew);
 
 	musicsymbolnew = musicsymbol.clone({
+		x: canvas.width - 80,
 		duration: 60*1000/playlist[playlistiter].bpm,
 		frame: 2,
 	});
 
-	music_text.addChild(musicsymbolnew);
+	canvas.addChild(musicsymbolnew);
+	
 	musicsymbolnew.bind("click tap", function(){musicPress();});
 }
 
@@ -2141,6 +2150,7 @@ else
 
 initialiseUI();
 initialiseMusic();
+resizeCanvas();
 
 console.log("Done with initialise");
 
