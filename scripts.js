@@ -312,7 +312,7 @@ function grayButtons()
 		if (Game.gold > 0 && Game.tutorialprogress < 2)
 		{
 			toggleNotes();
-			customNote(Game.alertstyle, "Upgrades", "You can quadruple the power of your clicks by clicking the 'Upgrade clicks' button, but this will become more expensive with each purchase.", 0);
+			customNote(Game.alertstyle, "Upgrades", "You can quadruple the power of your clicks by going to the upgrade section. Try that now!", 0);
 			Game.tutorialprogress++;
 		}
 	}
@@ -2171,7 +2171,7 @@ else
 	if (Game.tutorialprogress < 1)
 	{
 		customNote(Game.alertstyle, "Welcome!", 
-		"Click your ship or the \'Click\' button to mine fuel.", 0);
+		"Click the screen or the \'Click\' button to mine fuel.", 0);
 		Game.tutorialprogress++;
 	}
 }
