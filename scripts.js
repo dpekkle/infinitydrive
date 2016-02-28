@@ -609,7 +609,7 @@ function count()
 {
 	clicklimit = new Date().getTime();
 	
-	if (clicklimit - oldclicklimit > 50)
+	if (clicklimit - oldclicklimit > 80)
 	{
 		if (Game.clicktype == "gold")
 		{
@@ -709,7 +709,8 @@ function buyMiner(mode)
 	{
 		Game.gold -= Game.goldupcost;
 		Game.goldupcost *= 7.5;
-		Game.goldmod *=4;
+		Game.goldmod *=3;
+		
 	}	
 	if (id == "miner" && Game.gold >= Game.minerupcost)
 	{
@@ -999,6 +1000,8 @@ function initialiseCanvas()
 		fill: "#0aa",
 		align: "right"
 	});
+
+	
 	thrust_text = canvas.display.text({
 		x:canvas.width - 120 + 110,
 		y: canvas.height - 24,
@@ -1159,10 +1162,20 @@ function initialiseCanvas()
 	
 //music pane
 	canvas.addChild(music_text);
-
+	
+	vol_text = canvas.display.text({
+		x: canvas.width - 150,
+		y: 24,
+		origin: { x: "right", y: "top" },
+		font: "bold 20px monospace",
+		text: "Vol",
+		fill: "#0aa"
+	});
+	canvas.addChild(vol_text);
+	
 	triangle = canvas.display.polygon({
 		sides:3,
-		radius: 13,
+		radius: 15,
 		fill: "#0aa"
 	});
 	
@@ -1181,14 +1194,14 @@ function initialiseCanvas()
 	
 	upVol = triangle.clone({
 		x: canvas.width - 120,
-		y: 28,
+		y: 26,
 		rotation: 270
 	});
 	canvas.addChild(upVol);
 	
 	downVol = triangle.clone({
 		x: canvas.width - 120,
-		y: 46,
+		y: 48,
 		rotation: 90
 	});
 	canvas.addChild(downVol);
@@ -1197,14 +1210,14 @@ function initialiseCanvas()
 		x: canvas.width - 120 + 80,
 		y: 35,
 		rotation: 0,
-		radius: 14,
+		radius: 15,
 	});
 	
 	nextSong2 = triangle.clone({
 		x: 14,
 		y: 0,
 		rotation: 0,
-		radius: 14,
+		radius: 15,
 	});
 	canvas.addChild(nextSong);
 	nextSong.addChild(nextSong2);
@@ -1232,9 +1245,10 @@ function resizeCanvas()
 	var tabpageheight = document.getElementById("gamecanvas").parentElement.clientHeight;
 	canvas.height = tabpageheight;
 	
+	vol_text.moveTo(canvas.width - 110, 28);
 	thrust_text.moveTo(canvas.width - 10, canvas.height - 24);
-	upVol.moveTo(canvas.width - 120, 28);
-	downVol.moveTo(canvas.width - 120,46);
+	upVol.moveTo(canvas.width - 165, 28);
+	downVol.moveTo(canvas.width - 165,46);
 	nextSong.moveTo(canvas.width - 40,35);
 	music_text.moveTo(canvas.width - 10,70);
 	musicsymbolnew.moveTo(canvas.width - 80,38);
@@ -1325,6 +1339,7 @@ function panPlanet(type)
 	planet.animate(
 	{
 		x: canvas.width/2,
+		y: canvas.height/2
 	},
 	{
 		duration:  50000/planet.speed,
@@ -1365,6 +1380,8 @@ function panPlanet(type)
 	planet.animate(
 	{
 		x:-1000,
+		y: canvas.height/2
+
 	},
 	{
 		duration: 50000/planet.speed,
@@ -1819,6 +1836,7 @@ function initialiseMusic()
 	
 	music.loop = false;
 	music.volume = Game.vol;
+	vol_text.text = Math.round(Game.vol * 100);
 	
 	//this is immediately replaced with the appropriate BPM version, but we need it here because that function requires starting by removing it!
 	musicsymbolnew = musicsymbol.clone({
@@ -1835,7 +1853,7 @@ function playNextSong(init)
 		adjustRealVol("end", playlist[playlistiter].volmod); //end the previous songs volmod impact on html5 audio volume
 	}
 	playlistiter++;
-	if (playlistiter > playlist.length-1)
+	if (playlistiter >= playlist.length-1)
 		playlistiter = 0;
 	
 	var songobj = playlist[playlistiter];
@@ -1867,13 +1885,18 @@ function adjustRealVol(state, mod)
 	{
 		music.volume = (music.volume/mod) ;
 	}
+
 }
 
 function upVolume()
 {
-	if (music.volume/playlist[playlistiter].volmod <= 0.95)
+	if (music.volume/playlist[playlistiter].volmod < 1)
+	{
 		music.volume += 0.05;
+		music.volume = 5/100 * Math.round(100 * music.volume/5);
+	}
 	Game.vol = music.volume/playlist[playlistiter].volmod;
+	vol_text.text = Math.round(Game.vol*100);
 }
 
 function downVolume()
@@ -1881,9 +1904,13 @@ function downVolume()
 	if (music.volume/playlist[playlistiter].volmod >= 0.05)
 	{
 		music.volume -= 0.05;
+		music.volume = 5/100 * Math.round(100 * music.volume/5);
+
 	}
 	
 	Game.vol = music.volume/playlist[playlistiter].volmod;
+	vol_text.text = Math.round(Game.vol*100);
+
 }
 
 function musicPress()
