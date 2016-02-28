@@ -819,8 +819,12 @@ function initialiseZoneMap()
 	var canvas_elem = document.getElementById("zonecanvas");
 	zonecanvas = oCanvas.create({canvas: canvas_elem, background: "#555"});
 	
-	zonecanvas.width = window.innerWidth*0.98 - 32;
-	
+	var tabpagewidth = document.getElementById("zonecanvas").parentElement.clientWidth;
+	var tabpageheight = document.getElementById("zonecanvas").parentElement.clientHeight;
+
+	zonecanvas.width = tabpagewidth;
+	zonecanvas.height = tabpageheight;
+			
 	star = zonecanvas.display.ellipse(
 	{
 		x:-975,
@@ -1222,17 +1226,23 @@ function initialiseCanvas()
 
 function resizeCanvas() 
 {
-	canvas.width = window.innerWidth*0.98 - 32;
+	var tabpagewidth = document.getElementById("gamecanvas").parentElement.clientWidth;
+	canvas.width = tabpagewidth;
+	
+	var tabpageheight = document.getElementById("gamecanvas").parentElement.clientHeight;
+	canvas.height = tabpageheight;
+	
 	thrust_text.moveTo(canvas.width - 10, canvas.height - 24);
 	upVol.moveTo(canvas.width - 120, 28);
 	downVol.moveTo(canvas.width - 120,46);
 	nextSong.moveTo(canvas.width - 40,35);
 	music_text.moveTo(canvas.width - 10,70);
 	musicsymbolnew.moveTo(canvas.width - 80,38);
+	level_text.moveTo(20,canvas.height - 64);
+	progress_text.moveTo(20,canvas.height - 24);
 	
 	zonecanvas.destroy();
 	initialiseZoneMap();
-	//;
 }
 
 function drawExtras()
@@ -1418,12 +1428,6 @@ function drawBackground()
 	starfield3.moveTo(-100 - (((Game.shipspeed * (starfield3.speed * (progtomove))) % (starfield3.width/2))), starfield3.y);
 	starfield4.moveTo(-100 - (((Game.shipspeed * (starfield4.speed * (progtomove))) % (starfield4.width/2))), starfield4.y);
 	distantgalaxy.moveTo(-100 - (((Game.shipspeed * (distantgalaxy.speed * (progtomove))) % (distantgalaxy.width/2))), 0);
-}
-
-
-function adjustBackgroundProgress()
-{
-	//unused with current background parallax method	
 }
 
 function drawZone()
@@ -1991,9 +1995,6 @@ var inactivecolour = "rgb(0,119,119)";
 
 initialiseCanvas();
 
-//var activecolour = 'rgb(' + 12 + ',' + 192 + ',' + 204+ ')';
-//var inactivecolour = 'rgb(' + 6 + ',' + 96 + ',' + 102 + ')';
-
 function NewGame()
 {
 	this.gold = 0;
@@ -2201,7 +2202,6 @@ setInterval( function()
 	oldprog = changeprog;
 	
 	levelup('online');
-	adjustBackgroundProgress();		
 }, prograte);
 
 // screen loop

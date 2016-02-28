@@ -142,12 +142,11 @@
 		</font>
 	</ul>
 	<div class="clear-float"></div>
-	<div id="game" class="tab-page active-page">
+	<div id="game" class="toptab-page active-page">
 		<canvas id="gamecanvas" width="1000" height="450" style="background-color: #000"></canvas>
-
 	</div>
 	
-	<div id="sciencepage" class="tab-page" style="background-color: black;">
+	<div id="sciencepage" class="toptab-page" style="background-color: black;">
 		<div style="margin-top:0px; height:100px;margin-left:50px;">
 			<br>
 			<font id = "scienceamount" color= #0aa style="font-size:150%">Science: 0</font>
@@ -156,44 +155,41 @@
 		</div>
 	</div>
 
-	<div id="zone" class="tab-page">
+	<div id="zone" class="toptab-page">
 		<canvas id="zonecanvas" width="1000" height="450" style="background-color: #000"></canvas>
 	</div>
 
-	<div id="galaxy" class="tab-page">
+	<div id="galaxy" class="toptab-page">
 	<font color=#FFF> WIP 3</font>
 	</div>
 	
-	<div id="settings" class="tab-page" style="background-color: black;">
-		<div style= " margin-left:2vh; margin-top:2vh">
+	<div id="settings" class="toptab-page" style="background-color: black;">
+		<div style= " height:100%; width: 100%; margin-left:2vh; margin-top:2vh">
 			<font color= #DDD style="font-size:150%"><h>Settings</h></font>
 			<br><br>
-			<input style = "height:50px;" id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
-			<input style = "height:50px;" id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
-			<input style = "height:50px;" id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
-			<input style = "height:50px; display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
-			
-			<div style="position:relative;top:0%;text-align:left">	
-				<font color= #DDD style="font-size:100%"> 
-					<br>
-					To buy the maximum amount of units you can afford hold control.<br><br>
-					<font color= #DDD style="font-size:150%"><h>Upcoming</h></font><br><br>
-					Many more unlocks and units.<br>
-					Zone changes.<br>
-					Galaxy Map.<br>
-					Tower Defense elements.<br>
-					More graphics such as:<br>
-					&nbsp &nbspPlanets, better maps, mining lasers, hyperdrive<br>
-					<br>
-					View on <a href="https://github.com/dpekkle/infinitydrive">Github.</a><br>
-				</font>
-			</div>
-			<div style="margin-left:60vh; margin-top:-335px;">
-				<font color= "#DDD" style="font-size:150%;"><h>Updates</h></font><br><br>
-				<div id="Changelog" style="overflow-y: scroll; height:350px; width:100vh">
+			<input style = "height:6vh;" id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
+			<input style = "height:6vh;" id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
+			<input style = "height:6vh;" id = "togglenotes" type = "button" value = "Notifications: Big" onclick = "toggleNotes()"/>
+			<input style = "height:6vh; display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
+			<div id="Changelog" style="overflow-y: scroll; height:75%; width:90%">			
+				<div style="position:relative;top:0%;text-align:left">	
+					<font color= #DDD style="font-size:100%"> 
+						<br>
+						To buy the maximum amount of units you can afford hold control.<br><br>
+						<font color= #DDD style="font-size:150%"><h>Upcoming</h></font><br><br>
+						Many more unlocks and units.<br>
+						Zone changes.<br>
+						Galaxy Map.<br>
+						Tower Defense elements.<br>
+						More graphics such as:<br>
+						&nbsp &nbspPlanets, better maps, mining lasers, hyperdrive<br>
+						<br>
+						View on <a href="https://github.com/dpekkle/infinitydrive">Github.</a><br><br><br>
+					</font>
+					<font color= "#DDD" style="font-size:150%;"><h>Updates</h></font><br><br>
 					<font color= "#DDD" style="font-size:80%">
 						<!--Updates-->
-						<br>28/02/16 - Version 0.2.6<br>
+						28/02/16 - Version 0.2.6<br>
 						- Zone map<br>
 						- Progression longer<br>
 						- UI tweaks<br>
@@ -216,7 +212,7 @@
 						- Multi-buy key modifier (ctrl). Only implemented for units at the moment, not upgrades.
 						<br>
 					</font>
-				</div>	
+					</div>
 			</div>
 		</div>
 	</div>	
@@ -229,7 +225,7 @@
 		</font>
 	</ul>
 
-	<div id="buypage" class = "tab-page active-page" style="border: none;"
+	<div id="buypage" class = "bottab-page active-page" style="border: none;"
 	><div id = "list1"
 			><div id = "goldcomb" class = "combinebutt"
 				><button id = "goldbutton" onclick="fireGuns()" class="buy" >Click</button
@@ -253,7 +249,7 @@
 			></div
 		></div
 	></div>
-	<div id="upgradepage" class = "tab-page" style="border: none;">
+	<div id="upgradepage" class = "bottab-page" style="border: none;">
 		<div id = "list2">
 			<button id = "goldupgradebutton" onclick = "upgrade('gold')" class="upgrade" >Fuel			
 			<button id = "minerupgradebutton" onclick = "upgrade('miner')" class="upgrade" >Crew			
@@ -262,13 +258,12 @@
 		</div>	
 	</div>
 	
-	<div id="unlockpage" class = "tab-page" style="border: none;">
+	<div id="unlockpage" class = "bottab-page" style="border: none;">
 		<div id = "list3">
 		</div>		
 	</div>
 
 	<br><br>
-	<div style="height:100px"></div>
 	
 	<!-- Audio -->
 	<audio id= "music"></audio>
