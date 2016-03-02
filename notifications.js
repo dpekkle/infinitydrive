@@ -12,7 +12,6 @@ function customNote(style, title, text, img)
 		{
 			Notifier.notify(text, title, img, false);		console.log("B");
 		}
-		console.log(img);
 		return document.getElementById(title + "note");
 	}
 	else if (style == "Big")

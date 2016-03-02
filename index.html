@@ -30,9 +30,13 @@
 
 	input{
 		font-family: Arial;	
+		vertical-align:middle;
+		font-size: 2vmin;
 	}
 	button{
 		font-family: Arial;	
+		vertical-align:middle;
+		font-size: 1.7vmin;
 	}
 	font{
 		font-family: Arial;
@@ -73,7 +77,7 @@
 	
 	button.buy{
 		display:inline-block;
-		height:60%; 
+		height:65%; 
 		width: 100%;
 		border: thin #000000 solid;
 		-moz-box-sizing: border-box;
@@ -87,7 +91,6 @@
 		height:40%; 
 		width:50%;
 		white-space: pre-wrap;
-		font-size: 80%;
 		margin: 0;
 		border: thin #000000 solid;
 		-moz-box-sizing: border-box;
@@ -104,7 +107,6 @@
 		height:40%; 
 		width:50%;
 		white-space: pre-wrap;
-		font-size: 80%;
 		margin: 0;
 		border: thin #000000 solid;
 		-moz-box-sizing: border-box;
@@ -133,7 +135,7 @@
 
 	
 	<ul class="simple-tabs" id="window-tabs">
-		<font size=4px>
+		<font style="font-size:3vmin; vertical-align:middle; line-height:3vmin">
 		<li id = "gametab" class="game active">Game</li>
 		<li id = "sciencetab" class="sciencepage">Science</li>
 		<li id = "zonetab" class="zone">Zone Map</li>
@@ -149,9 +151,9 @@
 	<div id="sciencepage" class="toptab-page" style="background-color: black;">
 		<div style="margin-top:0px; height:100px;margin-left:50px;">
 			<br>
-			<font id = "scienceamount" color= #0aa style="font-size:150%">Science: 0</font>
+			<font id = "scienceamount" color= #0aa style="font-size:2vmin">Science: 0</font>
 			<br><br>
-			<font color= #0aa style="font-size:100%">Doesn't do anything yet...</font>		
+			<font color= #0aa style="font-size:2vmin">Doesn't do anything yet...</font>		
 		</div>
 	</div>
 
@@ -160,12 +162,12 @@
 	</div>
 
 	<div id="galaxy" class="toptab-page">
-	<font color=#FFF> WIP 3</font>
+		<canvas id="galaxycanvas" width="1000" height="450" style="background-color: #000"></canvas>
 	</div>
 	
 	<div id="settings" class="toptab-page" style="background-color: black;">
 		<div style= " height:100%; width: 100%; margin-left:2vh; margin-top:2vh">
-			<font color= #DDD style="font-size:150%"><h>Settings</h></font>
+			<font color= #DDD style="font-size:3vmin"><h>Settings</h></font>
 			<br><br>
 			<input style = "height:6vh;" id = "toggleprojectiles" type ="button" value = "Display projectiles" onclick = "toggleProjectiles()"/>
 			<input style = "height:6vh;" id = "deletesave" type ="button" value = "Delete save file" onclick = "deleteSave()"/>
@@ -173,7 +175,7 @@
 			<input style = "height:6vh; display:none;" id = "resetdrones" type ="button" title = "If your drones are out of alignment and you have OCD this is the button for you!" value = "Refresh drones" onclick = "resetDrones()"/>
 			<div id="Changelog" style="overflow-y: scroll; margin-top:2%; height:70%; width:90%">			
 				<div style="position:relative;top:0%;text-align:left">	
-					<font color= #DDD style="font-size:100%"> 
+					<font color= #DDD style="font-size:2vmin"> 
 						<br>
 						To buy the maximum amount of units you can afford hold control.<br><br>
 						<font color= #DDD style="font-size:150%"><h>Upcoming</h></font><br><br>
@@ -218,7 +220,7 @@
 	</div>	
 	
 	<ul class="simple-tabs" id="window-tabs2">
-		<font size=4px>
+		<font style="font-size:2.5vmin; vertical-align:middle; line-height:2.5vmin">
 			<li id = "buytab" class="buypage active" style="width:33.33%">Buy</li>
 			<li id = "uptab" class="upgradepage" style="width:33.33%">Upgrade</li>
 			<li id = "untab" class="unlockpage" style="width:33.33%">Unlocks</li>
@@ -287,8 +289,8 @@
 	<link rel="stylesheet" type="text/css" href="lib/sweetalert.css">
 	<script defer src="lib/title_notifier.js"></script>
 	<script defer src="lib/Notifier.js"></script>
-	<script defer src="notifications.js"></script>
 	
+	<script defer src="notifications.js"></script>	
 	<script defer src="scripts.js"></script>
 
 	

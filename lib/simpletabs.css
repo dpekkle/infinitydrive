@@ -11,26 +11,26 @@
 ul.simple-tabs {
 	font-family: sans-serif;
     width:100%;
-    max-width:98%; //extra two pixels for tab-page border, dont want to resize canvas there though
+    max-width:98%;
+	height: 4vh;
     margin: 0;
     padding: 0;
 	margin-left: 1%;
 	margin-top: 0px;
-
+	vertical-align:middle;
 }
 
 ul.simple-tabs li {
     background-color: #0aa;
     float:left;
     width:20%;
-    height:35px;
+	height:100%;
     border: thin #000000 solid;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
  /*margin-bottom: 30px;*/
     list-style-type: none;
     text-align: center;
-    line-height:30px;
 }
 
 ul.simple-tabs li:hover {
