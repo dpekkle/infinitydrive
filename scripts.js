@@ -2124,7 +2124,7 @@ function NewGame()
 	this.dronestyle = 1;
 	this.vol = 0.4;
 	this.musicplaying = true;
-	this.gameversion = "0.2.6";
+	this.gameversion = "0.2.8";
 	this.alertstyle = "Big";
 	this.tutorialprogress = 0;
 }
@@ -2135,8 +2135,8 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.2.7";
-var savefilechanged = false;
+var currentversion = "0.2.8";
+var savefilechanged = true;
 
 // if save file exists load it
 if (localStorage.getItem('saveObject') !== null)
