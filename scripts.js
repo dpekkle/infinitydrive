@@ -2155,7 +2155,7 @@ if (localStorage.getItem('saveObject') !== null)
 	}
 	if (success)
 	{
-		if (Game.gameversion != currentversion)
+		if (Game.gameversion != currentversion || savefilechanged)
 		{
 			swal
 			(
@@ -2191,20 +2191,23 @@ if (localStorage.getItem('saveObject') !== null)
 				}
 			);
 		}
-		Game.gameversion = currentversion;
-		//need to re-add the drones to canvas, just in case...
-		resetDrones("onload");
-		//load the last date and tell the user we were offline
-		//dates act funny so can't be simply placed in game object
-		savetime = new Date(parseInt(localStorage.getItem('time')));  
-		
-		//offline progression
-		offlineticks();
-		Game.shipscanning = false; //in case you load a save while you were scanning a planet
-		
-		console.log("Done with offline");	
-		
-		reloadUnlocks();
+		else
+		{
+			Game.gameversion = currentversion;
+			//need to re-add the drones to canvas, just in case...
+			resetDrones("onload");
+			//load the last date and tell the user we were offline
+			//dates act funny so can't be simply placed in game object
+			savetime = new Date(parseInt(localStorage.getItem('time')));  
+			
+			//offline progression
+			offlineticks();
+			Game.shipscanning = false; //in case you load a save while you were scanning a planet
+			
+			console.log("Done with offline");	
+			
+			reloadUnlocks();
+		}
 		
 	}
 }
