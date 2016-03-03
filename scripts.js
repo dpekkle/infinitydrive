@@ -2135,7 +2135,7 @@ var delay = (1000 / tickspeed);
 var now = new Date(), before = new Date(); 
 var savetime;
 
-var currentversion = "0.2.8";
+var currentversion = "0.2.9";
 var savefilechanged = true;
 
 // if save file exists load it
